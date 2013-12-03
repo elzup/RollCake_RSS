@@ -82,11 +82,11 @@ public class FeedManager {
 
 	public JPanel getTable() {
 		JPanel table = new JPanel();
-		table.setLayout(new GridLayout(1, 3));
-		JPanel[] colPanes = new JPanel[3];
+		table.setLayout(new GridLayout(1, RCConfig.num_day_recentry));
+		JPanel[] colPanes = new JPanel[RCConfig.num_day_recentry];
 		for (JPanel p : colPanes) {
 			p = new JPanel();
-			p.setLayout(new GridLayout(24, 4));
+			p.setLayout(new GridLayout(24, RCConfig.num_split_column_hour));
 		}
 
 		this.putRecently(colPanes);
@@ -94,7 +94,7 @@ public class FeedManager {
 	}
 
 	private void putRecently(JPanel[] pane) {
-		if (pane.length != 3) {
+		if (pane.length != RCConfig.num_day_recentry) {
 			System.out.println("Argumentが不正:" + "長さが3でない");
 			return;
 		}
