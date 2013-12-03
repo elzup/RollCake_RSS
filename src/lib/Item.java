@@ -15,15 +15,15 @@ import org.w3c.dom.Node;
  *  Atomフィード中の 1つの entry要素  を表すクラス
  */
 public class Item {
-	private String title;
-	private String link;
-	private String description;  // RSS のみ。Atom では summary。
-	private String dcDate;       // RSS 1.0 のみ。Atom では updated。
-	private String pubDate;      // RSS 2.0 のみ
-	private String dcCreator;    // RSS 1.0 のみ
-	private List<String> dcSubject;  // RSS 1.0 のみ。複数ある場合に対応。
-	private Date date;           // Java の形式に変換した日付
-	private String dateString;   // Java の形式に変換した日付の標準的な文字列表現
+	protected String title;
+	protected String link;
+	protected String description;  // RSS のみ。Atom では summary。
+	protected String dcDate;       // RSS 1.0 のみ。Atom では updated。
+	protected String pubDate;      // RSS 2.0 のみ
+	protected String dcCreator;    // RSS 1.0 のみ
+	protected List<String> dcSubject;  // RSS 1.0 のみ。複数ある場合に対応。
+	protected Date date;           // Java の形式に変換した日付
+	protected String dateString;   // Java の形式に変換した日付の標準的な文字列表現
 	public Item (Node node) {
 		title = null;
 		link = null;
@@ -76,7 +76,7 @@ public class Item {
 		}
 	}
 	/** 要素から(子孫の)内容 (TEXT か CDATA) を取り出す */
-	private String getContent(Node node) {
+	protected String getContent(Node node) {
 		String content = "";
 		// node の子ノードを走査
 		for(Node current = node.getFirstChild();
@@ -146,7 +146,7 @@ public class Item {
 		return dateString;
 	}
 	/** RFC3339形式の日時 (dc:date 要素, updated 要素) を Date に変換 */
-	private static Date rfc3339toDate(String rfc3339) {
+	protected static Date rfc3339toDate(String rfc3339) {
 		// 先頭が数字でなければ RFC3339 ではない
 		if(rfc3339.charAt(0) - '0' > 9)
 			return pubDate2Date(rfc3339);
@@ -166,7 +166,7 @@ public class Item {
 		return format.parse(rfc3339, new ParsePosition(0));
 	}
 	/** pubDate 要素の内容を Date に変換 */
-	private static Date pubDate2Date(String pubDate) {
+	protected static Date pubDate2Date(String pubDate) {
 		String pattern = "EEE, dd MMM yyyy HH:mm:ss Z";
 		SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.US);
 		return format.parse(pubDate, new ParsePosition(0));

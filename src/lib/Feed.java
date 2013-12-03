@@ -23,10 +23,10 @@ import org.xml.sax.SAXException;
  *  setURL メソッドで指定された URL のフィードを取得し、Item のリストを生成
  */
 public class Feed implements Runnable {
-	private URL url;
-	private String encoding;
-	private Document document;
-	private ArrayList<Item> itemList;
+	protected URL url;
+	protected String encoding;
+	protected Document document;
+	protected ArrayList<Item> itemList;
 
 	public Feed() {
 		url = null;
@@ -95,7 +95,7 @@ public class Feed implements Runnable {
 	}
 
 	/** node の下位(子孫)から item 要素を探し Item オブジェクトを得る(深さ優先探索) */
-	private void findItems(Node node) {
+	protected void findItems(Node node) {
 		// node の子ノードについて繰り返す
 		for (Node current = node.getFirstChild(); current != null; current = current.getNextSibling()) {
 			// 着目している子ノード current は要素か
