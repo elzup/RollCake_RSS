@@ -9,12 +9,12 @@ public class RollCakeRSS extends JFrame {
 	public static void main(String... args) {
 		System.out.println("main start");
 
-		RollCakeRSS rcake = new RollCakeRSS();
+		RollCakeRSS cake = new RollCakeRSS();
 
-		rcake.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		rcake.setBounds(10, 10, 300, 200);
-		rcake.setTitle(FRAME_TITLE);
-		rcake.setVisible(true);
+		cake.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		cake.setBounds(10, 10, 300, 200);
+		cake.setTitle(FRAME_TITLE);
+		cake.setVisible(true);
 
 		System.out.println("main end");
 	}
