@@ -3,6 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.swing.JButton;
@@ -16,18 +17,17 @@ import com.sun.istack.internal.Nullable;
 
 public class FeedManager {
 
-
 	private JPanel uPane;
-	private JTextField uTextField;
 	private ArrayList<RCFeed> feedList;
-	private ArrayList<Tile> tileList;
+	private HashMap<String, Tile> tileList;
 
-	public ArrayList<Tile> getTiles() {
+	public HashMap getTiles() {
 		return this.tileList;
 	}
 
 	public FeedManager() {
 		this.feedList = new ArrayList<RCFeed>();
+		this.tileList = new HashMap<String, Tile>();
 	}
 
 	public void addFeed(String url, boolean compact, @Nullable String encode) {
@@ -49,9 +49,6 @@ public class FeedManager {
 
 	public void setUnderPane(JPanel p) {
 		this.uPane = p;
-	}
-	public void setUnderTextField(JTextField tf) {
-		this.uTextField = tf;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -129,7 +126,6 @@ public class FeedManager {
 					pane[l].add(bus[l][j][i]);
 				}
 
-
 		for (RCFeed feed : this.feedList) {
 			for (RCItem item : feed.getRCItemList()) {
 				int d = item.getRecentryNum();
@@ -138,25 +134,41 @@ public class FeedManager {
 				System.out.printf("%s\n%s\n%s\n%d\n\n", item.getTitle(), item.getLink(), item.getDate(), d);
 				int h = item.getDate().getHours();
 				int m = (item.getDate().getMinutes()) / (60 / RCConfig.num_split_column_hour);
-					System.out.printf("%d : %d : %d\n", d, h, m);
+				System.out.printf("%d : %d : %d\n", d, h, m);
 				bus[d][h][m].setEnabled(true);
-				bus[d][h][m].addActionListener(new actionOpenDetails(this.uTextField, item.getTitle()));
+				String key = d + ":" + h + ":" + m;
+				Tile tile = new Tile();
+				if (tileList.containsKey(key)) {
+					tile = tileList.remove(key);
+				}
+				else
+					tile = new Tile();
+				tile.addItem(item);
+				tileList.put(key, tile);
+
+				bus[d][h][m].removeActionListener(null);
+				bus[d][h][m].addActionListener(new ActionOpenDetails(this.uPane, tile));
 			}
 		}
 	}
 }
 
-class actionOpenDetails implements ActionListener {
-	JTextField tf;
-	String detail;
+class ActionOpenDetails implements ActionListener {
+	private JPanel pane;
+	private Tile tile;
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		tf.setText(detail);
+		System.out.println(tile.getItems().get(0).getTitle());
+		//		pane.removeAll();
+		//		pane.add(tile.getItemPane());
+		JTextField l = new JTextField("test");
+		pane.add(l);
 	}
 
-	public actionOpenDetails(JTextField tf, String detail) {
+	public ActionOpenDetails(JPanel pane, Tile tile) {
 		// TODO Constracter
-		this.tf = tf;
-		this.detail = detail;
+		this.pane = pane;
+		this.tile = tile;
 	}
 }

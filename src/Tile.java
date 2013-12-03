@@ -1,23 +1,33 @@
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 
-import lib.Item;
-
+import javax.swing.JPanel;
 
 public class Tile {
-	private ArrayList<Item> listItem;
+	private ArrayList<RCItem> itemList;
 
 	public Tile() {
-		this.listItem = new ArrayList<Item>();
+		this.itemList = new ArrayList<RCItem>();
 	}
 
-	public ArrayList<Item> getItems () {
-		return this.listItem;
+	public ArrayList<RCItem> getItems () {
+		return this.itemList;
 	}
-	public void addItem(Item e) {
-		this.listItem.add(e);
+
+	public void addItem(RCItem e) {
+		this.itemList.add(e);
 	}
 
 	public int size() {
-		return this.listItem.size();
+		return this.itemList.size();
+	}
+
+	public JPanel getItemPane() {
+		JPanel pane = new JPanel(new FlowLayout());
+		for (RCItem item: this.itemList) {
+			pane.add(item.getItemPanel());
+		}
+		return pane;
 	}
 }
+

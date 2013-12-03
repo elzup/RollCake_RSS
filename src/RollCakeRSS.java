@@ -44,7 +44,6 @@ public class RollCakeRSS extends JFrame {
 		underPane.add(details_tf, BorderLayout.CENTER);
 
 		fm.setUnderPane(underPane);
-		fm.setUnderTextField(details_tf);
 
 		JPanel rightPane = new JPanel();
 
