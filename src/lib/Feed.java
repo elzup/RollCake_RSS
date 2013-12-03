@@ -26,7 +26,7 @@ public class Feed implements Runnable {
 	protected URL url;
 	protected String encoding;
 	protected Document document;
-	protected ArrayList<Item> itemList;
+	private ArrayList<Item> itemList;
 
 	public Feed() {
 		url = null;

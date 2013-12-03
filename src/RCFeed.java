@@ -1,5 +1,6 @@
+import java.util.ArrayList;
+
 import lib.Feed;
-import lib.Item;
 
 import org.w3c.dom.Node;
 
@@ -7,9 +8,12 @@ public class RCFeed extends Feed {
 	private String name;
 	private boolean isSimple = false;
 
+	private ArrayList<RCItem> itemList;
+
 	public RCFeed() {
 		// TODO Constracter
 		super();
+		this.itemList = new ArrayList<RCItem>();
 	}
 
 	public RCFeed(String url) {
@@ -33,20 +37,21 @@ public class RCFeed extends Feed {
  		return this.name;
 	}
 
+	public ArrayList<RCItem> getRCItemList() {
+		return itemList;
+	}
+
 	@Override protected void findItems(Node node) {
-		// node の子ノードについて繰り返す
 		for (Node current = node.getFirstChild(); current != null; current = current.getNextSibling()) {
-			// 着目している子ノード current は要素か
 			if (current.getNodeType() == Node.ELEMENT_NODE) {
-				// 要素なら要素名をチェック
 				String nodeName = current.getNodeName();
-				if (nodeName.equals("item") || nodeName.equals("entry")) // item または entry 要素を発見
-					// item 要素または entry 要素から Item オブジェクトを生成しリストに追加
-					itemList.add(new Item(current));
+				if (nodeName.equals("item") || nodeName.equals("entry")) {
+					RCItem item = new RCItem(current);
+					if (this.isSimple) item.compact();
+					itemList.add(item);
+				}
 				else
-					// item 要素または entry 要素でなければ、さらにその要素の子ノードから探す
-					// (channel, items など)
-					findItems(current); // 再帰呼び出し
+					findItems(current);
 			}
 		}
 	}

@@ -21,12 +21,12 @@ public class RollCakeRSS extends JFrame {
 
 	RollCakeRSS() {
 		//		Container cp = this.getContentPane();
-
 		this.fm = new FeedManager();
 		for (String url : Debug.DEBUG_URLS) {
 			this.fm.addFeed(url, null);
 		}
 		this.updateTable();
+		fm.getTable();
 		//		this.fm._consoleOutput();
 	}
 

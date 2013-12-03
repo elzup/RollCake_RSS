@@ -1,4 +1,6 @@
+import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 import javax.swing.JLabel;
@@ -7,7 +9,6 @@ import javax.swing.JPanel;
 import lib.Item;
 
 import com.sun.istack.internal.Nullable;
-
 
 public class FeedManager {
 
@@ -18,7 +19,6 @@ public class FeedManager {
 		return this.tileList;
 	}
 
-
 	public FeedManager() {
 		this.feedList = new ArrayList<RCFeed>();
 	}
@@ -27,7 +27,7 @@ public class FeedManager {
 		this.feedList.add(this.createFeed(url, encode));
 	}
 
-	public void addFeed(String url,@Nullable String encode) {
+	public void addFeed(String url, @Nullable String encode) {
 		this.addFeed(url, false, encode);
 	}
 
@@ -40,14 +40,14 @@ public class FeedManager {
 		return feed;
 	}
 
+	@SuppressWarnings("deprecation")
 	public JPanel getPanel() {
 		JPanel p = new JPanel();
 		for (RCFeed feed : this.feedList) {
-			for (Item item : feed.getItemList()) {
+			for (RCItem item : feed.getRCItemList()) {
+				Date d = item.getDate();
 				JLabel label = new JLabel(item.getTitle());
-				String url = item.getLink();
-				System.out.println(url);
-				p.add(label);
+//				p.add(label);
 			}
 		}
 		return p;
@@ -56,17 +56,16 @@ public class FeedManager {
 	public void setupTile() {
 		if (this.feedList.size() == 0) {
 			System.out.println("feedListが空です");
-			return ;
+			return;
 		}
 
-		for (RCFeed feed: this.feedList) {
-			for (Item item : feed.getItemList()) {
-				System.out.println(item.getDateString());	///
-				System.out.println(item.getDateTime());	///
+		for (RCFeed feed : this.feedList) {
+			for (RCItem item : feed.getRCItemList()) {
+				System.out.println(item.getDateString()); ///
+				System.out.println(item.getDateTime()); ///
 				System.out.println();
 			}
 		}
-
 	}
 
 	public void _consoleOutput() {
@@ -80,5 +79,34 @@ public class FeedManager {
 			}
 		}
 	}
-}
 
+	public JPanel getTable() {
+		JPanel table = new JPanel();
+		table.setLayout(new GridLayout(1, 3));
+		JPanel[] colPanes = new JPanel[3];
+		for (JPanel p : colPanes) {
+			p = new JPanel();
+			p.setLayout(new GridLayout(24, 4));
+		}
+
+		this.putRecently(colPanes);
+		return table;
+	}
+
+	private void putRecently(JPanel[] pane) {
+		if (pane.length != 3) {
+			System.out.println("Argumentが不正:" + "長さが3でない");
+			return;
+		}
+
+		for (RCFeed feed : this.feedList) {
+			for (RCItem item : feed.getRCItemList()) {
+				int res = item.getRecentryNum();
+
+				System.out.printf("%s\n%s\n%s\n%d\n\n", item.getTitle(), item.getLink(), item.getDate(), res);
+
+				if (res == -1) continue;
+			}
+		}
+	}
+}
