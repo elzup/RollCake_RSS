@@ -7,6 +7,8 @@ import org.w3c.dom.Node;
 
 
 public class RCItem extends Item{
+
+	private int id_recently;
 	public RCItem(Node node) {
 		super(node);
 		// TODO Constracter
@@ -18,7 +20,7 @@ public class RCItem extends Item{
 
 	public int getRecentryNum() {
 		long diff = this.getDiffToday(this.getDate());
-		if (diff > 60 * 60 * 24 * 3 * 1000) {
+		if (diff > 60 * 60 * 24 * RCConfig.num_day_recentry * 1000) {
 			return -1;
 		}
 		return (int) (diff / (60 * 60 * 24 * 1000));
@@ -27,5 +29,11 @@ public class RCItem extends Item{
 	public long getDiffToday(Date d) {
 		return Calendar.getInstance().getTime().getTime() - d.getTime();
 	}
+
+	public void setIdRecently(int id) {
+		this.id_recently = id;
+	}
 }
+
+
 

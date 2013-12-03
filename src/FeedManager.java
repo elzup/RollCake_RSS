@@ -1,10 +1,14 @@
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import lib.Item;
 
@@ -12,8 +16,11 @@ import com.sun.istack.internal.Nullable;
 
 public class FeedManager {
 
-	ArrayList<RCFeed> feedList;
-	public ArrayList<Tile> tileList;
+
+	private JPanel uPane;
+	private JTextField uTextField;
+	private ArrayList<RCFeed> feedList;
+	private ArrayList<Tile> tileList;
 
 	public ArrayList<Tile> getTiles() {
 		return this.tileList;
@@ -40,6 +47,13 @@ public class FeedManager {
 		return feed;
 	}
 
+	public void setUnderPane(JPanel p) {
+		this.uPane = p;
+	}
+	public void setUnderTextField(JTextField tf) {
+		this.uTextField = tf;
+	}
+
 	@SuppressWarnings("deprecation")
 	public JPanel getPanel() {
 		JPanel p = new JPanel();
@@ -47,7 +61,7 @@ public class FeedManager {
 			for (RCItem item : feed.getRCItemList()) {
 				Date d = item.getDate();
 				JLabel label = new JLabel(item.getTitle());
-//				p.add(label);
+				//				p.add(label);
 			}
 		}
 		return p;
@@ -84,29 +98,65 @@ public class FeedManager {
 		JPanel table = new JPanel();
 		table.setLayout(new GridLayout(1, RCConfig.num_day_recentry));
 		JPanel[] colPanes = new JPanel[RCConfig.num_day_recentry];
-		for (JPanel p : colPanes) {
-			p = new JPanel();
-			p.setLayout(new GridLayout(24, RCConfig.num_split_column_hour));
+		for (int i = 0; i < colPanes.length; i++) {
+			colPanes[i] = new JPanel();
+			colPanes[i].setLayout(new GridLayout(24, RCConfig.num_split_column_hour));
+			table.add(colPanes[i]);
 		}
-
+		System.out.println(colPanes.length);
 		this.putRecently(colPanes);
 		return table;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void putRecently(JPanel[] pane) {
 		if (pane.length != RCConfig.num_day_recentry) {
 			System.out.println("Argumentが不正:" + "長さが3でない");
 			return;
 		}
 
+		JButton[][][] bus = new JButton[RCConfig.num_day_recentry][24][RCConfig.num_split_column_hour];
+
+		for (int l = 0; l < bus.length; l++)
+			for (int j = 0; j < bus[0].length; j++)
+				for (int i = 0; i < bus[0][0].length; i++) {
+					bus[l][j][i] = new JButton();
+					bus[l][j][i].setEnabled(false);
+					System.out.printf("%d : %d : %d\n", l, j, i);
+					if (pane[l] == null) {
+						System.out.println("null");
+					}
+					pane[l].add(bus[l][j][i]);
+				}
+
+
 		for (RCFeed feed : this.feedList) {
 			for (RCItem item : feed.getRCItemList()) {
-				int res = item.getRecentryNum();
-
-				System.out.printf("%s\n%s\n%s\n%d\n\n", item.getTitle(), item.getLink(), item.getDate(), res);
-
-				if (res == -1) continue;
+				int d = item.getRecentryNum();
+				if (d == -1)
+					continue;
+				System.out.printf("%s\n%s\n%s\n%d\n\n", item.getTitle(), item.getLink(), item.getDate(), d);
+				int h = item.getDate().getHours();
+				int m = (item.getDate().getMinutes()) / (60 / RCConfig.num_split_column_hour);
+					System.out.printf("%d : %d : %d\n", d, h, m);
+				bus[d][h][m].setEnabled(true);
+				bus[d][h][m].addActionListener(new actionOpenDetails(this.uTextField, item.getTitle()));
 			}
 		}
+	}
+}
+
+class actionOpenDetails implements ActionListener {
+	JTextField tf;
+	String detail;
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		tf.setText(detail);
+	}
+
+	public actionOpenDetails(JTextField tf, String detail) {
+		// TODO Constracter
+		this.tf = tf;
+		this.detail = detail;
 	}
 }
