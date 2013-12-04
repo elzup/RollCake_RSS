@@ -172,7 +172,7 @@ class ActionOpenDetails implements ActionListener {
 		System.out.println(tile.getItems().get(0).getTitle());
 		pane.removeAll();
 		pane.add(tile.getItemPane(), BorderLayout.CENTER);
-		pane.repaint();
+//		pane.repaint();
 	}
 
 	public ActionOpenDetails(JPanel pane, Tile tile) {

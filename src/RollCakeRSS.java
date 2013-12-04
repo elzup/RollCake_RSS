@@ -1,6 +1,10 @@
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -23,8 +27,29 @@ public class RollCakeRSS extends JFrame {
 
 	RollCakeRSS() {
 
+		this.setupWindowConfig();
+		this.setupToolBar();
+		this.setupMenuBar();
+		//		Container cp = this.getContentPane();
+		this.fm = new FeedManager();
+
+		//------------------- debug initialize -------------------//
+		for (String url : Debug.DEBUG_URLS) {
+			this.fm.addFeed(url, null);
+		}
+		//------------------- debug end -------------------//
+
+
+
+		this.updateTable();
+		//		this.fm._consoleOutput();
+	}
+
+	private void setupWindowConfig() {
+
 		try {
-			UIManager.setLookAndFeel(UIManager.getInstalledLookAndFeels()[RCConfig.window_id_lookandfeel].getClassName());
+			UIManager.setLookAndFeel(UIManager.getInstalledLookAndFeels()[RCConfig.window_id_lookandfeel]
+					.getClassName());
 		} catch (ClassNotFoundException e) {
 			// TODO catch block
 			e.printStackTrace();
@@ -38,32 +63,49 @@ public class RollCakeRSS extends JFrame {
 			// TODO catch block
 			e.printStackTrace();
 		}
-		//		Container cp = this.getContentPane();
-		this.fm = new FeedManager();
+	}
 
-		//------------------- debug initialize -------------------//
-		for (String url : Debug.DEBUG_URLS) {
-			this.fm.addFeed(url, null);
-		}
-		//------------------- debug end -------------------//
+	private void setupToolBar() {
+		//		JToolBar tb = new JToolBar();
+	}
 
+	private void setupMenuBar() {
+		JMenuBar menuBar = new JMenuBar();
+		this.setJMenuBar(menuBar);
 
-		this.updateTable();
-		//		this.fm._consoleOutput();
+		JMenu file = new JMenu("File");
+		menuBar.add(file);
+		JMenuItem itemExit = new JMenuItem("Exit");;
+		file.add(itemExit);
 	}
 
 	public void updateTable() {
 		JPanel pane = (JPanel) this.getContentPane();
 		pane.setLayout(new BorderLayout());
+		pane.setBackground(RCConfig.window_background_color);
 
-		JPanel underPane = new JPanel(new BorderLayout());
+		JPanel leftPane = new JPanel(new BorderLayout());
+		leftPane.setPreferredSize(new Dimension(RCConfig.tablepane_size_width, RCConfig.window_size_height));
 
-		fm.setUnderPane(underPane);
+		JPanel leftUnderPane = new JPanel(new BorderLayout());
+		leftUnderPane.setPreferredSize(RCConfig.underpane_size_dimension);
+		leftUnderPane.setBackground(RCConfig.underpane_background_color);
+		fm.setUnderPane(leftUnderPane);
+
+		JPanel tablePane = fm.getTable();
+		tablePane.setPreferredSize(RCConfig.tablepane_size_dimension);
+		tablePane.setBackground(RCConfig.tablepane_background_color);
+
+
+
+		leftPane.add(tablePane, BorderLayout.NORTH);
+		leftPane.add(leftUnderPane, BorderLayout.SOUTH);
 
 		JPanel rightPane = new JPanel();
+		rightPane.setPreferredSize(RCConfig.rightpane_size_dimension);
+		rightPane.setBackground(RCConfig.rightpane_background_color);
 
-		pane.add(fm.getTable(), BorderLayout.CENTER);
+		pane.add(leftPane,  BorderLayout.WEST);
 		pane.add(rightPane, BorderLayout.EAST);
-		pane.add(underPane, BorderLayout.SOUTH);
 	}
 }
