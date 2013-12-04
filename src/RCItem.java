@@ -39,8 +39,8 @@ public class RCItem extends Item{
 	}
 
 	public JPanel getItemPanel() {
-		JPanel pane = new JPanel(new GridLayout(4, 0));
-		JLabel title = new JLabel(this.getDescription());
+		JPanel pane = new JPanel(new GridLayout(4, 1));
+		JLabel title = new JLabel(this.getTitle());
 		JLabel date = new JLabel(this.getDateString());
 		JLabel description = new JLabel(this.getDescription());
 		String url = this.getLink();

@@ -1,4 +1,4 @@
-import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -8,6 +8,10 @@ public class Tile {
 
 	public Tile() {
 		this.itemList = new ArrayList<RCItem>();
+	}
+	public Tile(RCItem item) {
+		this.itemList = new ArrayList<RCItem>();
+		this.itemList.add(item);
 	}
 
 	public ArrayList<RCItem> getItems () {
@@ -23,8 +27,10 @@ public class Tile {
 	}
 
 	public JPanel getItemPane() {
-		JPanel pane = new JPanel(new FlowLayout());
+		JPanel pane = new JPanel(new GridLayout(this.size(), 1));
+		System.out.println(this.size() + "]");
 		for (RCItem item: this.itemList) {
+			System.out.println(item.getTitle());
 			pane.add(item.getItemPanel());
 		}
 		return pane;

@@ -5,6 +5,7 @@ public class RCConfig {
 	public static String title_frame = "RollCakeRSS";
 	public static int window_size_width  = 500;
 	public static int window_size_height = 400;
+	public static int window_id_lookandfeel = 3;
 
 
 

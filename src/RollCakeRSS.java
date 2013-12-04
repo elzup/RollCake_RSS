@@ -2,7 +2,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class RollCakeRSS extends JFrame {
 	FeedManager fm;
@@ -21,6 +22,22 @@ public class RollCakeRSS extends JFrame {
 	}
 
 	RollCakeRSS() {
+
+		try {
+			UIManager.setLookAndFeel(UIManager.getInstalledLookAndFeels()[RCConfig.window_id_lookandfeel].getClassName());
+		} catch (ClassNotFoundException e) {
+			// TODO catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO catch block
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			// TODO catch block
+			e.printStackTrace();
+		}
 		//		Container cp = this.getContentPane();
 		this.fm = new FeedManager();
 
@@ -29,6 +46,7 @@ public class RollCakeRSS extends JFrame {
 			this.fm.addFeed(url, null);
 		}
 		//------------------- debug end -------------------//
+
 
 		this.updateTable();
 		//		this.fm._consoleOutput();
@@ -39,9 +57,6 @@ public class RollCakeRSS extends JFrame {
 		pane.setLayout(new BorderLayout());
 
 		JPanel underPane = new JPanel(new BorderLayout());
-		JTextField details_tf = new JTextField();
-		details_tf.setEnabled(false);
-		underPane.add(details_tf, BorderLayout.CENTER);
 
 		fm.setUnderPane(underPane);
 

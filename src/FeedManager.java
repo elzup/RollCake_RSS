@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +10,6 @@ import java.util.Iterator;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import lib.Item;
 
@@ -135,20 +135,30 @@ public class FeedManager {
 				int h = item.getDate().getHours();
 				int m = (item.getDate().getMinutes()) / (60 / RCConfig.num_split_column_hour);
 				System.out.printf("%d : %d : %d\n", d, h, m);
-				bus[d][h][m].setEnabled(true);
+				JButton but = bus[d][h][m];
+				but.setEnabled(true);
 				String key = d + ":" + h + ":" + m;
 				Tile tile = new Tile();
 				if (tileList.containsKey(key)) {
 					tile = tileList.remove(key);
+					tile.addItem(item);
 				}
 				else
-					tile = new Tile();
-				tile.addItem(item);
+					tile = new Tile(item);
 				tileList.put(key, tile);
 
-				bus[d][h][m].removeActionListener(null);
-				bus[d][h][m].addActionListener(new ActionOpenDetails(this.uPane, tile));
+				removeActionListener(but);
+				but.addActionListener(new ActionOpenDetails(this.uPane, tile));
+//				System.out.println(but.getActionListeners().length + "]");
 			}
+		}
+	}
+
+	private void removeActionListener(JButton b) {
+		while(true) {
+			ActionListener[] als = b.getActionListeners();
+			if (als.length == 0) return;
+			b.removeActionListener(als[0]);
 		}
 	}
 }
@@ -160,10 +170,9 @@ class ActionOpenDetails implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.out.println(tile.getItems().get(0).getTitle());
-		//		pane.removeAll();
-		//		pane.add(tile.getItemPane());
-		JTextField l = new JTextField("test");
-		pane.add(l);
+		pane.removeAll();
+		pane.add(tile.getItemPane(), BorderLayout.CENTER);
+		pane.repaint();
 	}
 
 	public ActionOpenDetails(JPanel pane, Tile tile) {
