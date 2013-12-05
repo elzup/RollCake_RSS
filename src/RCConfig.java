@@ -39,10 +39,7 @@ public class RCConfig {
 	public static Dimension rightpane_size_dimension = new Dimension(rightpane_size_width, rightpane_size_height);
 	public static Color rightpane_background_color = new Color(200, 240, 240);
 
-
 	public static String key_delimiter = "-";
-
-
 
 
 	/* --------------------------------------------------------- *
@@ -79,7 +76,7 @@ public class RCConfig {
 	/* --------------------------------------------------------- *
 	 *     main value setting
 	 * --------------------------------------------------------- */
-	public static int num_day_recentry = 3;
+	public static int num_day_recentry = 4;
 
 
 	//------------------- table layout -------------------//
