@@ -1,18 +1,23 @@
-import java.awt.GridLayout;
+import java.awt.FlowLayout;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 
 import lib.Item;
 
 import org.w3c.dom.Node;
 
-
-public class RCItem extends Item{
+public class RCItem extends Item {
 
 	private int id_recently;
+
 	public RCItem(Node node) {
 		super(node);
 		// TODO Constracter
@@ -23,35 +28,90 @@ public class RCItem extends Item{
 	}
 
 	public int getRecentryNum() {
-		long diff = this.getDiffToday(this.getDate());
-		if (diff > 60 * 60 * 24 * RCConfig.num_day_recentry * 1000) {
-			return -1;
-		}
-		return (int) (diff / (60 * 60 * 24 * 1000));
+		int diffNum = this.getDiffTodayNum();
+		return (diffNum > RCConfig.num_day_recentry) ? -1 : diffNum;
 	}
 
-	public long getDiffToday(Date d) {
+	public static long getDiffToday(Date d) {
 		return Calendar.getInstance().getTime().getTime() - d.getTime();
+	}
+
+	public int getDiffTodayNum() {
+		long diff = getDiffToday(this.getDate());
+		return (int) (diff / (60 * 60 * 24 * 1000));
 	}
 
 	public void setIdRecently(int id) {
 		this.id_recently = id;
 	}
 
+	public String getKey() {
+		int[] vals = {
+				this.getDiffTodayNum(),
+				this.getDate().getHours(),
+				(this.getDate().getMinutes()) / (60 / RCConfig.num_split_column_hour),
+		};
+		return valsToKey(vals);
+	}
+
+	public static int[] keyToVals(String key) {
+		int[] vals = new int[3];
+		String[] strs = key.split(RCConfig.key_delimiter);
+		for (int i = 0; i < 3; i++)
+			vals[i] = Integer.parseInt(strs[i]);
+		return vals;
+	}
+
+	public static String valsToKey(int[] vals) {
+		return vals[0] + RCConfig.key_delimiter + vals[1] + RCConfig.key_delimiter + vals[2];
+	}
+
 	public JPanel getItemPanel() {
-		JPanel pane = new JPanel(new GridLayout(4, 1));
-		JLabel title = new JLabel(this.getTitle());
-		JLabel date = new JLabel(this.getDateString());
-		JLabel description = new JLabel(this.getDescription());
-		String url = this.getLink();
-		JLabel link = new JLabel(String.format("<a href=\"%s\">%s</a>", url, url));
+		JPanel pane = new JPanel(new FlowLayout());
+		pane.setPreferredSize(RCConfig.underpane_size_dimension);
+
+		JTextField title = new JTextField(this.getTitle());
+		title.setPreferredSize(RCConfig.item_info_line);
+		title.setBorder(RCConfig.item_info_title_border);
 
 		pane.add(title);
+
+		JTextField date = new JTextField(this.getDateString());
+		date.setPreferredSize(RCConfig.item_info_line);
+		date.setBorder(RCConfig.item_info_date_border);
+
 		pane.add(date);
-		pane.add(description);
+
+		if (this.getDescription() != null) {
+			JTextPane description = getHTMLJTextPane(this.getDescription());
+			description.setBorder(RCConfig.item_info_description_border);
+			pane.add(description);
+		}
+
+		String url = this.getLink();
+		JTextPane link = getHTMLJTextPane(String.format("<a href=\"%s\">%s</a>", url, url));
+		link.setPreferredSize(RCConfig.item_info_line);
+		link.setBorder(RCConfig.item_info_url_border);
+
 		pane.add(link);
 		return pane;
 	}
+
+	private JTextPane getHTMLJTextPane(String html) {
+		JTextPane textPane = new JTextPane();
+		textPane.setContentType("text/html");
+		textPane.setEditable(false);
+		HTMLDocument doc = (HTMLDocument) textPane.getDocument();
+		HTMLEditorKit editorKit = (HTMLEditorKit) textPane.getEditorKit();
+		try {
+			editorKit.insertHTML(doc, doc.getLength(), html, 0, 0, null);
+		} catch (BadLocationException e) {
+			// TODO catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO catch block
+			e.printStackTrace();
+		}
+		return textPane;
+	}
 }
-
-

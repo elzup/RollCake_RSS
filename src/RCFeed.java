@@ -41,6 +41,20 @@ public class RCFeed extends Feed {
 		return itemList;
 	}
 
+//	public ArrayList<RCItem> getRecentryDate(int diff) {
+//		for (RCItem item: this.itemList) {
+//			int d = item.getRecentryNum();
+//			if (d == -1)
+//				continue;
+//			System.out.printf("%s\n%s\n%s\n%d\n\n", item.getTitle(), item.getLink(), item.getDate(), d);
+//			int h = item.getDate().getHours();
+//			int m = (item.getDate().getMinutes()) / (60 / RCConfig.num_split_column_hour);
+//			System.out.printf("%d : %d : %d\n", d, h, m);
+//			but.setEnabled(true);
+//			String key = d + ":" + h + ":" + m;
+//		}
+//	}
+
 	@Override protected void findItems(Node node) {
 		for (Node current = node.getFirstChild(); current != null; current = current.getNextSibling()) {
 			if (current.getNodeType() == Node.ELEMENT_NODE) {

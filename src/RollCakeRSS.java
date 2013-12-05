@@ -10,7 +10,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class RollCakeRSS extends JFrame {
-	FeedManager fm;
+	RCManager fm;
 
 	public static void main(String... args) {
 		System.out.println("main start");
@@ -31,7 +31,7 @@ public class RollCakeRSS extends JFrame {
 		this.setupToolBar();
 		this.setupMenuBar();
 		//		Container cp = this.getContentPane();
-		this.fm = new FeedManager();
+		this.fm = new RCManager();
 
 		//------------------- debug initialize -------------------//
 		for (String url : Debug.DEBUG_URLS) {
@@ -92,7 +92,7 @@ public class RollCakeRSS extends JFrame {
 		leftUnderPane.setBackground(RCConfig.underpane_background_color);
 		fm.setUnderPane(leftUnderPane);
 
-		JPanel tablePane = fm.getTable();
+		JPanel tablePane = fm.getTablePane();
 		tablePane.setPreferredSize(RCConfig.tablepane_size_dimension);
 		tablePane.setBackground(RCConfig.tablepane_background_color);
 
