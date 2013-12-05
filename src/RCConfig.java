@@ -7,7 +7,6 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 
-
 public class RCConfig {
 
 	/* --------------------------------------------------------- *
@@ -16,7 +15,7 @@ public class RCConfig {
 
 	//------------------- window -------------------//
 	public static String title_frame = "RollCakeRSS";
-	public static int window_size_width  = 900;
+	public static int window_size_width = 900;
 	public static int window_size_height = 700;
 	public static int window_id_lookandfeel = 3;
 	public static Color window_background_color = Color.white;
@@ -34,13 +33,12 @@ public class RCConfig {
 	public static Color underpane_background_color = new Color(200, 255, 255);
 
 	//------------------- rightPanel -------------------//
-	public static int rightpane_size_width = window_size_width - tablepane_size_width;
+	public static int rightpane_size_width = window_size_width - tablepane_size_width - 15;
 	public static int rightpane_size_height = tablepane_size_height;
 	public static Dimension rightpane_size_dimension = new Dimension(rightpane_size_width, rightpane_size_height);
 	public static Color rightpane_background_color = new Color(200, 240, 240);
 
 	public static String key_delimiter = "-";
-
 
 	/* --------------------------------------------------------- *
 	 *     design
@@ -59,15 +57,15 @@ public class RCConfig {
 	public static Border item_info_date_border = new TitledBorder("DATE");
 
 	//------------------- item_info discription -------------------//
-	public static Border item_info_description_border = new MatteBorder(new Insets(4, 4, 4, 4), new Color(220, 255, 255));
+	public static Border item_info_description_border = new MatteBorder(new Insets(4, 4, 4, 4),
+			new Color(220, 255, 255));
 
 	//------------------- item_info url -------------------//
 	public static Border item_info_url_border = new EtchedBorder();
 
-
 	//------------------- table basic -------------------//
 	public static int cell_size_height = 10;
-	public static int cell_size_width  = 14;
+	public static int cell_size_width = 14;
 
 	//------------------- table hour -------------------//
 	public static int label_table_hour_size_width = 14;
@@ -78,9 +76,7 @@ public class RCConfig {
 	 * --------------------------------------------------------- */
 	public static int num_day_recentry = 4;
 
-
 	//------------------- table layout -------------------//
 	public static int num_split_column_hour = 4;
-
 
 }

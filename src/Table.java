@@ -32,6 +32,7 @@ public class Table {
 		}
 
 		for (RCFeed feed : this.feedList) {
+			System.out.println(feed.getName());
 			for (RCItem item : feed.getRCItemList()) {
 				int d = item.getDiffTodayNum();
 				if (d != diff)
@@ -53,7 +54,7 @@ public class Table {
 			label.setHorizontalAlignment(SwingConstants.RIGHT);
 			label.setPreferredSize(RCConfig.label_table_hour);
 			pane.add(label);
-			for (int i = 0; i < RCConfig.num_split_column_hour;i++){
+			for (int i = 0; i < RCConfig.num_split_column_hour; i++) {
 				JButton b = new JButton();
 				b.setEnabled(false);
 				pane.add(b);
@@ -63,7 +64,7 @@ public class Table {
 			Tile tile = e.getValue();
 			int[] vals = RCItem.keyToVals(e.getKey());
 			System.out.println(e.getKey());
-			int n = vals[1] * (vals[2] + 1);
+			int n = vals[1] * (RCConfig.num_split_column_hour + 1) + (vals[2] + 1);
 			JButton b = (JButton) pane.getComponent(n);
 			b.setText(String.valueOf(tile.size()));
 			b.setEnabled(true);
@@ -83,7 +84,6 @@ public class Table {
 	}
 }
 
-
 class ActionOpenDetails implements ActionListener {
 	private JPanel pane;
 	private Tile tile;
@@ -96,7 +96,7 @@ class ActionOpenDetails implements ActionListener {
 		pane.add(spane, BorderLayout.CENTER);
 		pane.setVisible(false);
 		pane.setVisible(true);
-//		pane.repaint();
+		//		pane.repaint();
 	}
 
 	public ActionOpenDetails(JPanel pane, Tile tile) {
@@ -105,11 +105,11 @@ class ActionOpenDetails implements ActionListener {
 		this.tile = tile;
 	}
 
-
 	public static void removeActionListener(JButton b) {
-		while(true) {
+		while (true) {
 			ActionListener[] als = b.getActionListeners();
-			if (als.length == 0) return;
+			if (als.length == 0)
+				return;
 			b.removeActionListener(als[0]);
 		}
 	}

@@ -20,16 +20,17 @@ public class RCManager {
 		this.feedList = new ArrayList<RCFeed>();
 	}
 
-	public void addFeed(String url, boolean compact, @Nullable String encode) {
-		this.feedList.add(this.createFeed(url, encode));
+	public void addFeed(String name, String url, boolean compact, @Nullable String encode) {
+		this.feedList.add(this.createFeed(name, url, encode));
 	}
 
-	public void addFeed(String url, @Nullable String encode) {
-		this.addFeed(url, false, encode);
+	public void addFeed(String name, String url, @Nullable String encode) {
+		this.addFeed(name, url, false, encode);
 	}
 
-	private RCFeed createFeed(String url, @Nullable String encode) {
+	private RCFeed createFeed(String name, String url, @Nullable String encode) {
 		RCFeed feed = new RCFeed();
+		feed.setName(name);
 		feed.setURL(url);
 		if (encode != null) // 引数で指示があったら文字コードを指定
 			feed.setEncoding(encode);
@@ -89,9 +90,10 @@ public class RCManager {
 
 		for (int i = 0; i < colPanes.length; i++)
 			table.add(colPanes[i]);
-
 		return table;
 	}
+
+
 
 	@SuppressWarnings("deprecation")
 	private JPanel[] getRecentlyTable() {
@@ -101,9 +103,8 @@ public class RCManager {
 		//			return null;
 		//		}
 
-		for (int i = 0; i < RCConfig.num_day_recentry; i++) {
+		for (int i = 0; i < RCConfig.num_day_recentry; i++)
 			pane[i] = this.table.getDatePane(i);
-		}
 		return pane;
 	}
 }
