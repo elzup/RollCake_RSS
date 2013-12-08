@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<feedList>
+  <feed>
+    <name>Wiki:minecraft</name>
+    <groupId>0</groupId>
+    <url>/minecraft/rss</url>
+  </feed>
+  <feed>
+    <name>#Minecraft技術部</name>
+    <groupId>0</groupId>
+    <url>/tag/minecraft技術部</url>
+  </feed>
+</feedList>
