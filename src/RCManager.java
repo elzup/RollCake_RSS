@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,35 +13,57 @@ import com.sun.istack.internal.Nullable;
 
 public class RCManager {
 
-	private JPanel uPane;
+	private JPanel contentPane;
 	private ArrayList<RCFeed> feedList;
 	private Table table;
+
+	private int mode;
+
+	public static int table_mode_recentry = 0;
 
 	public RCManager() {
 		this.feedList = new ArrayList<RCFeed>();
 	}
 
+	public ArrayList<RCFeed> getFeedList() {
+		return this.feedList;
+	}
+
+	public void addFeed(RCFeed feed) {
+		this.feedList.add(feed);
+	}
+
 	public void addFeed(String name, String url, boolean compact, @Nullable String encode) {
-		this.feedList.add(this.createFeed(name, url, encode));
+		this.addFeed(this.createFeed(name, url, encode));
 	}
 
 	public void addFeed(String name, String url, @Nullable String encode) {
 		this.addFeed(name, url, false, encode);
 	}
 
-	private RCFeed createFeed(String name, String url, @Nullable String encode) {
+	public void addFeed(String url, @Nullable String encode) {
+		this.addFeed(null, url, false, encode);
+	}
+
+	public RCFeed createFeed(String name, String url, @Nullable String encode) {
 		RCFeed feed = new RCFeed();
+		if (!feed.setURL(url)) {
+			return null;
+		}
 		feed.setName(name);
-		feed.setURL(url);
 		if (encode != null) // 引数で指示があったら文字コードを指定
 			feed.setEncoding(encode);
 		feed.run();
 		return feed;
 	}
 
-	public void setUnderPane(JPanel p) {
-		this.uPane = p;
-		this.table = new Table(p, this.feedList);
+	public RCFeed createFeed(String url, @Nullable String encode) {
+		return this.createFeed(null, url, encode);
+	}
+
+	public void setContentPane(JPanel cPane) {
+		this.contentPane = cPane;
+		this.table = new Table(contentPane, this.feedList);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -83,25 +106,33 @@ public class RCManager {
 		}
 	}
 
-	public JPanel getTablePane() {
+	public JPanel setTablePane() {
 		JPanel table = new JPanel();
 		table.setLayout(new GridLayout(1, RCConfig.num_day_recentry));
 		JPanel[] colPanes = this.getRecentlyTable();
 
 		for (int i = 0; i < colPanes.length; i++)
 			table.add(colPanes[i]);
+		//		System.out.println(contentPane.getComponents().length + "<<<");
+		JPanel leftPane = (JPanel) contentPane.getComponent(0);
+
+		if (leftPane.getComponents().length > 1)
+			leftPane.remove(leftPane.getComponent(1));
+		((JPanel) contentPane.getComponent(0)).add(table, BorderLayout.NORTH);
+		table.setPreferredSize(RCConfig.tablepane_size_dimension);
+		table.setBackground(RCConfig.tablepane_background_color);
+		table.setVisible(false);
+		table.setVisible(true);
 		return table;
 	}
 
+	public void update() {
 
+	}
 
 	@SuppressWarnings("deprecation")
 	private JPanel[] getRecentlyTable() {
 		JPanel[] pane = new JPanel[RCConfig.num_day_recentry];
-		//		if (pane.length != RCConfig.num_day_recentry) {
-		//			System.out.println("Argumentが不正:" + "長さが3でない");
-		//			return null;
-		//		}
 
 		for (int i = 0; i < RCConfig.num_day_recentry; i++)
 			pane[i] = this.table.getDatePane(i);

@@ -35,12 +35,14 @@ public class Feed implements Runnable {
 		itemList = new ArrayList<Item>();
 	}
 
-	public void setURL(String url) {
+	public boolean setURL(String url) {
 		try {
 			this.url = new URL(url);
 		} catch (MalformedURLException e) {
 			System.err.println("間違ったURL: " + url);
+			return false;
 		}
+		return true;
 	}
 
 	public void setEncoding(String encoding) {

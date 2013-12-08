@@ -74,9 +74,16 @@ public class RCConfig {
 	/* --------------------------------------------------------- *
 	 *     main value setting
 	 * --------------------------------------------------------- */
-	public static int num_day_recentry = 4;
+	public static int num_day_recentry = 3;
 
 	//------------------- table layout -------------------//
 	public static int num_split_column_hour = 4;
+
+	/* --------------------------------------------------------- *
+	 *     File io
+	 * --------------------------------------------------------- */
+
+	public static String savefile_name = "data/save.xml";
+	public static String savefile_encoding = "UTF-8";
 
 }

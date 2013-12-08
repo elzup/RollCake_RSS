@@ -1,3 +1,5 @@
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import lib.Feed;
@@ -5,8 +7,10 @@ import lib.Feed;
 import org.w3c.dom.Node;
 
 public class RCFeed extends Feed {
+	private int groupId;
 	private String name;
 	private boolean isSimple = false;
+//	private String url;
 
 	private ArrayList<RCItem> itemList;
 
@@ -16,12 +20,28 @@ public class RCFeed extends Feed {
 		this.itemList = new ArrayList<RCItem>();
 	}
 
-	public RCFeed(String url) {
-		// TODO Constracter
-		super();
-		this.setURL(url);
+	public boolean setURL(String url) {
+		try {
+			this.url = new URL(url);
+		} catch (MalformedURLException e) {
+			return false;
+		}
+		return true;
 	}
 
+	public URL getUrl() {
+		return this.url;
+	}
+	public void setGroupId(int id) {
+		this.groupId = id;
+	}
+	public int getGroupId() {
+		return this.groupId;
+	}
+
+	public boolean isSimple() {
+		return this.isSimple;
+	}
 	public void setSimple (boolean b) {
 		this.isSimple = b;
 	}

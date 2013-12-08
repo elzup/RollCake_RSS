@@ -15,17 +15,17 @@ import javax.swing.SwingConstants;
 public class Table {
 
 	public HashMap<String, Tile> tileMap;
-	public JPanel pane;
+	public JPanel contentPane;
 	public ArrayList<RCFeed> feedList;
 
 	public Table(JPanel pane, ArrayList<RCFeed> feedLsit) {
 		// TODO Constracter
-		this.pane = pane;
+		this.contentPane= pane;
 		this.feedList = feedLsit;
-		this.tileMap = new HashMap<String, Tile>();
 	}
 
 	public JPanel getDatePane(int diff) {
+		this.tileMap = new HashMap<String, Tile>();
 		if (feedList.size() == 0) {
 			System.out.println("feedLsitが空です");
 			return null;
@@ -68,7 +68,9 @@ public class Table {
 			JButton b = (JButton) pane.getComponent(n);
 			b.setText(String.valueOf(tile.size()));
 			b.setEnabled(true);
-			b.addActionListener(new ActionOpenDetails(this.pane, tile));
+			JPanel uPane = (JPanel)((JPanel)contentPane.getComponent(0)).getComponent(0);
+
+			b.addActionListener(new ActionOpenDetails(uPane, tile));
 		}
 		return pane;
 	}

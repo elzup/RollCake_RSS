@@ -17,6 +17,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class RollCakeRSS extends JFrame {
 	RCManager fm;
 	JPanel detailPane, tablePane, rightPane;
+	int group;
 
 	public static void main(String... args) {
 		System.out.println("main start");
@@ -40,10 +41,11 @@ public class RollCakeRSS extends JFrame {
 		this.fm = new RCManager();
 
 		//------------------- debug initialize -------------------//
-		for (String[] feed: Debug.DEBUG_URLS) {
+		for (String[] feed : Debug.DEBUG_URLS) {
 			this.fm.addFeed(feed[0], feed[1], null);
 		}
 		//------------------- debug end -------------------//
+		this.group = 0;
 
 		this.updateTable();
 		//		this.fm._consoleOutput();
@@ -92,35 +94,37 @@ public class RollCakeRSS extends JFrame {
 		JPanel leftPane = new JPanel(new BorderLayout());
 		leftPane.setPreferredSize(new Dimension(RCConfig.tablepane_size_width, RCConfig.window_size_height));
 
+		pane.add(leftPane, BorderLayout.WEST);
+
 		detailPane = new JPanel(new BorderLayout());
 		detailPane.setPreferredSize(RCConfig.underpane_size_dimension);
 		detailPane.setBackground(RCConfig.underpane_background_color);
-		fm.setUnderPane(detailPane);
+		fm.setContentPane(pane);
 
-		tablePane = fm.getTablePane();
-		tablePane.setPreferredSize(RCConfig.tablepane_size_dimension);
-		tablePane.setBackground(RCConfig.tablepane_background_color);
 
-		leftPane.add(tablePane, BorderLayout.NORTH);
 		leftPane.add(detailPane, BorderLayout.SOUTH);
 
+		tablePane = fm.setTablePane();
+//		leftPane.add(tablePane, BorderLayout.NORTH);
+
+
 		rightPane = getRightPane();
+		pane.add(rightPane, BorderLayout.EAST);
 		rightPane.setPreferredSize(RCConfig.rightpane_size_dimension);
 		rightPane.setBackground(RCConfig.rightpane_background_color);
 
-		pane.add(leftPane, BorderLayout.WEST);
-		pane.add(rightPane, BorderLayout.EAST);
+//		(JPanel)((JPanel)contentPane.getComponent(0)).getComponent(1);
 	}
 
 	public JPanel getRightPane() {
 		JPanel pane = new JPanel(new GridLayout(3, 1));
-		JButton button = new JButton(new AddFeedDialog("RSSを登録する"));
+		JButton button = new JButton(new AddFeedAction("RSSを登録する"));
 		pane.add(button);
 		return pane;
 	}
 
-	class AddFeedDialog extends AbstractAction {
-		AddFeedDialog(String text) {
+	class AddFeedAction extends AbstractAction {
+		AddFeedAction(String text) {
 			super(text);
 		}
 
@@ -131,16 +135,31 @@ public class RollCakeRSS extends JFrame {
 			System.out.println(ans);
 			if (ans == null)
 				return;
-//			fm.addFeed(ans, null);
 
-			tablePane.removeAll();
-			tablePane = fm.getTablePane();
-			tablePane.setPreferredSize(RCConfig.tablepane_size_dimension);
-			tablePane.setBackground(RCConfig.tablepane_background_color);
-			tablePane.setVisible(false);
-			tablePane.setVisible(true);
+			RCFeed feed = fm.createFeed(ans, null);
+			if (feed == null) {
+				String[] msg2 =  {
+						"Feedを取得できませんでした",
+						"URLが間違っていないか確認して下さい",
+						"["+ ans + "]",
+				};
+				JOptionPane.showMessageDialog(rightPane, msg2, "失敗",
+						JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+
+			feed.run();
+			feed.setGroupId(group);
+			fm.addFeed(feed);
+			fm.setTablePane();
+
+			RCFiler.outputFeedList(fm.getFeedList());
 
 			System.out.println(ans);
 		}
+	}
+
+	class AddFeedDialog extends JOptionPane {
+
 	}
 }
