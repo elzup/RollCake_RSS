@@ -3,11 +3,16 @@
   <feed>
     <name>Wiki:minecraft</name>
     <groupId>0</groupId>
-    <url>/minecraft/rss</url>
+    <url>http://www26.atwiki.jp/minecraft/rss</url>
   </feed>
   <feed>
     <name>#Minecraft技術部</name>
     <groupId>0</groupId>
-    <url>/tag/minecraft技術部</url>
+    <url>http://www.nicovideo.jp/tag/minecraft技術部?sort=f&amp;rss=2.0</url>
+  </feed>
+  <feed>
+    <name>elzzup's Activity</name>
+    <groupId>0</groupId>
+    <url>https://github.com/elzzup.atom</url>
   </feed>
 </feedList>
