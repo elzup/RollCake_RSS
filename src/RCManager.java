@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import lib.Item;
 
@@ -133,9 +136,19 @@ public class RCManager {
 	@SuppressWarnings("deprecation")
 	private JPanel[] getRecentlyTable() {
 		JPanel[] pane = new JPanel[RCConfig.num_day_recentry];
-
 		for (int i = 0; i < RCConfig.num_day_recentry; i++)
 			pane[i] = this.table.getDatePane(i);
 		return pane;
+	}
+
+	public JScrollPane getFeedListPane() {
+		DefaultListModel model = new DefaultListModel();
+		JList list = new JList(model);
+		System.out.println("+" + this.feedList.size());
+		for (RCFeed feed: this.feedList) {
+			System.out.println("+" + feed.getName());
+			model.addElement(feed.getName());
+		}
+		return new JScrollPane(list);
 	}
 }

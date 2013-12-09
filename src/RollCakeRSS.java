@@ -40,11 +40,11 @@ public class RollCakeRSS extends JFrame {
 		//		Container cp = this.getContentPane();
 		this.fm = new RCManager();
 
-//		RCFiler.loadFeedList(fm);
+		RCFiler.loadFeedList(fm);
 		//------------------- debug initialize -------------------//
-		for (String[] feed : Debug.DEBUG_URLS) {
-			this.fm.addFeed(feed[0], feed[1], null);
-		}
+//		for (String[] feed : Debug.DEBUG_URLS) {
+//			this.fm.addFeed(feed[0], feed[1], null);
+//		}
 		//------------------- debug end -------------------//
 		this.group = 0;
 
@@ -120,7 +120,9 @@ public class RollCakeRSS extends JFrame {
 	public JPanel getRightPane() {
 		JPanel pane = new JPanel(new GridLayout(3, 1));
 		JButton button = new JButton(new AddFeedAction("RSSを登録する"));
+//		button.setPreferredSize();
 		pane.add(button);
+		pane.add(fm.getFeedListPane());
 		return pane;
 	}
 
@@ -148,9 +150,7 @@ public class RollCakeRSS extends JFrame {
 						JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-
 			feed.run();
-
 
 			Object[] msg2 = {"登録するRSSの名前をつけて下さい", "[" + ans + "]"};
 			String ans_name = JOptionPane.showInputDialog(rightPane, msg, feed.getTempName());
@@ -163,7 +163,6 @@ public class RollCakeRSS extends JFrame {
 			fm.setTablePane();
 
 			RCFiler.saveFeedList(fm.getFeedList());
-
 			System.out.println(ans);
 		}
 	}

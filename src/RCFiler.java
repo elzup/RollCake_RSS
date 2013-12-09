@@ -39,9 +39,11 @@ public class RCFiler {
 		}
 		Node rootNode = document.getChildNodes().item(0);
 		NodeList feedNodes = rootNode.getChildNodes();
+		System.out.println("-" + feedNodes.getLength());
 		for (int i = 0; i < feedNodes.getLength(); i++) {
 			NodeList feed = feedNodes.item(i).getChildNodes();
 			String name = getElementValue(feed, "name");
+			System.out.println("-" + name);
 			if (name == null)
 				continue;
 			int groupId = Integer.valueOf(getElementValue(feed, "groupId"));
