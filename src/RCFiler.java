@@ -60,6 +60,9 @@ public class RCFiler {
 			System.out.println("name: " + name + ":" + url);
 			fm.addFeed(name, url, null);
 		}
+		fm.runAll();
+
+
 
 		for (int i = 0; i < groupNodes.getLength(); i++) {
 			NodeList group = groupNodes.item(i).getChildNodes();

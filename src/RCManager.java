@@ -3,8 +3,13 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -36,6 +41,7 @@ public class RCManager {
 	public ArrayList<RCFeed> getFeedList() {
 		return this.feedList;
 	}
+
 	public ArrayList<RCGroup> getGroupList() {
 		return this.groupList;
 	}
@@ -47,12 +53,15 @@ public class RCManager {
 	public void addFeed(RCFeed feed) {
 		this.feedList.add(feed);
 	}
+
 	public void addFeed(String name, String url, boolean compact, @Nullable String encode) {
 		this.addFeed(this.createFeed(name, url, encode));
 	}
+
 	public void addFeed(String name, String url, @Nullable String encode) {
 		this.addFeed(name, url, false, encode);
 	}
+
 	public void addFeed(String url, @Nullable String encode) {
 		this.addFeed(null, url, false, encode);
 	}
@@ -65,9 +74,10 @@ public class RCManager {
 		feed.setName(name);
 		if (encode != null) // 引数で指示があったら文字コードを指定
 			feed.setEncoding(encode);
-		feed.run();
+		//		feed.run();
 		return feed;
 	}
+
 	public RCFeed createFeed(String url, @Nullable String encode) {
 		return this.createFeed(null, url, encode);
 	}
@@ -77,17 +87,17 @@ public class RCManager {
 		this.table = new Table(contentPane, this.feedList);
 	}
 
-//	public JPanel getPanel() {
-//		JPanel p = new JPanel();
-//		for (RCFeed feed : this.feedList) {
-//			for (RCItem item : feed.getRCItemList()) {
-//				Date d = item.getDate();
-//				JLabel label = new JLabel(item.getTitle());
-//				//				p.add(label);
-//			}
-//		}
-//		return p;
-//	}
+	//	public JPanel getPanel() {
+	//		JPanel p = new JPanel();
+	//		for (RCFeed feed : this.feedList) {
+	//			for (RCItem item : feed.getRCItemList()) {
+	//				Date d = item.getDate();
+	//				JLabel label = new JLabel(item.getTitle());
+	//				//				p.add(label);
+	//			}
+	//		}
+	//		return p;
+	//	}
 
 	public void setupTile() {
 		if (this.feedList.size() == 0) {
@@ -104,10 +114,53 @@ public class RCManager {
 		}
 	}
 
+	public void runAll() {
+
+		long start = System.currentTimeMillis();
+		ExecutorService threadPool = Executors.newFixedThreadPool(8);
+		Collection<Callable<Void>> processes = new LinkedList<Callable<Void>>();
+		for (RCFeed feed : this.feedList) {
+			final RCFeed feed0 = feed;
+			processes.add(new Callable<Void>() {
+				@Override public Void call() {
+					feed0.run();
+					return null;
+				}
+			});
+		}
+
+		try {
+			threadPool.invokeAll(processes);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		} finally {
+			threadPool.shutdown();
+		}
+
+		System.out.println("RunProcesseTime: " + (System.currentTimeMillis() - start));
+	}
+
+//	@SuppressWarnings("hiding")
+//	public class RunCallable<Void> implements Callable<Void> {
+//		RCFeed feed;
+//		public RunCallable(RCFeed feed) {
+//			this.feed = feed;
+//		}
+//		@Override
+//		public Void call() throws Exception {
+//			// TODO method
+//			this.runCall();
+//			return null;
+//		}
+//		public void runCall() {
+//			feed.run();
+//			System.out.println("run now");
+//		}
+//	}
+
 	public void update(RCFeed feed) {
 		this.table.tileUpdate(feed, RCConfig.num_day_recentry);
 	}
-
 
 	public void _consoleOutput() {
 		for (RCFeed feed : this.feedList) {
@@ -143,7 +196,7 @@ public class RCManager {
 		int ndr = RCConfig.num_day_recentry;
 		JPanel[] pane = new JPanel[ndr];
 		for (int i = 0; i < ndr; i++) {
-			JPanel wrapPane = new JPanel ();
+			JPanel wrapPane = new JPanel();
 			wrapPane.setLayout(new BoxLayout(wrapPane, BoxLayout.Y_AXIS));
 			wrapPane.add(new JTextField(RCConfig.DateToString(new Date(new Date().getTime() - (i * 24 * 60 * 60)))));
 			JPanel inPane = this.table.getDatePane(i);
@@ -158,11 +211,12 @@ public class RCManager {
 	public void setFeedListPaneSetAt(JPanel pane) {
 		DefaultListModel<String> model = new DefaultListModel<String>();
 		JList<String> list = new JList<String>(model);
-		for (RCFeed feed: this.feedList)
+		for (RCFeed feed : this.feedList)
 			model.addElement(feed.getName());
 		pane.add(new JScrollPane(list));
 	}
-	public void updateFeedList () {
+
+	public void updateFeedList() {
 
 	}
 
@@ -172,4 +226,3 @@ public class RCManager {
 		}
 	}
 }
-

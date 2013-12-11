@@ -2,24 +2,19 @@
 <rollCake>
   <feedList>
     <feed>
-      <name>#Minecraft謚&#128;陦馴Κ</name>
+      <name>#Minecraft技術部</name>
       <groupId>0</groupId>
-      <url>http://www.nicovideo.jp/tag/minecraft謚&#128;陦馴Κ?sort=f&amp;rss=2.0</url>
+      <url>http://www.nicovideo.jp/tag/minecraft技術部?sort=f&amp;rss=2.0</url>
     </feed>
     <feed>
-      <name>#Minecraft霎ｲ蟄ｦ驛ｨ</name>
+      <name>#Minecraft農業部</name>
       <groupId>0</groupId>
-      <url>http://www.nicovideo.jp/tag/Minecraft霎ｲ蟄ｦ驛ｨ?sort=f&amp;rss=2.0</url>
+      <url>http://www.nicovideo.jp/tag/Minecraft農業部?sort=f&amp;rss=2.0</url>
     </feed>
     <feed>
-      <name>#Minecraft蟒ｺ遽蛾Κ</name>
+      <name>#Minecraft_MOD紹介部</name>
       <groupId>0</groupId>
-      <url>http://www.nicovideo.jp/tag/Minecraft蟒ｺ遽蛾Κ?sort=f&amp;rss=2.0</url>
-    </feed>
-    <feed>
-      <name>#Mod邏ｹ莉矩Κ</name>
-      <groupId>0</groupId>
-      <url>http://www.nicovideo.jp/tag/Minecraft_MOD邏ｹ莉矩Κ?sort=f&amp;rss=2.0</url>
+      <url>http://www.nicovideo.jp/tag/Minecraft_MOD紹介部?sort=f&amp;rss=2.0</url>
     </feed>
     <feed>
       <name>GIGAZINE</name>
@@ -30,6 +25,11 @@
       <name>Amazon.co.jp: DVD &gt; 外国映画のベストセラー</name>
       <groupId>0</groupId>
       <url>http://www.amazon.co.jp/gp/rss/bestsellers/dvd/562016/ref=zg_bs_562016_rsslink</url>
+    </feed>
+    <feed>
+      <name>elzzup's Activity</name>
+      <groupId>0</groupId>
+      <url>https://github.com/elzzup.atom</url>
     </feed>
   </feedList>
   <groupList>
