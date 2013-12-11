@@ -47,13 +47,10 @@ public class RollCakeRSS extends JFrame {
 //		}
 		//------------------- debug end -------------------//
 		this.group = 0;
-
 		this.updateTable();
-		//		this.fm._consoleOutput();
 	}
 
 	private void setupWindowConfig() {
-
 		try {
 			UIManager.setLookAndFeel(UIManager.getInstalledLookAndFeels()[RCConfig.window_id_lookandfeel]
 					.getClassName());
@@ -102,19 +99,14 @@ public class RollCakeRSS extends JFrame {
 		detailPane.setBackground(RCConfig.underpane_background_color);
 		fm.setContentPane(pane);
 
-
 		leftPane.add(detailPane, BorderLayout.SOUTH);
 
 		tablePane = fm.setTablePane();
-//		leftPane.add(tablePane, BorderLayout.NORTH);
-
 
 		rightPane = getRightPane();
 		pane.add(rightPane, BorderLayout.EAST);
 		rightPane.setPreferredSize(RCConfig.rightpane_size_dimension);
 		rightPane.setBackground(RCConfig.rightpane_background_color);
-
-//		(JPanel)((JPanel)contentPane.getComponent(0)).getComponent(1);
 	}
 
 	public JPanel getRightPane() {
@@ -122,7 +114,7 @@ public class RollCakeRSS extends JFrame {
 		JButton button = new JButton(new AddFeedAction("RSSを登録する"));
 //		button.setPreferredSize();
 		pane.add(button);
-		pane.add(fm.getFeedListPane());
+		fm.setFeedListPaneSetAt(pane);
 		return pane;
 	}
 
@@ -162,7 +154,7 @@ public class RollCakeRSS extends JFrame {
 			fm.addFeed(feed);
 			fm.setTablePane();
 
-			RCFiler.saveFeedList(fm.getFeedList());
+			RCFiler.saveFeedList(fm);
 			System.out.println(ans);
 		}
 	}

@@ -21,9 +21,12 @@ import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
 
 public class RCFiler {
 
-	public static void saveFeedList(ArrayList<RCFeed> feedList) {
+	public static void saveFeedList(RCManager fm) {
+		ArrayList<RCFeed> feedList = fm.getFeedList();
+		ArrayList<RCGroup> groupList = fm.getGroupList();
+
 		try {
-			writeDocument(convertToDocumnet(feedList));
+			writeDocument(convertToDocumnet(feedList, groupList));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -37,9 +40,15 @@ public class RCFiler {
 			// TODO catch block
 			e.printStackTrace();
 		}
-		Node rootNode = document.getChildNodes().item(0);
-		NodeList feedNodes = rootNode.getChildNodes();
-		System.out.println("-" + feedNodes.getLength());
+
+		for (int i = 0; i < 5; i++)
+			System.out.println(":" + document.getChildNodes().item(0).getChildNodes().item(i).getNodeName());
+		NodeList feedNodes = (NodeList) document.getChildNodes().item(0).getChildNodes().item(1).getChildNodes();
+		NodeList groupNodes = (NodeList) document.getChildNodes().item(0).getChildNodes().item(3).getChildNodes();
+
+		System.out.println(feedNodes.getLength());
+		System.out.println(groupNodes.getLength());
+
 		for (int i = 0; i < feedNodes.getLength(); i++) {
 			NodeList feed = feedNodes.item(i).getChildNodes();
 			String name = getElementValue(feed, "name");
@@ -50,6 +59,17 @@ public class RCFiler {
 			String url = getElementValue(feed, "url");
 			System.out.println("name: " + name + ":" + url);
 			fm.addFeed(name, url, null);
+		}
+
+		for (int i = 0; i < groupNodes.getLength(); i++) {
+			NodeList group = groupNodes.item(i).getChildNodes();
+			String name = getElementValue(group, "name");
+			System.out.println("-" + name);
+			if (name == null)
+				continue;
+			int groupId = Integer.valueOf(getElementValue(group, "id"));
+			System.out.println("name: " + name + ":" + groupId);
+			fm.addGroup(groupId, name);
 		}
 	}
 
@@ -63,12 +83,18 @@ public class RCFiler {
 		return null;
 	}
 
-	private static Document convertToDocumnet(ArrayList<RCFeed> feedList) throws Exception {
+	@SuppressWarnings("unused")
+	private static Document convertToDocumnet(@NotNull ArrayList<RCFeed> feedList, @NotNull ArrayList<RCGroup> groupList)
+			throws Exception {
 		DOMImplementation domImpl = DocumentBuilderFactory.newInstance().newDocumentBuilder().getDOMImplementation();
-		Document document = domImpl.createDocument("", "feedList", null);
-
+		Document document = domImpl.createDocument("", "rollCake", null);
 		Element rootElement = document.getDocumentElement();
+		Element feedRootElement = document.createElement("feedList");
+		Element groupRootElement = document.createElement("groupList");
+		rootElement.appendChild(feedRootElement);
+		rootElement.appendChild(groupRootElement);
 
+		//------------------- feedList node management -------------------//
 		for (RCFeed feed : feedList) {
 			Element feedElement = document.createElement("feed");
 			//			feedElement.setAttribute("name");
@@ -79,25 +105,28 @@ public class RCFiler {
 			feedElement.appendChild(createElementWithName(document, "name", feed.getName()));
 			feedElement.appendChild(createElementWithName(document, "groupId", String.valueOf(feed.getGroupId())));
 			feedElement.appendChild(createElementWithName(document, "url", feed.getUrl().toString()));
-			//Element confElement = document.createElement("config");
-			//confElement.appendChild(createElementWithName(document, "isSimple", (feed.isSimple() ? "1" : "0")));
-			//feedElement.appendChild(confElement);
 			//RC~~クラス側で生成
-			rootElement.appendChild(feedElement);
+			feedRootElement.appendChild(feedElement);
 		}
 
-		// ルート要素を追加する        
-		//		Element rootElement = document.createElement("items");
-		//		rootElement.appendChild(createElementWithName(document, "tagName", "データ"));
-		//		document.appendChild(rootElement);
-
+		//------------------- groupList node management -------------------//
+		for (RCGroup group : groupList) {
+			Element groupElement = document.createElement("group");
+			//			feedElement.setAttribute("name");
+			System.out.println(group.getName() + "::://///>>>>");
+			if (group.getName() == null)
+				continue;
+			groupElement.appendChild(createElementWithName(document, "name", group.getName()));
+			groupElement.appendChild(createElementWithName(document, "id", String.valueOf(group.getId())));
+			//RC~~クラス側で生成
+			groupRootElement.appendChild(groupElement);
+		}
 		return document;
 	}
 
 	private static Element createElementWithName(Document document, String tagName, String data) {
 		Element e = document.createElement(tagName);
 		e.appendChild(document.createTextNode(data));
-		//		e.setAttribute("id", id);
 		return e;
 	}
 
@@ -113,16 +142,12 @@ public class RCFiler {
 		StreamResult result = new StreamResult(fos);
 		TransformerFactory tff = TransformerFactoryImpl.newInstance();
 		tff.setAttribute(TransformerFactoryImpl.INDENT_NUMBER, 2);
-
 		Transformer tf = tff.newInstance().newTransformer();
 		tf.setOutputProperty(OutputKeys.ENCODING, RCConfig.savefile_encoding);
 		tf.setOutputProperty(OutputKeys.INDENT, "yes");
 		tf.setOutputProperty(OutputPropertiesFactory.S_KEY_INDENT_AMOUNT, "2");
-
 		DOMSource source = new DOMSource(document);
-
 		tf.transform(source, result);
 		fos.close();
 	}
-
 }

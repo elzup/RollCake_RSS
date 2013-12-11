@@ -20,7 +20,7 @@ public class Table {
 
 	public Table(JPanel pane, ArrayList<RCFeed> feedLsit) {
 		// TODO Constracter
-		this.contentPane= pane;
+		this.contentPane = pane;
 		this.feedList = feedLsit;
 	}
 
@@ -32,23 +32,31 @@ public class Table {
 		}
 
 		for (RCFeed feed : this.feedList) {
-			System.out.println(feed.getName());
-			for (RCItem item : feed.getRCItemList()) {
-				int d = item.getDiffTodayNum();
-				if (d != diff)
-					continue;
-				String key = item.getKey();
-				Tile tile = new Tile();
-				if (tileMap.containsKey(key)) {
-					tile = tileMap.get(key);
-					tile.addItem(item);
-				}
-				else
-					this.tileMap.put(key, new Tile(item));
-			}
+			this.tileUpdate(feed, diff);
 		}
+		return this.getTilePain();
+	}
 
+	public void tileUpdate(RCFeed feed, int diff) {
+		System.out.println(feed.getName());
+		for (RCItem item : feed.getRCItemList()) {
+			int d = item.getDiffTodayNum();
+			if (d != diff)
+				continue;
+			String key = item.getKey();
+			Tile tile = new Tile();
+			if (tileMap.containsKey(key)) {
+				tile = tileMap.get(key);
+				tile.addItem(item);
+			}
+			else
+				this.tileMap.put(key, new Tile(item));
+		}
+	}
+
+	public JPanel getTilePain() {
 		JPanel pane = new JPanel(new GridLayout(24, RCConfig.num_split_column_hour));
+		pane.setPreferredSize(RCConfig.tablepane_size_dimension);
 		for (int j = 0; j < 24; j++) {
 			JLabel label = new JLabel(String.valueOf(j));
 			label.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -68,8 +76,7 @@ public class Table {
 			JButton b = (JButton) pane.getComponent(n);
 			b.setText(String.valueOf(tile.size()));
 			b.setEnabled(true);
-			JPanel uPane = (JPanel)((JPanel)contentPane.getComponent(0)).getComponent(0);
-
+			JPanel uPane = (JPanel) ((JPanel) contentPane.getComponent(0)).getComponent(0);
 			b.addActionListener(new ActionOpenDetails(uPane, tile));
 		}
 		return pane;
@@ -78,10 +85,8 @@ public class Table {
 	public void put(String key, Tile value) {
 		this.tileMap.put(key, value);
 	}
-
 	public void addAll(ArrayList<RCItem> itemList) {
 	}
-
 	public void removeAll(ArrayList<RCItem> itemList) {
 	}
 }

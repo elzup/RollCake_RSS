@@ -1,14 +1,17 @@
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import lib.Item;
 
@@ -18,6 +21,7 @@ public class RCManager {
 
 	private JPanel contentPane;
 	private ArrayList<RCFeed> feedList;
+	private ArrayList<RCGroup> groupList;
 	private Table table;
 
 	private int mode;
@@ -26,24 +30,29 @@ public class RCManager {
 
 	public RCManager() {
 		this.feedList = new ArrayList<RCFeed>();
+		this.groupList = new ArrayList<RCGroup>();
 	}
 
 	public ArrayList<RCFeed> getFeedList() {
 		return this.feedList;
 	}
+	public ArrayList<RCGroup> getGroupList() {
+		return this.groupList;
+	}
+
+	public void addGroup(int id, String name) {
+		this.groupList.add(new RCGroup(id, name));
+	}
 
 	public void addFeed(RCFeed feed) {
 		this.feedList.add(feed);
 	}
-
 	public void addFeed(String name, String url, boolean compact, @Nullable String encode) {
 		this.addFeed(this.createFeed(name, url, encode));
 	}
-
 	public void addFeed(String name, String url, @Nullable String encode) {
 		this.addFeed(name, url, false, encode);
 	}
-
 	public void addFeed(String url, @Nullable String encode) {
 		this.addFeed(null, url, false, encode);
 	}
@@ -59,7 +68,6 @@ public class RCManager {
 		feed.run();
 		return feed;
 	}
-
 	public RCFeed createFeed(String url, @Nullable String encode) {
 		return this.createFeed(null, url, encode);
 	}
@@ -69,18 +77,17 @@ public class RCManager {
 		this.table = new Table(contentPane, this.feedList);
 	}
 
-	@SuppressWarnings("deprecation")
-	public JPanel getPanel() {
-		JPanel p = new JPanel();
-		for (RCFeed feed : this.feedList) {
-			for (RCItem item : feed.getRCItemList()) {
-				Date d = item.getDate();
-				JLabel label = new JLabel(item.getTitle());
-				//				p.add(label);
-			}
-		}
-		return p;
-	}
+//	public JPanel getPanel() {
+//		JPanel p = new JPanel();
+//		for (RCFeed feed : this.feedList) {
+//			for (RCItem item : feed.getRCItemList()) {
+//				Date d = item.getDate();
+//				JLabel label = new JLabel(item.getTitle());
+//				//				p.add(label);
+//			}
+//		}
+//		return p;
+//	}
 
 	public void setupTile() {
 		if (this.feedList.size() == 0) {
@@ -97,10 +104,15 @@ public class RCManager {
 		}
 	}
 
+	public void update(RCFeed feed) {
+		this.table.tileUpdate(feed, RCConfig.num_day_recentry);
+	}
+
+
 	public void _consoleOutput() {
 		for (RCFeed feed : this.feedList) {
 			ArrayList<Item> itemList = feed.getItemList();
-			// 表示
+
 			Iterator<Item> iterator = itemList.iterator();
 			while (iterator.hasNext()) {
 				System.out.print(iterator.next().toString());
@@ -116,39 +128,48 @@ public class RCManager {
 
 		for (int i = 0; i < colPanes.length; i++)
 			table.add(colPanes[i]);
-		//		System.out.println(contentPane.getComponents().length + "<<<");
 		JPanel leftPane = (JPanel) contentPane.getComponent(0);
 
 		if (leftPane.getComponents().length > 1)
 			leftPane.remove(leftPane.getComponent(1));
 		((JPanel) contentPane.getComponent(0)).add(table, BorderLayout.NORTH);
-		table.setPreferredSize(RCConfig.tablepane_size_dimension);
 		table.setBackground(RCConfig.tablepane_background_color);
 		table.setVisible(false);
 		table.setVisible(true);
 		return table;
 	}
 
-	public void update() {
-
-	}
-
-	@SuppressWarnings("deprecation")
 	private JPanel[] getRecentlyTable() {
-		JPanel[] pane = new JPanel[RCConfig.num_day_recentry];
-		for (int i = 0; i < RCConfig.num_day_recentry; i++)
-			pane[i] = this.table.getDatePane(i);
+		int ndr = RCConfig.num_day_recentry;
+		JPanel[] pane = new JPanel[ndr];
+		for (int i = 0; i < ndr; i++) {
+			JPanel wrapPane = new JPanel ();
+			wrapPane.setLayout(new BoxLayout(wrapPane, BoxLayout.Y_AXIS));
+			wrapPane.add(new JTextField(RCConfig.DateToString(new Date(new Date().getTime() - (i * 24 * 60 * 60)))));
+			JPanel inPane = this.table.getDatePane(i);
+			inPane.setPreferredSize(RCConfig.tablepane_size_dimension);
+			wrapPane.add(inPane);
+			pane[ndr - i - 1] = wrapPane;
+		}
 		return pane;
 	}
 
-	public JScrollPane getFeedListPane() {
-		DefaultListModel model = new DefaultListModel();
-		JList list = new JList(model);
-		System.out.println("+" + this.feedList.size());
-		for (RCFeed feed: this.feedList) {
-			System.out.println("+" + feed.getName());
+	//------------------- RightPane -------------------//
+	public void setFeedListPaneSetAt(JPanel pane) {
+		DefaultListModel<String> model = new DefaultListModel<String>();
+		JList<String> list = new JList<String>(model);
+		for (RCFeed feed: this.feedList)
 			model.addElement(feed.getName());
+		pane.add(new JScrollPane(list));
+	}
+	public void updateFeedList () {
+
+	}
+
+	public class ShowFeedDetailActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
 		}
-		return new JScrollPane(list);
 	}
 }
+

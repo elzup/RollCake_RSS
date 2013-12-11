@@ -71,6 +71,13 @@ public class RCConfig {
 	public static int label_table_hour_size_width = 14;
 	public static Dimension label_table_hour = new Dimension(label_table_hour_size_width, cell_size_height);
 
+
+	//------------------- text date format -------------------//
+	public static String DateToString (java.util.Date date) {
+		return date.toString();
+	}
+
+
 	/* --------------------------------------------------------- *
 	 *     main value setting
 	 * --------------------------------------------------------- */

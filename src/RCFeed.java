@@ -21,8 +21,11 @@ import org.xml.sax.SAXException;
 public class RCFeed extends Feed {
 	private int groupId;
 	private String name;
-	private boolean isSimple = false;
+
 	private String tempName;
+
+	private boolean isSimple = false;
+	private boolean isRun;
 //	private String url;
 
 	private ArrayList<RCItem> itemList;
@@ -31,6 +34,7 @@ public class RCFeed extends Feed {
 		// TODO Constracter
 		super();
 		this.itemList = new ArrayList<RCItem>();
+		this.isRun = false;
 	}
 
 	public boolean setURL(String url) {
@@ -78,23 +82,12 @@ public class RCFeed extends Feed {
 		return this.tempName;
 	}
 
-//	public ArrayList<RCItem> getRecentryDate(int diff) {
-//		for (RCItem item: this.itemList) {
-//			int d = item.getRecentryNum();
-//			if (d == -1)
-//				continue;
-//			System.out.printf("%s\n%s\n%s\n%d\n\n", item.getTitle(), item.getLink(), item.getDate(), d);
-//			int h = item.getDate().getHours();
-//			int m = (item.getDate().getMinutes()) / (60 / RCConfig.num_split_column_hour);
-//			System.out.printf("%d : %d : %d\n", d, h, m);
-//			but.setEnabled(true);
-//			String key = d + ":" + h + ":" + m;
-//		}
-//	}
-
 	/** URLで指示されたフィードを取得し DOM tree を構築、itemList を生成 */
 	@Override
 	public void run() {
+		if (this.isRun) return;
+		this.isRun = true;
+		this.itemList = new ArrayList<RCItem>();
 		BufferedReader in = null;
 		try {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -133,6 +126,11 @@ public class RCFeed extends Feed {
 		} catch (DOMException e) {
 			System.err.println("DOMエラー:" + e);
 		}
+	}
+
+	public void Rerun() {
+		this.isRun = false;
+		this.run();
 	}
 
 	@Override protected void findItems(Node node) {
