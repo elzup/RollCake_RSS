@@ -109,6 +109,8 @@ public class RCFiler {
 			feedRootElement.appendChild(feedElement);
 		}
 
+
+
 		//------------------- groupList node management -------------------//
 		for (RCGroup group : groupList) {
 			Element groupElement = document.createElement("group");
