@@ -115,7 +115,6 @@ public class RCManager {
 	}
 
 	public void runAll() {
-
 		long start = System.currentTimeMillis();
 		ExecutorService threadPool = Executors.newFixedThreadPool(8);
 		Collection<Callable<Void>> processes = new LinkedList<Callable<Void>>();
@@ -128,7 +127,6 @@ public class RCManager {
 				}
 			});
 		}
-
 		try {
 			threadPool.invokeAll(processes);
 		} catch (InterruptedException e) {
@@ -136,27 +134,15 @@ public class RCManager {
 		} finally {
 			threadPool.shutdown();
 		}
-
 		System.out.println("RunProcesseTime: " + (System.currentTimeMillis() - start));
 	}
-
-//	@SuppressWarnings("hiding")
-//	public class RunCallable<Void> implements Callable<Void> {
-//		RCFeed feed;
-//		public RunCallable(RCFeed feed) {
-//			this.feed = feed;
-//		}
-//		@Override
-//		public Void call() throws Exception {
-//			// TODO method
-//			this.runCall();
-//			return null;
-//		}
-//		public void runCall() {
-//			feed.run();
-//			System.out.println("run now");
-//		}
-//	}
+	@Deprecated
+	public void reRunAll() {
+		for (RCFeed feed :this.feedList) {
+			feed.reSet();
+		}
+		this.runAll();
+	}
 
 	public void update(RCFeed feed) {
 		this.table.tileUpdate(feed, RCConfig.num_day_recentry);

@@ -127,10 +127,12 @@ public class RCFeed extends Feed {
 			System.err.println("DOMエラー:" + e);
 		}
 	}
-
-	public void Rerun() {
-		this.isRun = false;
+	public void reRun() {
+		this.reSet();
 		this.run();
+	}
+	public void reSet() {
+		this.isRun = false;;
 	}
 
 	@Override protected void findItems(Node node) {

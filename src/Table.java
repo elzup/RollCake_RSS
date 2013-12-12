@@ -57,6 +57,7 @@ public class Table {
 	public JPanel getTilePain() {
 		JPanel pane = new JPanel(new GridLayout(24, RCConfig.num_split_column_hour));
 		pane.setPreferredSize(RCConfig.tablepane_size_dimension);
+		pane.setBackground(RCConfig.tablepane_background_color);
 		for (int j = 0; j < 24; j++) {
 			JLabel label = new JLabel(String.valueOf(j));
 			label.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -65,6 +66,9 @@ public class Table {
 			for (int i = 0; i < RCConfig.num_split_column_hour; i++) {
 				JButton b = new JButton();
 				b.setEnabled(false);
+				b.setForeground(RCConfig.button_font_color);
+				b.setBackground(RCConfig.button_back_color);
+				b.setBorder(RCConfig.button_border);
 				pane.add(b);
 			}
 		}

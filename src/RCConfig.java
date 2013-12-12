@@ -4,6 +4,7 @@ import java.awt.Insets;
 
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 
@@ -17,14 +18,14 @@ public class RCConfig {
 	public static String title_frame = "RollCakeRSS";
 	public static int window_size_width = 900;
 	public static int window_size_height = 700;
-	public static int window_id_lookandfeel = 3;
+	public static int window_id_lookandfeel = 0;
 	public static Color window_background_color = Color.white;
 
 	//------------------- tablepane -------------------//
 	public static int tablepane_size_width = 700;
 	public static int tablepane_size_height = 400;
 	public static Dimension tablepane_size_dimension = new Dimension(tablepane_size_width, tablepane_size_height);
-	public static Color tablepane_background_color = new Color(210, 210, 255);
+	public static Color tablepane_background_color = Color.white;
 
 	//------------------- underPanel -------------------//
 	public static int underpane_size_width = tablepane_size_width;
@@ -39,6 +40,8 @@ public class RCConfig {
 	public static Color rightpane_background_color = new Color(200, 240, 240);
 
 	public static String key_delimiter = "-";
+
+
 
 	/* --------------------------------------------------------- *
 	 *     design
@@ -70,6 +73,12 @@ public class RCConfig {
 	//------------------- table hour -------------------//
 	public static int label_table_hour_size_width = 14;
 	public static Dimension label_table_hour = new Dimension(label_table_hour_size_width, cell_size_height);
+
+
+	//------------------- button -------------------//
+	public static Color button_font_color = new Color(0, 100, 0);
+	public static Color button_back_color = new Color(200, 255, 200);
+	public static Border button_border = new LineBorder(Color.white);
 
 
 	//------------------- text date format -------------------//
