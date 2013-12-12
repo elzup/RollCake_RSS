@@ -16,10 +16,10 @@ import org.w3c.dom.Node;
 
 public class RCItem extends Item {
 
-	private int id_recently;
-
+	private int num_recently;
 	public RCItem(Node node) {
 		super(node);
+		this.num_recently = -1;
 		// TODO Constracter
 	}
 
@@ -33,19 +33,22 @@ public class RCItem extends Item {
 	}
 
 	public static long getDiffToday(Date d) {
-		return Calendar.getInstance().getTime().getTime() - d.getTime();
+		Calendar cal = Calendar.getInstance();
+		return cal.getTime().getTime() - d.getTime();
 	}
 
 	public int getDiffTodayNum() {
+		if (this.num_recently != -1) return this.num_recently;
 		long diff = getDiffToday(this.getDate());
-		return (int) (diff / (60 * 60 * 24 * 1000));
+		return this.num_recently = (int) (diff / (60 * 60 * 24 * 1000));
 	}
 
-	public void setIdRecently(int id) {
-		this.id_recently = id;
+	public void setNumRecently(int id) {
+		this.num_recently = id;
 	}
 
 	public String getKey() {
+		@SuppressWarnings("deprecation")
 		int[] vals = {
 				this.getDiffTodayNum(),
 				this.getDate().getHours(),
@@ -73,13 +76,11 @@ public class RCItem extends Item {
 		JTextField title = new JTextField(this.getTitle());
 		title.setPreferredSize(RCConfig.item_info_line);
 		title.setBorder(RCConfig.item_info_title_border);
-
 		pane.add(title);
 
 		JTextField date = new JTextField(this.getDateString());
 		date.setPreferredSize(RCConfig.item_info_line);
 		date.setBorder(RCConfig.item_info_date_border);
-
 		pane.add(date);
 
 		if (this.getDescription() != null) {
@@ -92,7 +93,6 @@ public class RCItem extends Item {
 		JTextPane link = getHTMLJTextPane(String.format("<a href=\"%s\">%s</a>", url, url));
 		link.setPreferredSize(RCConfig.item_info_line);
 		link.setBorder(RCConfig.item_info_url_border);
-
 		pane.add(link);
 		return pane;
 	}

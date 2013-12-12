@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.Callable;
@@ -87,18 +86,6 @@ public class RCManager {
 		this.table = new Table(contentPane, this.feedList);
 	}
 
-	//	public JPanel getPanel() {
-	//		JPanel p = new JPanel();
-	//		for (RCFeed feed : this.feedList) {
-	//			for (RCItem item : feed.getRCItemList()) {
-	//				Date d = item.getDate();
-	//				JLabel label = new JLabel(item.getTitle());
-	//				//				p.add(label);
-	//			}
-	//		}
-	//		return p;
-	//	}
-
 	public void setupTile() {
 		if (this.feedList.size() == 0) {
 			System.out.println("feedListが空です");
@@ -164,11 +151,9 @@ public class RCManager {
 		JPanel table = new JPanel();
 		table.setLayout(new GridLayout(1, RCConfig.num_day_recentry));
 		JPanel[] colPanes = this.getRecentlyTable();
-
 		for (int i = 0; i < colPanes.length; i++)
 			table.add(colPanes[i]);
 		JPanel leftPane = (JPanel) contentPane.getComponent(0);
-
 		if (leftPane.getComponents().length > 1)
 			leftPane.remove(leftPane.getComponent(1));
 		((JPanel) contentPane.getComponent(0)).add(table, BorderLayout.NORTH);
@@ -184,7 +169,10 @@ public class RCManager {
 		for (int i = 0; i < ndr; i++) {
 			JPanel wrapPane = new JPanel();
 			wrapPane.setLayout(new BoxLayout(wrapPane, BoxLayout.Y_AXIS));
-			wrapPane.add(new JTextField(RCConfig.DateToString(new Date(new Date().getTime() - (i * 24 * 60 * 60)))));
+			JTextField tf = new JTextField(RCConfig.getDateStringDiff(i));
+			tf.setBorder(RCConfig.button_border);
+			tf.setForeground(RCConfig.button_font_color);
+			wrapPane.add(tf);
 			JPanel inPane = this.table.getDatePane(i);
 			inPane.setPreferredSize(RCConfig.tablepane_size_dimension);
 			wrapPane.add(inPane);

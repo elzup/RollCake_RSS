@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.util.Calendar;
 
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
@@ -37,9 +38,13 @@ public class RCConfig {
 	public static int rightpane_size_width = window_size_width - tablepane_size_width - 15;
 	public static int rightpane_size_height = tablepane_size_height;
 	public static Dimension rightpane_size_dimension = new Dimension(rightpane_size_width, rightpane_size_height);
-	public static Color rightpane_background_color = new Color(200, 240, 240);
+	public static Color rightpane_background_color = Color.white;
 
 	public static String key_delimiter = "-";
+
+	public static int rightbutton_height = 70;
+	public static Dimension rightbutton_dimension = new Dimension (rightpane_size_width, rightbutton_height);
+	public static Border rightbutton_border = new LineBorder(Color.white);
 
 
 
@@ -80,10 +85,25 @@ public class RCConfig {
 	public static Color button_back_color = new Color(200, 255, 200);
 	public static Border button_border = new LineBorder(Color.white);
 
+	public static Color rightbutton_back_color = new Color(200, 255, 200);
+	public static Color rightbutton_font_color = new Color(0, 100, 0);
+
 
 	//------------------- text date format -------------------//
+	@SuppressWarnings("deprecation")
 	public static String DateToString (java.util.Date date) {
-		return date.toString();
+		return String.format("%2d/%2d", date.getMonth(), date.getDate());
+	}
+	public static String getDateStringDiff (int diff) {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, -diff);
+		return DateToString(cal.getTime());
+	}
+	@SuppressWarnings("deprecation")
+	public static int getDateDif(int diff) {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, -diff);
+		return cal.getTime().getDate();
 	}
 
 

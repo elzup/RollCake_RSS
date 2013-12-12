@@ -25,6 +25,7 @@ public class Table {
 	}
 
 	public JPanel getDatePane(int diff) {
+		assert 0 <= diff && diff < 3;
 		this.tileMap = new HashMap<String, Tile>();
 		if (feedList.size() == 0) {
 			System.out.println("feedLsitが空です");
@@ -38,11 +39,13 @@ public class Table {
 	}
 
 	public void tileUpdate(RCFeed feed, int diff) {
-		System.out.println(feed.getName());
+//		System.out.println(feed.getName());
 		for (RCItem item : feed.getRCItemList()) {
-			int d = item.getDiffTodayNum();
-			if (d != diff)
+			int d = item.getDate().getDate();
+			int num_diff = item.getDiffTodayNum();
+			if (Math.abs(num_diff - diff) > 2 || d != RCConfig.getDateDif(diff))
 				continue;
+//			System.out.println("~~~");
 			String key = item.getKey();
 			Tile tile = new Tile();
 			if (tileMap.containsKey(key)) {
@@ -60,7 +63,7 @@ public class Table {
 		pane.setBackground(RCConfig.tablepane_background_color);
 		for (int j = 0; j < 24; j++) {
 			JLabel label = new JLabel(String.valueOf(j));
-			label.setHorizontalAlignment(SwingConstants.RIGHT);
+			label.setHorizontalAlignment(SwingConstants.CENTER);
 			label.setPreferredSize(RCConfig.label_table_hour);
 			pane.add(label);
 			for (int i = 0; i < RCConfig.num_split_column_hour; i++) {

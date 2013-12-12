@@ -110,11 +110,32 @@ public class RollCakeRSS extends JFrame {
 	}
 
 	public JPanel getRightPane() {
-		JPanel pane = new JPanel(new GridLayout(3, 1));
-		JButton button = new JButton(new AddFeedAction("RSSを登録する"));
-//		button.setPreferredSize();
-		pane.add(button);
-		fm.setFeedListPaneSetAt(pane);
+		JPanel pane = new JPanel(new BorderLayout());
+		pane.setBackground(RCConfig.rightpane_background_color);
+		JPanel manaPane = this.getManagerPane();
+		JPanel listPane = new JPanel();
+		listPane.setBackground(RCConfig.rightpane_background_color);
+		fm.setFeedListPaneSetAt(listPane);
+
+		pane.add(manaPane, BorderLayout.NORTH);
+		pane.add(listPane, BorderLayout.CENTER);
+		return pane;
+	}
+
+	public JPanel getManagerPane() {
+		JPanel pane = new JPanel(new GridLayout(2, 1));
+		JButton addButton = new JButton(new AddFeedAction("Feedを登録する"));
+		JButton updButton = new JButton(new AddFeedAction("Feed編集"));
+//		addButton.setPreferredSize(RCConfig.rightbutton_dimension);
+//		updButton.setPreferredSize(RCConfig.rightbutton_dimension);
+		addButton.setBackground(RCConfig.rightbutton_back_color);
+		updButton.setBackground(RCConfig.rightbutton_back_color);
+		addButton.setForeground(RCConfig.rightbutton_font_color);
+		updButton.setForeground(RCConfig.rightbutton_font_color);
+		addButton.setBorder(RCConfig.rightbutton_border);
+		updButton.setBorder(RCConfig.rightbutton_border);
+		pane.add(addButton);
+		pane.add(updButton);
 		return pane;
 	}
 
