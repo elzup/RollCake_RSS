@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.util.Date;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -19,6 +20,7 @@ public class RollCakeRSS extends JFrame {
 	JPanel detailPane, tablePane, rightPane;
 	int group;
 
+	@SuppressWarnings("deprecation")
 	public static void main(String... args) {
 		System.out.println("main start");
 
@@ -29,7 +31,13 @@ public class RollCakeRSS extends JFrame {
 		cake.setTitle(RCConfig.title_frame);
 		cake.setVisible(true);
 
+
 		System.out.println("main end");
+
+		//------------------- play -------------------//
+
+		System.out.println(new Date(Date.parse("2013/12/18 23:56")).toString());
+
 	}
 
 	RollCakeRSS() {
@@ -143,7 +151,6 @@ public class RollCakeRSS extends JFrame {
 		AddFeedAction(String text) {
 			super(text);
 		}
-
 		public void actionPerformed(ActionEvent e) {
 			Object[] msg = { "登録したいURLを貼り付けて下さい" };
 			String ans = JOptionPane.showInputDialog(rightPane, msg, "RSSの登録",
@@ -151,7 +158,6 @@ public class RollCakeRSS extends JFrame {
 			System.out.println(ans);
 			if (ans == null)
 				return;
-
 			RCFeed feed = fm.createFeed(ans, null);
 			if (feed == null) {
 				String[] msg2 =  {
@@ -164,7 +170,6 @@ public class RollCakeRSS extends JFrame {
 				return;
 			}
 			feed.run();
-
 			Object[] msg2 = {"登録するRSSの名前をつけて下さい", "[" + ans + "]"};
 			String ans_name = JOptionPane.showInputDialog(rightPane, msg, feed.getTempName());
 			System.out.println(ans);
@@ -174,10 +179,27 @@ public class RollCakeRSS extends JFrame {
 			feed.setGroupId(group);
 			fm.addFeed(feed);
 			fm.setTablePane();
-
 			RCFiler.saveFeedList(fm);
 			System.out.println(ans);
 		}
+	}
+
+	class UpdateFeedAction extends AbstractAction {
+		UpdateFeedAction(String text) {
+			super(text);
+		}
+		public void actionPerformed(ActionEvent e) {
+			Object[] msg = {
+					"登録されているFeedを編集します" ,
+
+					};
+			String ans = JOptionPane.showInputDialog(rightPane, msg, "Feed",
+					JOptionPane.INFORMATION_MESSAGE);
+			System.out.println(ans);
+			if (ans == null)
+				return;
+		}
+
 	}
 
 	class AddFeedDialog extends JOptionPane {

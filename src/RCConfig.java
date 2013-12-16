@@ -79,7 +79,6 @@ public class RCConfig {
 	public static int label_table_hour_size_width = 14;
 	public static Dimension label_table_hour = new Dimension(label_table_hour_size_width, cell_size_height);
 
-
 	//------------------- button -------------------//
 	public static Color button_font_color = new Color(0, 100, 0);
 	public static Color button_back_color = new Color(200, 255, 200);
@@ -87,7 +86,6 @@ public class RCConfig {
 
 	public static Color rightbutton_back_color = new Color(200, 255, 200);
 	public static Color rightbutton_font_color = new Color(0, 100, 0);
-
 
 	//------------------- text date format -------------------//
 	@SuppressWarnings("deprecation")

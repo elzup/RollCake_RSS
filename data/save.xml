@@ -31,6 +31,16 @@
       <groupId>0</groupId>
       <url>https://github.com/elzzup.atom</url>
     </feed>
+    <feed>
+      <name>#アニソン‐ニコニコ動画</name>
+      <groupId>0</groupId>
+      <url>http://www.nicovideo.jp/tag/アニソン?sort=f&amp;rss=2.0</url>
+    </feed>
+    <feed>
+      <name>タグ ボカロ‐ニコニコ動画</name>
+      <groupId>0</groupId>
+      <url>http://www.nicovideo.jp/tag/ボカロ?sort=f&amp;rss=2.0</url>
+    </feed>
   </feedList>
   <groupList>
     <group>

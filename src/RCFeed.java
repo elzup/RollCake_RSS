@@ -143,7 +143,7 @@ public class RCFeed extends Feed {
 					RCItem item = new RCItem(current);
 					if (this.isSimple) item.compact();
 					itemList.add(item);
-				} else if ("title".equals(nodeName)) {
+			} else if ("title".equals(nodeName)) {
 					this.tempName = current.getFirstChild().getNodeValue();
 				}
 				else
