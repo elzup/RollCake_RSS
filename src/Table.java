@@ -39,13 +39,16 @@ public class Table {
 	}
 
 	public void tileUpdate(RCFeed feed, int diff) {
-//		System.out.println(feed.getName());
+		//		System.out.println(feed.getName());
 		for (RCItem item : feed.getRCItemList()) {
+			System.out.println(item.getTitle());
+			@SuppressWarnings("deprecation")
 			int d = item.getDate().getDate();
+			System.out.println();
 			int num_diff = item.getDiffTodayNum();
 			if (Math.abs(num_diff - diff) > 2 || d != RCConfig.getDateDif(diff))
 				continue;
-//			System.out.println("~~~");
+			//			System.out.println("~~~");
 			String key = item.getKey();
 			Tile tile = new Tile();
 			if (tileMap.containsKey(key)) {
@@ -58,7 +61,10 @@ public class Table {
 	}
 
 	public JPanel getTilePain() {
-		JPanel pane = new JPanel(new GridLayout(24, RCConfig.num_split_column_hour));
+		GridLayout gl = new GridLayout(24, RCConfig.num_split_column_hour);
+		gl.setHgap(3);
+		gl.setVgap(3);
+		JPanel pane = new JPanel(gl);
 		pane.setPreferredSize(RCConfig.tablepane_size_dimension);
 		pane.setBackground(RCConfig.tablepane_background_color);
 		for (int j = 0; j < 24; j++) {
@@ -92,8 +98,10 @@ public class Table {
 	public void put(String key, Tile value) {
 		this.tileMap.put(key, value);
 	}
+
 	public void addAll(ArrayList<RCItem> itemList) {
 	}
+
 	public void removeAll(ArrayList<RCItem> itemList) {
 	}
 }

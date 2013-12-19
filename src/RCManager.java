@@ -14,7 +14,6 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import lib.Item;
@@ -65,6 +64,14 @@ public class RCManager {
 		this.addFeed(null, url, false, encode);
 	}
 
+	public RCFeed getFeed(String name) {
+		for (RCFeed feed: this.feedList) {
+			if (name.equals(feed.getName()))
+				return feed;
+		}
+		return null;
+	}
+
 	public RCFeed createFeed(String name, String url, @Nullable String encode) {
 		RCFeed feed = new RCFeed();
 		if (!feed.setURL(url)) {
@@ -106,6 +113,7 @@ public class RCManager {
 		ExecutorService threadPool = Executors.newFixedThreadPool(8);
 		Collection<Callable<Void>> processes = new LinkedList<Callable<Void>>();
 		for (RCFeed feed : this.feedList) {
+			System.out.println("RunNow :" + feed.getName());
 			final RCFeed feed0 = feed;
 			processes.add(new Callable<Void>() {
 				@Override public Void call() {
@@ -182,16 +190,16 @@ public class RCManager {
 	}
 
 	//------------------- RightPane -------------------//
-	public void setFeedListPaneSetAt(JPanel pane) {
+	public JList<String> getFeedJList() {
 		DefaultListModel<String> model = new DefaultListModel<String>();
 		JList<String> list = new JList<String>(model);
+		list.setPreferredSize(RCConfig.rightpane_list_size_dimension);
 		for (RCFeed feed : this.feedList)
 			model.addElement(feed.getName());
-		pane.add(new JScrollPane(list));
+		return list;
 	}
 
 	public void updateFeedList() {
-
 	}
 
 	public class ShowFeedDetailActionListener implements ActionListener {

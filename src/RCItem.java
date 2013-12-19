@@ -2,6 +2,7 @@ import java.awt.FlowLayout;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -21,6 +22,58 @@ public class RCItem extends Item {
 		super(node);
 		this.num_recently = -1;
 		// TODO Constracter
+	}
+
+	public void run(Node node){
+		title = null;
+		link = null;
+		description = null;
+		dcDate = null;
+		pubDate = null;
+		dcCreator = null;
+		dcSubject = null;
+		date = null;
+		dateString = null;
+		// 引数 node (= item要素) の子ノードを走査
+		for(Node current = node.getFirstChild();
+				current != null;
+				current = current.getNextSibling()) { // 子ノードを先頭から
+			if(current.getNodeType() == Node.ELEMENT_NODE) { // 要素だったら
+				String nodeName = current.getNodeName();
+				if(nodeName.equals("title"))
+					title = getContent(current);
+				else if(nodeName.equals("link"))
+					if(current.hasChildNodes())  // RSS
+						link = getContent(current);
+					else  // Atom
+						link = current.getAttributes().getNamedItem("href").getNodeValue();
+				else if(nodeName.equals("description") || nodeName.equals("summary"))
+					description = getContent(current);
+				else if(nodeName.equals("dc:date") || nodeName.equals("updated"))
+					dcDate = getContent(current);
+				else if(nodeName.equals("pubDate"))
+					pubDate = getContent(current);
+				else if(nodeName.equals("dc:creator"))
+					dcCreator = getContent(current);
+				else if(nodeName.equals("dc:subject")) {
+					if(dcSubject == null) {
+						dcSubject = new LinkedList<String>();
+					}
+					dcSubject.add(getContent(current));
+				}
+				else if(nodeName.equals("guid") ||
+						nodeName.equals("category") ||
+						nodeName.startsWith("dc:") ||
+						nodeName.startsWith("rdf:") ||
+						nodeName.startsWith("dcq:")){
+					; // 処理しない
+				}
+				else {
+					; // 処理しない
+				}
+			}
+			// 要素 (Node.ELEMENT_NODE) でなかったら何もしない (改行など)
+		}
 	}
 
 	public void compact() {

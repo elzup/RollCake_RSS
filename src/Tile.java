@@ -9,6 +9,7 @@ public class Tile {
 	public Tile() {
 		this.itemList = new ArrayList<RCItem>();
 	}
+
 	public Tile(RCItem item) {
 		this.itemList = new ArrayList<RCItem>();
 		this.itemList.add(item);
@@ -35,5 +36,4 @@ public class Tile {
 		}
 		return pane;
 	}
-
 }

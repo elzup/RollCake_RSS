@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +24,8 @@ public class RCFeed extends Feed {
 	private String name;
 
 	private String tempName;
+
+	private Color color;
 
 	private boolean isSimple = false;
 	private boolean isRun;
@@ -55,6 +58,13 @@ public class RCFeed extends Feed {
 	}
 	public int getGroupId() {
 		return this.groupId;
+	}
+
+	public void setColor(Color col) {
+		this.color = col;
+	}
+	public Color getColor() {
+		return this.color;
 	}
 
 	public boolean isSimple() {
@@ -132,7 +142,7 @@ public class RCFeed extends Feed {
 		this.run();
 	}
 	public void reSet() {
-		this.isRun = false;;
+		this.isRun = false;
 	}
 
 	@Override protected void findItems(Node node) {

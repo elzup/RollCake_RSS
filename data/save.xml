@@ -41,6 +41,11 @@
       <groupId>0</groupId>
       <url>http://www.nicovideo.jp/tag/ボカロ?sort=f&amp;rss=2.0</url>
     </feed>
+    <feed>
+      <name>PHP Advent Calendarの投稿 - Qiita</name>
+      <groupId>0</groupId>
+      <url>http://qiita.com/advent-calendar/2013/php/feed</url>
+    </feed>
   </feedList>
   <groupList>
     <group>

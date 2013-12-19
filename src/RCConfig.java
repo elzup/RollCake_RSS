@@ -37,7 +37,9 @@ public class RCConfig {
 	//------------------- rightPanel -------------------//
 	public static int rightpane_size_width = window_size_width - tablepane_size_width - 15;
 	public static int rightpane_size_height = tablepane_size_height;
+	public static int rightpane_list_size_height = 500;
 	public static Dimension rightpane_size_dimension = new Dimension(rightpane_size_width, rightpane_size_height);
+	public static Dimension rightpane_list_size_dimension = new Dimension(rightpane_size_width - 30, rightpane_list_size_height);
 	public static Color rightpane_background_color = Color.white;
 
 	public static String key_delimiter = "-";
@@ -81,8 +83,9 @@ public class RCConfig {
 
 	//------------------- button -------------------//
 	public static Color button_font_color = new Color(0, 100, 0);
-	public static Color button_back_color = new Color(200, 255, 200);
-	public static Border button_border = new LineBorder(Color.white);
+	public static Color button_back_color = Color.white;
+	public static Border button_border    = new LineBorder(Color.black);
+	public static Insets button_insets    = new Insets(3, 3, 3, 3);
 
 	public static Color rightbutton_back_color = new Color(200, 255, 200);
 	public static Color rightbutton_font_color = new Color(0, 100, 0);

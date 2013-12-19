@@ -37,7 +37,6 @@ public class RCFiler {
 		try {
 			document = readDocument();
 		} catch (Exception e) {
-			// TODO catch block
 			e.printStackTrace();
 		}
 
@@ -61,8 +60,6 @@ public class RCFiler {
 			fm.addFeed(name, url, null);
 		}
 		fm.runAll();
-
-
 
 		for (int i = 0; i < groupNodes.getLength(); i++) {
 			NodeList group = groupNodes.item(i).getChildNodes();

@@ -25,6 +25,9 @@ public class Item {
 	protected Date date;           // Java の形式に変換した日付
 	protected String dateString;   // Java の形式に変換した日付の標準的な文字列表現
 	public Item (Node node) {
+		run(node);
+	}
+	public void run(Node node){
 		title = null;
 		link = null;
 		description = null;
