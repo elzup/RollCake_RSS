@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.io.IOException;
 import java.util.Calendar;
@@ -17,10 +18,24 @@ import org.w3c.dom.Node;
 
 public class RCItem extends Item {
 
+	private Color color;
 	private int num_recently;
+
+	public void setColor (Color col) {
+		this.color = col;
+	}
+	public Color getColor () {
+		return this.color;
+	}
+
 	public RCItem(Node node) {
+		this(node, Color.white);
+	}
+
+	public RCItem(Node node, Color color) {
 		super(node);
 		this.num_recently = -1;
+		this.color = color;
 		// TODO Constracter
 	}
 

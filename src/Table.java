@@ -35,7 +35,7 @@ public class Table {
 		for (RCFeed feed : this.feedList) {
 			this.tileUpdate(feed, diff);
 		}
-		return this.getTilePain();
+		return this.getTilePane();
 	}
 
 	public void tileUpdate(RCFeed feed, int diff) {
@@ -60,7 +60,7 @@ public class Table {
 		}
 	}
 
-	public JPanel getTilePain() {
+	public JPanel getTilePane() {
 		GridLayout gl = new GridLayout(24, RCConfig.num_split_column_hour);
 		gl.setHgap(3);
 		gl.setVgap(3);
@@ -88,6 +88,7 @@ public class Table {
 			int n = vals[1] * (RCConfig.num_split_column_hour + 1) + (vals[2] + 1);
 			JButton b = (JButton) pane.getComponent(n);
 			b.setText(String.valueOf(tile.size()));
+			b.setBackground(tile.getColor());
 			b.setEnabled(true);
 			JPanel uPane = (JPanel) ((JPanel) contentPane.getComponent(0)).getComponent(0);
 			b.addActionListener(new ActionOpenDetails(uPane, tile));

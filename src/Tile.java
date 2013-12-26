@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 
@@ -15,7 +16,7 @@ public class Tile {
 		this.itemList.add(item);
 	}
 
-	public ArrayList<RCItem> getItems () {
+	public ArrayList<RCItem> getItems() {
 		return this.itemList;
 	}
 
@@ -27,10 +28,18 @@ public class Tile {
 		return this.itemList.size();
 	}
 
+	public Color getColor() {
+		Color c = Color.white;
+		for (RCItem item : itemList) {
+			c = item.getColor();
+		}
+		return c;
+	}
+
 	public JPanel getItemPane() {
 		JPanel pane = new JPanel(new GridLayout(this.size(), 1));
 		System.out.println(this.size() + "]");
-		for (RCItem item: this.itemList) {
+		for (RCItem item : this.itemList) {
 			System.out.println(item.getTitle());
 			pane.add(item.getItemPanel());
 		}
