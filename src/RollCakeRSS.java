@@ -149,8 +149,8 @@ public class RollCakeRSS extends JFrame {
 
 	public JPanel getManagerPane() {
 		JPanel pane = new JPanel(new GridLayout(2, 1));
-		JButton addButton = new JButton(new AddFeedAction("Feedを登録する"));
-		JButton updButton = new JButton(new UpdateFeedAction("Feedを編集する"));
+		JButton addButton = new JButton(new AddFeedAction("Feed繧堤匳骭ｲ縺吶ｋ"));
+		JButton updButton = new JButton(new UpdateFeedAction("Feed繧堤ｷｨ髮�☆繧�));
 		//		addButton.setPreferredSize(RCConfig.rightbutton_dimension);
 		//		updButton.setPreferredSize(RCConfig.rightbutton_dimension);
 		addButton.setBackground(RCConfig.rightbutton_back_color);
@@ -170,8 +170,8 @@ public class RollCakeRSS extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			Object[] msg = { "登録したいURLを貼り付けて下さい" };
-			String ans = JOptionPane.showInputDialog(rightPane, msg, "RSSの登録",
+			Object[] msg = { "逋ｻ骭ｲ縺励◆縺ФRL繧定ｲｼ繧贋ｻ倥￠縺ｦ荳九＆縺� };
+			String ans = JOptionPane.showInputDialog(rightPane, msg, "RSS縺ｮ逋ｻ骭ｲ",
 					JOptionPane.INFORMATION_MESSAGE);
 			System.out.println(ans);
 			if (ans == null)
@@ -179,16 +179,16 @@ public class RollCakeRSS extends JFrame {
 			RCFeed feed = fm.createFeed(ans, null);
 			if (feed == null) {
 				String[] msg2 = {
-						"Feedを取得できませんでした",
-						"URLが間違っていないか確認して下さい",
+						"Feed繧貞叙蠕励〒縺阪∪縺帙ｓ縺ｧ縺励◆",
+						"URL縺碁俣驕輔▲縺ｦ縺�↑縺�°遒ｺ隱阪＠縺ｦ荳九＆縺�,
 						"[" + ans + "]",
 				};
-				JOptionPane.showMessageDialog(rightPane, msg2, "失敗",
+				JOptionPane.showMessageDialog(rightPane, msg2, "螟ｱ謨�,
 						JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			feed.run();
-			Object[] msg2 = { "登録するRSSの名前をつけて下さい", "[" + ans + "]" };
+			Object[] msg2 = { "逋ｻ骭ｲ縺吶ｋRSS縺ｮ蜷榊燕繧偵▽縺代※荳九＆縺�, "[" + ans + "]" };
 			String ans_name = JOptionPane.showInputDialog(rightPane, msg2, feed.getTempName());
 			System.out.println(ans);
 			if (ans_name == null)
@@ -224,7 +224,7 @@ public class RollCakeRSS extends JFrame {
 			feedSettingPane.add(ccButton);
 
 			Object[] msg = {
-					"登録されているFeedを編集します",
+					"逋ｻ骭ｲ縺輔ｌ縺ｦ縺�ｋFeed繧堤ｷｨ髮�＠縺ｾ縺�,
 					feedSettingPane,
 			};
 			JOptionPane.showMessageDialog(rightPane, msg, "Feed",
@@ -237,7 +237,7 @@ public class RollCakeRSS extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JColorChooser cc = new JColorChooser();
-				col = cc.showDialog(rightPane, "カラー変更", col);
+				col = cc.showDialog(rightPane, "繧ｫ繝ｩ繝ｼ螟画峩", col);
 			}
 		}
 	}

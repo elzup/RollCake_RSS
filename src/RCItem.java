@@ -1,15 +1,7 @@
-import java.awt.FlowLayout;
-import java.io.IOException;
+import java.awt.Color;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
-
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
 
 import lib.Item;
 
@@ -17,10 +9,25 @@ import org.w3c.dom.Node;
 
 public class RCItem extends Item {
 
+	private Color color;
 	private int num_recently;
+
+	public void setColor(Color col) {
+		this.color = col;
+	}
+
+	public Color getColor() {
+		return this.color;
+	}
+
 	public RCItem(Node node) {
+		this(node, Color.white);
+	}
+
+	public RCItem(Node node, Color color) {
 		super(node);
 		this.num_recently = -1;
+		this.color = color;
 		// TODO Constracter
 	}
 
@@ -75,7 +82,6 @@ public class RCItem extends Item {
 			// 要素 (Node.ELEMENT_NODE) でなかったら何もしない (改行など)
 		}
 	}
-
 	public void compact() {
 		this.description = null;
 	}
@@ -91,7 +97,8 @@ public class RCItem extends Item {
 	}
 
 	public int getDiffTodayNum() {
-		if (this.num_recently != -1) return this.num_recently;
+		if (this.num_recently != -1)
+			return this.num_recently;
 		long diff = getDiffToday(this.getDate());
 		return this.num_recently = (int) (diff / (60 * 60 * 24 * 1000));
 	}
@@ -105,8 +112,8 @@ public class RCItem extends Item {
 		int[] vals = {
 				this.getDiffTodayNum(),
 				this.getDate().getHours(),
-				(this.getDate().getMinutes()) / (60 / RCConfig.num_split_column_hour),
-		};
+				(this.getDate().getMinutes())
+						/ (60 / RCConfig.num_split_column_hour), };
 		return valsToKey(vals);
 	}
 
@@ -119,52 +126,7 @@ public class RCItem extends Item {
 	}
 
 	public static String valsToKey(int[] vals) {
-		return vals[0] + RCConfig.key_delimiter + vals[1] + RCConfig.key_delimiter + vals[2];
-	}
-
-	public JPanel getItemPanel() {
-		JPanel pane = new JPanel(new FlowLayout());
-		pane.setPreferredSize(RCConfig.underpane_size_dimension);
-
-		JTextField title = new JTextField(this.getTitle());
-		title.setPreferredSize(RCConfig.item_info_line);
-		title.setBorder(RCConfig.item_info_title_border);
-		pane.add(title);
-
-		JTextField date = new JTextField(this.getDateString());
-		date.setPreferredSize(RCConfig.item_info_line);
-		date.setBorder(RCConfig.item_info_date_border);
-		pane.add(date);
-
-		if (this.getDescription() != null) {
-			JTextPane description = getHTMLJTextPane(this.getDescription());
-			description.setBorder(RCConfig.item_info_description_border);
-			pane.add(description);
-		}
-
-		String url = this.getLink();
-		JTextPane link = getHTMLJTextPane(String.format("<a href=\"%s\">%s</a>", url, url));
-		link.setPreferredSize(RCConfig.item_info_line);
-		link.setBorder(RCConfig.item_info_url_border);
-		pane.add(link);
-		return pane;
-	}
-
-	private JTextPane getHTMLJTextPane(String html) {
-		JTextPane textPane = new JTextPane();
-		textPane.setContentType("text/html");
-		textPane.setEditable(false);
-		HTMLDocument doc = (HTMLDocument) textPane.getDocument();
-		HTMLEditorKit editorKit = (HTMLEditorKit) textPane.getEditorKit();
-		try {
-			editorKit.insertHTML(doc, doc.getLength(), html, 0, 0, null);
-		} catch (BadLocationException e) {
-			// TODO catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO catch block
-			e.printStackTrace();
-		}
-		return textPane;
+		return vals[0] + RCConfig.key_delimiter + vals[1]
+				+ RCConfig.key_delimiter + vals[2];
 	}
 }
