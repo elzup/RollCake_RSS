@@ -20,12 +20,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class RCFeed extends Feed {
-	private int groupId;
 	private String name;
-
 	private String tempName;
-
 	private Color color;
+	private int groupId;
 
 	private boolean isSimple = false;
 	private boolean isRun;
@@ -49,26 +47,34 @@ public class RCFeed extends Feed {
 		return true;
 	}
 
+	//------------------- getter,setter -------------------//
+	public void setName (String name) {
+		this.name = name;
+	}
+	public String getName () {
+ 		return this.name;
+	}
+	public String getTempName() {
+		return this.tempName;
+	}
+	@Deprecated
+	public void setUrl(URL url) {
+		this.url = url;
+	}
 	public URL getUrl() {
 		return this.url;
 	}
-
 	public void setGroupId(int id) {
 		this.groupId = id;
 	}
 	public int getGroupId() {
 		return this.groupId;
 	}
-
 	public void setColor(Color col) {
 		this.color = col;
 	}
 	public Color getColor() {
 		return this.color;
-	}
-
-	public boolean isSimple() {
-		return this.isSimple;
 	}
 	public void setSimple (boolean b) {
 		this.isSimple = b;
@@ -76,22 +82,15 @@ public class RCFeed extends Feed {
 	public void setSimple () {
 		this.setSimple(true);
 	}
-
-	public void setName (String name) {
-		this.name = name;
-	}
-	public String getName () {
- 		return this.name;
+	public boolean isSimple() {
+		return this.isSimple;
 	}
 
 	public ArrayList<RCItem> getRCItemList() {
 		return itemList;
 	}
 
-	public String getTempName() {
-		return this.tempName;
-	}
-
+	//------------------- getter,setter end -------------------//
 	/** URLで指示されたフィードを取得し DOM tree を構築、itemList を生成 */
 	@Override
 	public void run() {
