@@ -12,10 +12,11 @@ public class RCItem extends Item {
 	private Color color;
 	private int num_recently;
 
-	public void setColor (Color col) {
+	public void setColor(Color col) {
 		this.color = col;
 	}
-	public Color getColor () {
+
+	public Color getColor() {
 		return this.color;
 	}
 
@@ -81,7 +82,6 @@ public class RCItem extends Item {
 			// 要素 (Node.ELEMENT_NODE) でなかったら何もしない (改行など)
 		}
 	}
-
 	public void compact() {
 		this.description = null;
 	}
@@ -97,7 +97,8 @@ public class RCItem extends Item {
 	}
 
 	public int getDiffTodayNum() {
-		if (this.num_recently != -1) return this.num_recently;
+		if (this.num_recently != -1)
+			return this.num_recently;
 		long diff = getDiffToday(this.getDate());
 		return this.num_recently = (int) (diff / (60 * 60 * 24 * 1000));
 	}
@@ -111,8 +112,8 @@ public class RCItem extends Item {
 		int[] vals = {
 				this.getDiffTodayNum(),
 				this.getDate().getHours(),
-				(this.getDate().getMinutes()) / (60 / RCConfig.num_split_column_hour),
-		};
+				(this.getDate().getMinutes())
+						/ (60 / RCConfig.num_split_column_hour), };
 		return valsToKey(vals);
 	}
 
@@ -125,6 +126,7 @@ public class RCItem extends Item {
 	}
 
 	public static String valsToKey(int[] vals) {
-		return vals[0] + RCConfig.key_delimiter + vals[1] + RCConfig.key_delimiter + vals[2];
+		return vals[0] + RCConfig.key_delimiter + vals[1]
+				+ RCConfig.key_delimiter + vals[2];
 	}
 }

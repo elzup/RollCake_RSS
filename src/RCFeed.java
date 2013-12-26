@@ -23,11 +23,10 @@ public class RCFeed extends Feed {
 	private String name;
 	private String tempName;
 	private Color color;
-	private int groupId;
 
 	private boolean isSimple = false;
 	private boolean isRun;
-//	private String url;
+	//	private String url;
 
 	private ArrayList<RCItem> itemList;
 
@@ -48,40 +47,43 @@ public class RCFeed extends Feed {
 	}
 
 	//------------------- getter,setter -------------------//
-	public void setName (String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
-	public String getName () {
- 		return this.name;
+
+	public String getName() {
+		return this.name;
 	}
+
 	public String getTempName() {
 		return this.tempName;
 	}
+
 	@Deprecated
 	public void setUrl(URL url) {
 		this.url = url;
 	}
+
 	public URL getUrl() {
 		return this.url;
 	}
-	public void setGroupId(int id) {
-		this.groupId = id;
-	}
-	public int getGroupId() {
-		return this.groupId;
-	}
+
 	public void setColor(Color col) {
 		this.color = col;
 	}
+
 	public Color getColor() {
 		return this.color;
 	}
-	public void setSimple (boolean b) {
+
+	public void setSimple(boolean b) {
 		this.isSimple = b;
 	}
-	public void setSimple () {
+
+	public void setSimple() {
 		this.setSimple(true);
 	}
+
 	public boolean isSimple() {
 		return this.isSimple;
 	}
@@ -94,7 +96,8 @@ public class RCFeed extends Feed {
 	/** URLで指示されたフィードを取得し DOM tree を構築、itemList を生成 */
 	@Override
 	public void run() {
-		if (this.isRun) return;
+		if (this.isRun)
+			return;
 		this.isRun = true;
 		this.itemList = new ArrayList<RCItem>();
 		BufferedReader in = null;
@@ -136,23 +139,27 @@ public class RCFeed extends Feed {
 			System.err.println("DOMエラー:" + e);
 		}
 	}
+
 	public void reRun() {
 		this.reSet();
 		this.run();
 	}
+
 	public void reSet() {
 		this.isRun = false;
 	}
 
-	@Override protected void findItems(Node node) {
+	@Override
+	protected void findItems(Node node) {
 		for (Node current = node.getFirstChild(); current != null; current = current.getNextSibling()) {
 			if (current.getNodeType() == Node.ELEMENT_NODE) {
 				String nodeName = current.getNodeName();
 				if ("item".equals(nodeName) || "entry".equals(nodeName)) {
 					RCItem item = new RCItem(current);
-					if (this.isSimple) item.compact();
+					if (this.isSimple)
+						item.compact();
 					itemList.add(item);
-			} else if ("title".equals(nodeName)) {
+				} else if ("title".equals(nodeName)) {
 					this.tempName = current.getFirstChild().getNodeValue();
 				}
 				else
@@ -162,5 +169,3 @@ public class RCFeed extends Feed {
 	}
 
 }
-
-
