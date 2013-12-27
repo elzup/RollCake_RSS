@@ -1,64 +1,55 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <rollCake>
-  <feedList>
-    <feed>
-      <name>#Minecraft技術部</name>
-      <groupId>0</groupId>
-      <url>http://www.nicovideo.jp/tag/minecraft技術部?sort=f&amp;rss=2.0</url>
-    </feed>
-    <feed>
-      <name>#Minecraft農業部</name>
-      <groupId>0</groupId>
-      <url>http://www.nicovideo.jp/tag/Minecraft農業部?sort=f&amp;rss=2.0</url>
-    </feed>
-    <feed>
-      <name>#Minecraft_MOD紹介部</name>
-      <groupId>0</groupId>
-      <url>http://www.nicovideo.jp/tag/Minecraft_MOD紹介部?sort=f&amp;rss=2.0</url>
-    </feed>
-    <feed>
-      <name>GIGAZINE</name>
-      <groupId>0</groupId>
-      <url>http://feed.rssad.jp/rss/gigazine/rss_2.0</url>
-    </feed>
-    <feed>
-      <name>Amazon.co.jp: DVD &gt; 外国映画のベストセラー</name>
-      <groupId>0</groupId>
-      <url>http://www.amazon.co.jp/gp/rss/bestsellers/dvd/562016/ref=zg_bs_562016_rsslink</url>
-    </feed>
-    <feed>
-      <name>elzzup's Activity</name>
-      <groupId>0</groupId>
-      <url>https://github.com/elzzup.atom</url>
-    </feed>
-    <feed>
-      <name>#アニソン‐ニコニコ動画</name>
-      <groupId>0</groupId>
-      <url>http://www.nicovideo.jp/tag/アニソン?sort=f&amp;rss=2.0</url>
-    </feed>
-    <feed>
-      <name>タグ ボカロ‐ニコニコ動画</name>
-      <groupId>0</groupId>
-      <url>http://www.nicovideo.jp/tag/ボカロ?sort=f&amp;rss=2.0</url>
-    </feed>
-    <feed>
-      <name>PHP Advent Calendarの投稿 - Qiita</name>
-      <groupId>0</groupId>
-      <url>http://qiita.com/advent-calendar/2013/php/feed</url>
-    </feed>
-  </feedList>
   <groupList>
     <group>
       <name>Minecraft</name>
       <id>0</id>
+      <feedList>
+        <feed>
+          <name>#Minecraft技術部</name>
+          <url>http://www.nicovideo.jp/tag/minecraft技術部?sort=f&amp;rss=2.0</url>
+        </feed>
+        <feed>
+          <name>#Minecraft農業部</name>
+          <url>http://www.nicovideo.jp/tag/Minecraft農業部?sort=f&amp;rss=2.0</url>
+        </feed>
+        <feed>
+          <name>#Minecraft_MOD紹介部</name>
+          <url>http://www.nicovideo.jp/tag/Minecraft_MOD紹介部?sort=f&amp;rss=2.0</url>
+        </feed>
+      </feedList>
     </group>
     <group>
       <name>group02</name>
       <id>1</id>
+      <feedList>
+        <feed>
+          <name>#アニソン‐ニコニコ動画</name>
+          <url>http://www.nicovideo.jp/tag/アニソン?sort=f&amp;rss=2.0</url>
+        </feed>
+        <feed>
+          <name>タグ ボカロ‐ニコニコ動画</name>
+          <url>http://www.nicovideo.jp/tag/ボカロ?sort=f&amp;rss=2.0</url>
+        </feed>
+      </feedList>
     </group>
     <group>
       <name>group03</name>
       <id>2</id>
+      <feedList>
+        <feed>
+          <name>GIGAZINE</name>
+          <url>http://feed.rssad.jp/rss/gigazine/rss_2.0</url>
+        </feed>
+        <feed>
+          <name>elzzup's Activity</name>
+          <url>https://github.com/elzzup.atom</url>
+        </feed>
+        <feed>
+          <name>PHP Advent Calendarの投稿 - Qiita</name>
+          <url>http://qiita.com/advent-calendar/2013/php/feed</url>
+        </feed>
+      </feedList>
     </group>
   </groupList>
 </rollCake>

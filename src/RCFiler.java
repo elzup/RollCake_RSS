@@ -48,36 +48,45 @@ public class RCFiler {
 		for (int i = 0; i < groupNodes.getLength(); i++) {
 			NodeList group = groupNodes.item(i).getChildNodes();
 			String name = getElementValue(group, "name");
-			System.out.println("-" + name);
 			if (name == null)
 				continue;
+//			System.out.println("-" + name);
 			int groupId = Integer.valueOf(getElementValue(group, "id"));
-			System.out.println("name: " + name + ":" + groupId);
-			RCGroup gorup = new RCGroup(groupId, name);
+//			System.out.println("name: " + name + ":" + groupId);
+			manager.addGroup(groupId, name);
 
-			NodeList feedNodes = (NodeList) groupNodes.item(1).getChildNodes();
+			for (int j = 0; j < group.getLength(); j++)
+				group.item(j).getChildNodes().getLength();
+
+
+			NodeList feedNodes = (NodeList) getElement(group, "feedList");
 			for (int j = 0; j < feedNodes.getLength(); j++) {
 				NodeList feed = feedNodes.item(j).getChildNodes();
 				String feedName = getElementValue(feed, "name");
-				System.out.println("-" + name);
 				if (feedName == null)
 					continue;
 				String url = getElementValue(feed, "url");
-				System.out.println("name: " + name + ":" + url);
-				manager.addFeed(feedName, url);
+//				System.out.println("name: " + name + ":" + url);
+				manager.addFeed(feedName, url, groupId);
 			}
-			manager.addGroup(groupId, name);
 		}
+		manager.runAll();
 	}
 
-	private String getElementValue(NodeList nodeList, @NotNull String tagName) {
+	private Node getElement(NodeList nodeList, String tagName) {
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Node n = nodeList.item(i);
 			if (tagName.equals(n.getNodeName())) {
-				return n.getFirstChild().getNodeValue();
+				return n;
 			}
 		}
 		return null;
+	}
+
+	private String getElementValue(NodeList nodeList, String tagName) {
+		Node n = getElement(nodeList, tagName);
+		if (n == null) return null;
+		return n.getFirstChild().getNodeValue();
 	}
 
 	@SuppressWarnings("unused")
@@ -101,8 +110,6 @@ public class RCFiler {
 			for (RCFeed feed : group.getFeedList()) {
 				Element feedElement = document.createElement("feed");
 				//			feedElement.setAttribute("name");
-				System.out.println(feed.getTempName());
-				System.out.println(feed.getName() + "::://///>>>>");
 				if (feed.getName() == null)
 					continue;
 				feedElement.appendChild(createElementWithName(document, "name", feed.getName()));

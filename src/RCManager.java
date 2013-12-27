@@ -6,6 +6,7 @@ public class RCManager {
 	private ArrayList<RCGroup> groupList;
 
 	private int groupPointer;
+	private RCFiler filer;
 
 	public static int table_mode_recentry = 0;
 
@@ -23,9 +24,20 @@ public class RCManager {
 	}
 
 	// ------------------- getter, setter, end -------------------//
-	public RCManager() {
+	public RCManager(String filename) {
 		this.groupList = new ArrayList<RCGroup>();
 		this.groupPointer = 0;
+		this.filer = new RCFiler(filename, this);
+	}
+	public RCManager() {
+		this(RCConfig.savefile_name);
+	}
+
+	public void save() {
+		this.filer.saveFeedList();
+	}
+	public void load() {
+		this.filer.loadFeedList();
 	}
 
 	public void addGroup(int id, String name) {
@@ -36,8 +48,12 @@ public class RCManager {
 		this.groupList.add(group);
 	}
 
+	public void addFeed(String name, String url, int index) {
+		this.groupList.get(index).add(this.createFeed(name, url, null));
+	}
+
 	public void addFeed(String name, String url) {
-		this.groupList.get(groupPointer).add(this.createFeed(name, url, null));
+		this.addFeed(name, url, groupPointer);
 	}
 
 	public void addFeed(String url) {
@@ -51,6 +67,11 @@ public class RCManager {
 				return feed;
 		}
 		return null;
+	}
+
+	public void runAll() {
+		for (RCGroup group : this.getGroupList())
+			group.runAll();
 	}
 
 	public RCFeed createFeed(@Nullable String name, String url,
@@ -70,4 +91,26 @@ public class RCManager {
 		return this.createFeed(name, url, null);
 	}
 
+	/* --------------------------------------------------------- *
+	 *     debug
+	 * --------------------------------------------------------- */
+
+	private void print() {
+		System.out.println("RCManager----");
+		for (RCGroup group : this.getGroupList()) {
+			System.out.println(" group" + group.getId() + ":" + group.getName());
+			for (RCFeed feed : group.getFeedList()) {
+				System.out.println("  feed:" + feed.getName() + "\n   (" + feed.getUrl().toString() + ")");
+			}
+			System.out.println();
+		}
+	}
+
+	public static void main(String[] args) {
+		RCManager manager = new RCManager();
+		manager.load();
+		manager.print();
+
+		manager.save();
+	}
 }
