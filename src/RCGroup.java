@@ -52,6 +52,14 @@ public class RCGroup {
 		return null;
 	}
 
+	public ArrayList<String> feedNameList() {
+		ArrayList<String> nameList = new ArrayList<>();
+		for (RCFeed feed : this.getFeedList())
+			nameList.add(feed.getName());
+		return nameList;
+	}
+
+
 	public void runAll() {
 		long start = System.currentTimeMillis();
 		ExecutorService threadPool = Executors.newFixedThreadPool(8);

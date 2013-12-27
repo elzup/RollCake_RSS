@@ -91,6 +91,13 @@ public class RCManager {
 		return this.createFeed(name, url, null);
 	}
 
+	public ArrayList<String> groupNameList() {
+		ArrayList<String> nameList = new ArrayList<>();
+		for (RCGroup group : this.getGroupList())
+			nameList.add(group.getName());
+		return nameList;
+	}
+
 	/* --------------------------------------------------------- *
 	 *     debug
 	 * --------------------------------------------------------- */
@@ -110,7 +117,6 @@ public class RCManager {
 		RCManager manager = new RCManager();
 		manager.load();
 		manager.print();
-
 		manager.save();
 	}
 }

@@ -1,32 +1,39 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.ArrayList;
 
-import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 public class RollCakeRSS extends JFrame {
-	RCManager fm;
-	JPanel detailPane, tablePane, rightPane;
+	RCManager manager;
+	NaviPanel naviPane;
+	RightPanel rightPane;
+	TabPanel mainPane;
 	DefaultListModel<String> feedListModel;
 	JList<String> feedList;
-	int group;
+	JComboBox<String> groupBox;
 
 	public static void main(String... args) {
 		System.out.println("main start");
@@ -34,56 +41,60 @@ public class RollCakeRSS extends JFrame {
 		RollCakeRSS cake = new RollCakeRSS();
 
 		cake.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		cake.setBounds(10, 10, RCConfig.window_size_width, RCConfig.window_size_height);
+		cake.setBounds(10, 10, RCConfig.window_size_width,
+				RCConfig.window_size_height);
 		cake.setTitle(RCConfig.title_frame);
 		cake.setVisible(true);
 
 		System.out.println("main end");
 
-		//------------------- play -------------------//
-		//------------------- play end -------------------//
+		// ------------------- play -------------------//
+		// ------------------- play end -------------------//
 
 	}
 
 	RollCakeRSS() {
+		// ------------------- construct model -------------------//
+		this.manager = new RCManager();
+		this.manager.load();
 
-		this.setupWindowConfig();
-		this.setupToolBar();
-		this.setupMenuBar();
-		//		Container cp = this.getContentPane();
-		this.fm = new RCManager();
+		// ------------------- gui putting -------------------//
+		JPanel pane = (JPanel) this.getContentPane();
+		pane.setLayout(new BorderLayout());
+		mainPane = new TabPanel();
+		naviPane = new NaviPanel();
+		rightPane = new RightPanel();
+		pane.add(naviPane, BorderLayout.PAGE_START);
+		pane.add(mainPane, BorderLayout.CENTER);
+		pane.add(rightPane, BorderLayout.EAST);
 
-		RCFiler.loadFeedList(fm);
-		//------------------- debug initialize -------------------//
-		//		for (String[] feed : Debug.DEBUG_URLS) {
-		//			this.fm.addFeed(feed[0], feed[1], null);
-		//		}
-		//------------------- debug end -------------------//
-		this.group = 0;
-		this.updateTable();
-	}
-
-	private void setupWindowConfig() {
 		try {
-			UIManager.setLookAndFeel(UIManager.getInstalledLookAndFeels()[RCConfig.window_id_lookandfeel]
-					.getClassName());
-		} catch (ClassNotFoundException e) {
-			// TODO catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO catch block
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			// TODO catch block
+			this.setupWindowConfig();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		this.setupMenuBar();
+
+		// ------------------- naviPane -------------------//
+
+		// ------------------- mainPane -------------------//
+		// ------------------- rightPane -------------------//
+
+		// ------------------- debug initialize -------------------//
+		// for (String[] feed : Debug.DEBUG_URLS) {
+		// this.fm.addFeed(feed[0], feed[1], null);
+		// }
+		// ------------------- debug end -------------------//
+	}
+
+	private void setupWindowConfig() throws Exception {
+		UIManager
+				.setLookAndFeel(UIManager.getInstalledLookAndFeels()[RCConfig.window_id_lookandfeel]
+						.getClassName());
 	}
 
 	private void setupToolBar() {
-		//		JToolBar tb = new JToolBar();
+		// JToolBar tb = new JToolBar();
 	}
 
 	private void setupMenuBar() {
@@ -96,149 +107,116 @@ public class RollCakeRSS extends JFrame {
 		file.add(itemExit);
 	}
 
-	public void updateTable() {
-		JPanel pane = (JPanel) this.getContentPane();
-		pane.setLayout(new BorderLayout());
-		pane.setBackground(RCConfig.window_background_color);
+	/*
+	 * --------------------------------------------------------- * NavPanel
+	 * ---------------------------------------------------------
+	 */
 
-		JPanel leftPane = new JPanel(new BorderLayout());
-		leftPane.setPreferredSize(new Dimension(RCConfig.tablepane_size_width, RCConfig.window_size_height));
+	class NaviPanel extends JPanel {
+		private final String startPage = "http://www.google.co.jp/";
+		private JTextField addressBar;
 
-		//		pane.add(this.getTopPane(), BorderLayout.PAGE_START);
-		pane.add(leftPane, BorderLayout.CENTER);
-
-		detailPane = new JPanel(new BorderLayout());
-		detailPane.setPreferredSize(RCConfig.underpane_size_dimension);
-		detailPane.setBackground(RCConfig.underpane_background_color);
-		fm.setContentPane(pane);
-
-		leftPane.add(detailPane, BorderLayout.SOUTH);
-
-		tablePane = fm.setTablePane();
-
-		rightPane = getRightPane();
-		pane.add(rightPane, BorderLayout.EAST);
-		rightPane.setPreferredSize(RCConfig.rightpane_size_dimension);
-		rightPane.setBackground(RCConfig.rightpane_background_color);
-	}
-
-	public JPanel getTopPane() {
-		JPanel pane = new JPanel(new GridLayout(1, 5));
-		pane.setBackground(RCConfig.rightpane_background_color);
-		return pane;
-	}
-
-	public JPanel getRightPane() {
-		JPanel pane = new JPanel(new BorderLayout());
-		pane.setBackground(RCConfig.rightpane_background_color);
-		JPanel manaPane = this.getManagerPane();
-		JPanel listPane = new JPanel();
-		listPane.setBackground(RCConfig.rightpane_background_color);
-		this.feedList = fm.getFeedJList();
-		JScrollPane sp = new JScrollPane(this.feedList);
-		sp.setPreferredSize(RCConfig.rightpane_list_size_dimension);
-		sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		listPane.add(sp);
-		this.feedListModel = (DefaultListModel<String>) feedList.getModel();
-
-		pane.add(manaPane, BorderLayout.NORTH);
-		pane.add(listPane, BorderLayout.CENTER);
-		return pane;
-	}
-
-	public JPanel getManagerPane() {
-		JPanel pane = new JPanel(new GridLayout(2, 1));
-		JButton addButton = new JButton(new AddFeedAction("Feed繧堤匳骭ｲ縺吶ｋ"));
-		JButton updButton = new JButton(new UpdateFeedAction("Feed繧堤ｷｨ髮�☆繧�));
-		//		addButton.setPreferredSize(RCConfig.rightbutton_dimension);
-		//		updButton.setPreferredSize(RCConfig.rightbutton_dimension);
-		addButton.setBackground(RCConfig.rightbutton_back_color);
-		updButton.setBackground(RCConfig.rightbutton_back_color);
-		addButton.setForeground(RCConfig.rightbutton_font_color);
-		updButton.setForeground(RCConfig.rightbutton_font_color);
-		addButton.setBorder(RCConfig.rightbutton_border);
-		updButton.setBorder(RCConfig.rightbutton_border);
-		pane.add(addButton);
-		pane.add(updButton);
-		return pane;
-	}
-
-	class AddFeedAction extends AbstractAction {
-		AddFeedAction(String text) {
-			super(text);
+		public NaviPanel() {
+			super();
+			this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+			addressBar = new JTextField(startPage);
+			mainPane.openWebPage(startPage);
+			addressBar.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					mainPane.openWebPage(addressBar.getText());
+				}
+			});
+			this.add(addressBar);
 		}
 
-		public void actionPerformed(ActionEvent e) {
-			Object[] msg = { "逋ｻ骭ｲ縺励◆縺ФRL繧定ｲｼ繧贋ｻ倥￠縺ｦ荳九＆縺� };
-			String ans = JOptionPane.showInputDialog(rightPane, msg, "RSS縺ｮ逋ｻ骭ｲ",
-					JOptionPane.INFORMATION_MESSAGE);
-			System.out.println(ans);
-			if (ans == null)
-				return;
-			RCFeed feed = fm.createFeed(ans, null);
-			if (feed == null) {
-				String[] msg2 = {
-						"Feed繧貞叙蠕励〒縺阪∪縺帙ｓ縺ｧ縺励◆",
-						"URL縺碁俣驕輔▲縺ｦ縺�↑縺�°遒ｺ隱阪＠縺ｦ荳九＆縺�,
-						"[" + ans + "]",
-				};
-				JOptionPane.showMessageDialog(rightPane, msg2, "螟ｱ謨�,
-						JOptionPane.INFORMATION_MESSAGE);
-				return;
+		public void setUrl(String url) {
+			addressBar.setText(url);
+		}
+	}
+
+	/*
+	 * --------------------------------------------------------- * TabPanel
+	 * ---------------------------------------------------------
+	 */
+	class TabPanel extends JTabbedPane {
+		public TabPanel() {
+			super();
+		}
+
+		public void addTabPanel(String tabname, final JComponent component) {
+			this.addTab(null, component);
+			JPanel tab = new JPanel(new FlowLayout());
+			JButton closeButton = new JButton("×");
+			closeButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					removeTabAt(indexOfComponent(component));
+				}
+			});
+			tab.add(new JLabel(tabname));
+			tab.add(closeButton);
+			this.setTabComponentAt(this.getTabCount() - 1, tab);
+		}
+
+		public void openWebPage(String url) {
+			final JEditorPane pane = new JEditorPane();
+			try {
+				pane.setPage(url);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			feed.run();
-			Object[] msg2 = { "逋ｻ骭ｲ縺吶ｋRSS縺ｮ蜷榊燕繧偵▽縺代※荳九＆縺�, "[" + ans + "]" };
-			String ans_name = JOptionPane.showInputDialog(rightPane, msg2, feed.getTempName());
-			System.out.println(ans);
-			if (ans_name == null)
-				return;
-			feed.setName(ans_name);
-			feed.setGroupId(group);
-			feedListModel.addElement(feed.getName());
-			fm.addFeed(feed);
-			fm.setTablePane();
-			RCFiler.saveFeedList(fm);
-			System.out.println(ans);
+			pane.addHyperlinkListener(new HyperlinkListener() {
+				@Override
+				public void hyperlinkUpdate(HyperlinkEvent e) {
+					if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED)
+						return;
+					String url = e.getURL().toString();
+					try {
+						pane.setPage(url);
+					} catch (IOException e1) {
+						// TODO 自動生成された catch ブロック
+						e1.printStackTrace();
+					}
+					naviPane.setUrl(url);
+				}
+			});
+
+			pane.setEditable(false);
+			this.addTabPanel(url.substring(0, 20), new JScrollPane(pane));
 		}
 	}
 
-	class UpdateFeedAction extends AbstractAction {
-		Color col;
-		UpdateFeedAction(String text) {
-			super(text);
-		}
+	/*
+	 * --------------------------------------------------------- * RightPanel
+	 * ---------------------------------------------------------
+	 */
+	class RightPanel extends JPanel {
+		public RightPanel() {
+			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			// ------------------- layoutButtons -------------------//
+			JPanel layoutButtons = new JPanel(new GridLayout(1, 3));
+			JButton panelsLayout = new JButton("Panel");
+			JButton tabelsLayout = new JButton("Table");
+			JButton imagesLayout = new JButton("Image");
+			layoutButtons.add(panelsLayout);
+			layoutButtons.add(tabelsLayout);
+			layoutButtons.add(imagesLayout);
+			this.add(layoutButtons);
 
-		public void actionPerformed(ActionEvent e) {
-			String name = feedList.getSelectedValue();
-			RCFeed feed = fm.getFeed(name);
-			JPanel feedSettingPane = new JPanel();
-			feedSettingPane.setLayout(new BoxLayout(feedSettingPane, BoxLayout.Y_AXIS));
-			JTextField title = new JTextField(name);
-			col = feed.getColor();
-			JButton ccButton = new JButton();
-			ccButton.setBackground(col);
-			ccButton.addActionListener(new ColorChooseAction());
+			// ------------------- groupChooser-------------------//
+			String[] nameList = manager.groupNameList().toArray(new String[manager.groupNameList().size()]);
+			groupBox = new JComboBox<String>(nameList);
+			this.add(groupBox);
 
-			feedSettingPane.add(title);
-			feedSettingPane.add(ccButton);
+			// ------------------- feedList -------------------//
+			ArrayList<RCGroup> groupList = manager.getGroupList();
+			RCGroup group = groupList.get(groupBox.getSelectedIndex());
+			nameList = group.feedNameList().toArray(new String[group.feedNameList().size()]);
+			JList<String> feedList = new JList<>(nameList);
+			this.add(feedList);
 
-			Object[] msg = {
-					"逋ｻ骭ｲ縺輔ｌ縺ｦ縺�ｋFeed繧堤ｷｨ髮�＠縺ｾ縺�,
-					feedSettingPane,
-			};
-			JOptionPane.showMessageDialog(rightPane, msg, "Feed",
-					JOptionPane.INFORMATION_MESSAGE);
-			feed.setColor(col);
-		}
 
-		class ColorChooseAction extends AbstractAction {
-			@SuppressWarnings("static-access")
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JColorChooser cc = new JColorChooser();
-				col = cc.showDialog(rightPane, "繧ｫ繝ｩ繝ｼ螟画峩", col);
-			}
 		}
 	}
 }

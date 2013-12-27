@@ -14,7 +14,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.sun.istack.internal.NotNull;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
 import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
 
@@ -89,7 +88,6 @@ public class RCFiler {
 		return n.getFirstChild().getNodeValue();
 	}
 
-	@SuppressWarnings("unused")
 	private Document getDocument()
 			throws Exception {
 		DOMImplementation domImpl = DocumentBuilderFactory.newInstance().newDocumentBuilder().getDOMImplementation();
