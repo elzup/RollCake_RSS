@@ -34,9 +34,7 @@ import javax.swing.event.HyperlinkListener;
 
 public class RollCakeRSS extends JFrame {
 	RCManager manager;
-	NaviPanel naviPane;
 	RightPanel rightPane;
-	TabPanel mainPane;
 	HomePanel homePane;
 	DefaultListModel<String> feedListModel;
 	JList<String> feedList;
@@ -67,11 +65,11 @@ public class RollCakeRSS extends JFrame {
 		// ------------------- gui putting -------------------//
 		JPanel pane = (JPanel) this.getContentPane();
 		pane.setLayout(new BorderLayout());
-		mainPane = new TabPanel();
-		naviPane = new NaviPanel();
+		homePane = new HomePanel(manager.getActiveGroup());
 		rightPane = new RightPanel();
-		pane.add(naviPane, BorderLayout.PAGE_START);
-		pane.add(mainPane, BorderLayout.CENTER);
+		JScrollPane sp = new JScrollPane(homePane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		sp.getVerticalScrollBar().setUnitIncrement(20);
+		pane.add(sp, BorderLayout.CENTER);
 		pane.add(rightPane, BorderLayout.EAST);
 
 		try {
@@ -81,16 +79,6 @@ public class RollCakeRSS extends JFrame {
 		}
 		this.setupMenuBar();
 
-		// ------------------- naviPane -------------------//
-
-		// ------------------- mainPane -------------------//
-		// ------------------- rightPane -------------------//
-
-		// ------------------- debug initialize -------------------//
-		// for (String[] feed : Debug.DEBUG_URLS) {
-		// this.fm.addFeed(feed[0], feed[1], null);
-		// }
-		// ------------------- debug end -------------------//
 	}
 
 	private void setupWindowConfig() throws Exception {
@@ -112,99 +100,8 @@ public class RollCakeRSS extends JFrame {
 	}
 
 	/*
-	 * --------------------------------------------------------- * NavPanel
 	 * ---------------------------------------------------------
-	 */
-
-	class NaviPanel extends JPanel {
-		private final String startPage = "http://www.google.co.jp/";
-		private JTextField addressBar;
-
-		public NaviPanel() {
-			super();
-			this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-			addressBar = new JTextField();
-			addressBar.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					mainPane.openWebPage(addressBar.getText());
-				}
-			});
-			// mainPane.openWebPage(startPage);
-			mainPane.setupHome();
-			this.add(addressBar);
-		}
-
-		public void setUrl(String url) {
-			addressBar.setText(url);
-		}
-	}
-
-	/*
-	 * --------------------------------------------------------- * TabPanel
-	 * ---------------------------------------------------------
-	 */
-	class TabPanel extends JTabbedPane {
-		public TabPanel() {
-			super();
-		}
-
-		public void addTabPanel(String tabname, final JComponent component) {
-			this.addTab(null, component);
-			JPanel tab = new JPanel(new FlowLayout());
-			JButton closeButton = new JButton("×");
-			closeButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					removeTabAt(indexOfComponent(component));
-				}
-			});
-			tab.add(new JLabel(tabname));
-			tab.add(closeButton);
-			this.setTabComponentAt(this.getTabCount() - 1, tab);
-		}
-
-		public void addTabPanelDeletable(String tabname, final JComponent component) {
-			this.addTabPanel(tabname, component);
-			JPanel tab = new JPanel(new FlowLayout());
-			tab.add(new JLabel(tabname));
-			this.setTabComponentAt(this.getTabCount() - 1, tab);
-		}
-
-		public void setupHome() {
-			homePane = new HomePanel(manager.getActiveGroup());
-			this.addTabPanelDeletable("Home", homePane);
-		}
-
-		public void openWebPage(String url) {
-			try {
-				final JEditorPane pane = new JEditorPane();
-				pane.setPage(url);
-				pane.addHyperlinkListener(new HyperlinkListener() {
-					@Override
-					public void hyperlinkUpdate(HyperlinkEvent e) {
-						if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED)
-							return;
-						String url = e.getURL().toString();
-						try {
-							pane.setPage(url);
-						} catch (IOException e1) {
-							addTabPanelDeletable(url, new WebErrorPnael(e1));
-						}
-						naviPane.setUrl(url);
-					}
-				});
-				pane.setEditable(false);
-				this.addTabPanelDeletable(url, new JScrollPane(pane));
-			} catch (IOException e) {
-				this.addTabPanelDeletable(url, new WebErrorPnael(e));
-			}
-
-		}
-	}
-
-	/*
-	 * --------------------------------------------------------- * RightPanel
+	 * RightPanel
 	 * ---------------------------------------------------------
 	 */
 	class RightPanel extends JPanel {
@@ -240,7 +137,6 @@ public class RollCakeRSS extends JFrame {
 			// ------------------- feedList -------------------//
 			feedListPane = new JPanel();
 			this.add(feedListPane);
-			this.changeGroup(0);
 
 			configButtons = new JPanel(new GridLayout(1, 2));
 			JButton editBtn = new JButton("Edit");
@@ -249,7 +145,7 @@ public class RollCakeRSS extends JFrame {
 			configButtons.add(deleteBtn);
 			this.add(configButtons);
 
-			this.setupFeel();
+			this.changeGroup(0);
 
 		}
 
@@ -259,7 +155,7 @@ public class RollCakeRSS extends JFrame {
 			layoutButtons.setMaximumSize(RCConfig.layout_button_box);
 			layoutButtons.setMinimumSize(RCConfig.layout_button_box);
 			layoutButtons.setBorder(RCConfig.margin_border);
-			layoutButtons.setBackground(Color.red);
+			layoutButtons.setBackground(RCConfig.rightpane_background_color);
 			((GridLayout) layoutButtons.getLayout()).setHgap(5);
 			((GridLayout) layoutButtons.getLayout()).setVgap(5);
 			for (Component button : layoutButtons.getComponents()) {
@@ -271,8 +167,9 @@ public class RollCakeRSS extends JFrame {
 			groupBox.setMaximumSize(RCConfig.group_comb);
 			groupBox.setMinimumSize(RCConfig.group_comb);
 			groupBox.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
+			groupBox.setBackground(RCConfig.rightpane_background_color);
 
-			feedListPane.setBackground(Color.blue);
+			feedListPane.setBackground(RCConfig.rightpane_background_color);
 			feedListPane.setBorder(RCConfig.margin_border);
 			for (Component button : feedListPane.getComponents()) {
 				if (button instanceof JToggleButton) {
@@ -284,7 +181,7 @@ public class RollCakeRSS extends JFrame {
 			configButtons.setMaximumSize(RCConfig.layout_button_box);
 			configButtons.setMinimumSize(RCConfig.layout_button_box);
 			configButtons.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
-			configButtons.setBackground(Color.red);
+			configButtons.setBackground(RCConfig.rightpane_background_color);
 			((GridLayout) configButtons.getLayout()).setHgap(5);
 			((GridLayout) configButtons.getLayout()).setVgap(5);
 			for (Component button : configButtons.getComponents()) {
@@ -307,6 +204,8 @@ public class RollCakeRSS extends JFrame {
 			}
 			feedListPane.setVisible(false);
 			feedListPane.setVisible(true);
+			homePane.setGroup(group);
+			setupFeel();
 		}
 	}
 }

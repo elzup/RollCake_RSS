@@ -51,10 +51,8 @@ public class RCConfig {
 	public static final Insets margin_default = new Insets(5, 5, 5, 5);
 	public static final Border margin_border = new EmptyBorder(margin_default);
 
-
-
-
-
+	// ------------------- itmePane -------------------//
+	public static final Dimension itempane_size = new Dimension(150, 120);
 
 	/* --------------------------------------------------------- *
 	 *     design
@@ -102,6 +100,8 @@ public class RCConfig {
 
 	//------------------- table layout -------------------//
 	public static final int num_split_column_hour = 4;
+
+	public static final int num_panel_layout_column = 3;
 
 	/* --------------------------------------------------------- *
 	 *     File io

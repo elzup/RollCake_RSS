@@ -1,4 +1,6 @@
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
@@ -6,11 +8,15 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class HomePanel extends JPanel {
-	private ArrayList<ItemPanel> itemPanelList;
+	private ArrayList<RCItem> itemList;
 
 	public HomePanel() {
-		this.itemPanelList = new ArrayList<>();
-		this.setLayout(new FlowLayout());
+		GridLayout gl =  new GridLayout(0, RCConfig.num_panel_layout_column);
+		gl.setVgap(5);
+		gl.setHgap(5);
+		this.setLayout(gl);
+		this.setBorder(RCConfig.margin_border);
+		this.itemList = new ArrayList<>();
 	}
 
 	public HomePanel(RCGroup group) {
@@ -20,10 +26,7 @@ public class HomePanel extends JPanel {
 
 	public void setGroup(RCGroup group) {
 		this.removeAll();
-		this.itemPanelList.clear();
-		this.itemPanelList = new ArrayList<>();
-
-		ArrayList<RCItem> itemList = new ArrayList<>();
+		this.itemList.clear();
 		for (RCFeed feed : group.getFeedList()) {
 			for (RCItem item : feed.getRCItemList()) {
 				itemList.add(item);
@@ -31,16 +34,16 @@ public class HomePanel extends JPanel {
 		}
 		for (RCItem item : itemList) {
 			ItemPanel itemPane = new ItemPanel(item);
-			itemPanelList.add(itemPane);
 			this.add(itemPane);
 		}
+		this.setVisible(false);
+		this.setVisible(true);
 	}
 
 	class ItemPanel extends JPanel {
-		private RCItem item;
 		public ItemPanel(RCItem item) {
-			this.item = item;
-			this.add(new JLabel(item.getTitle()));
+			this.setPreferredSize(RCConfig.itempane_size);
+			this.setBackground(Color.cyan);
 		}
 	}
 }
