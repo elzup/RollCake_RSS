@@ -15,18 +15,23 @@ public class RCGroup {
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public ArrayList<RCFeed> getFeedList() {
 		return this.feedList;
 	}
+
 	//------------------- getter, setter end -------------------//
 
 	public RCGroup(int id, String name) {
@@ -34,7 +39,6 @@ public class RCGroup {
 		this.name = name;
 		this.feedList = new ArrayList<RCFeed>();
 	}
-
 
 	public int size() {
 		return feedList.size();
@@ -45,7 +49,7 @@ public class RCGroup {
 	}
 
 	public RCFeed findFeed(String name) {
-		for (RCFeed feed: this.feedList) {
+		for (RCFeed feed : this.feedList) {
 			if (name.equals(feed.getName()))
 				return feed;
 		}
@@ -59,16 +63,16 @@ public class RCGroup {
 		return nameList;
 	}
 
-
 	public void runAll() {
 		long start = System.currentTimeMillis();
 		ExecutorService threadPool = Executors.newFixedThreadPool(8);
 		Collection<Callable<Void>> processes = new LinkedList<Callable<Void>>();
 		for (RCFeed feed : this.feedList) {
-			System.out.println("RunNow :" + feed.getName());
+			//			System.out.println("RunNow :" + feed.getName());
 			final RCFeed feed0 = feed;
 			processes.add(new Callable<Void>() {
-				@Override public Void call() {
+				@Override
+				public Void call() {
 					feed0.run();
 					return null;
 				}
@@ -81,11 +85,12 @@ public class RCGroup {
 		} finally {
 			threadPool.shutdown();
 		}
-		System.out.println("RunProcesseTime: " + (System.currentTimeMillis() - start));
+		//		System.out.println("RunProcesseTime: " + (System.currentTimeMillis() - start));
 	}
+
 	@Deprecated
 	public void reRunAll() {
-		for (RCFeed feed :this.feedList) {
+		for (RCFeed feed : this.feedList) {
 			feed.reSet();
 		}
 		this.runAll();

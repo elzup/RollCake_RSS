@@ -198,13 +198,15 @@ public class RollCakeRSS extends JFrame {
 			RCGroup group = groupList.get(groupId);
 			feedListPane.removeAll();
 			for (RCFeed feed : group.getFeedList()) {
-				System.out.println(":" + feed.getName());
+//				System.out.println(":" + feed.getName());
 				JToggleButton tb = new JToggleButton(feed.getName());
 				feedListPane.add(tb);
 			}
 			feedListPane.setVisible(false);
 			feedListPane.setVisible(true);
+
 			homePane.setGroup(group);
+
 			setupFeel();
 		}
 	}

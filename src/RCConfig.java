@@ -52,7 +52,10 @@ public class RCConfig {
 	public static final Border margin_border = new EmptyBorder(margin_default);
 
 	// ------------------- itmePane -------------------//
-	public static final Dimension itempane_size = new Dimension(150, 120);
+	public static final Dimension itempane_size = new Dimension(0, 250);
+	public static final int item_image_width  = 210;
+	public static final int item_image_height = (int) (200 / Math.sqrt(2));
+	public static final Dimension item_imagepane = new Dimension(400, item_image_height + 5);
 
 	/* --------------------------------------------------------- *
 	 *     design
@@ -92,6 +95,11 @@ public class RCConfig {
 		return cal.getTime().getDate();
 	}
 
+
+
+	public static final String toImgTag (String url) {
+		return "<img src=\"" + url + "\" width=\"" + item_image_width  + "\" height=\"" + item_image_height + "\">";
+	}
 
 	/* --------------------------------------------------------- *
 	 *     main value setting
