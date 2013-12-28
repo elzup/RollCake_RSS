@@ -98,6 +98,10 @@ public class RCManager {
 		return nameList;
 	}
 
+	public RCGroup getActiveGroup () {
+		return this.groupList.get(this.groupPointer);
+	}
+
 	/* --------------------------------------------------------- *
 	 *     debug
 	 * --------------------------------------------------------- */

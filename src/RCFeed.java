@@ -26,12 +26,11 @@ public class RCFeed extends Feed {
 
 	private boolean isSimple = false;
 	private boolean isRun;
-	//	private String url;
+	// private String url;
 
 	private ArrayList<RCItem> itemList;
 
 	public RCFeed() {
-		// TODO Constracter
 		super();
 		this.itemList = new ArrayList<RCItem>();
 		this.isRun = false;
@@ -46,7 +45,7 @@ public class RCFeed extends Feed {
 		return true;
 	}
 
-	//------------------- getter,setter -------------------//
+	// ------------------- getter,setter -------------------//
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -92,7 +91,7 @@ public class RCFeed extends Feed {
 		return itemList;
 	}
 
-	//------------------- getter,setter end -------------------//
+	// ------------------- getter,setter end -------------------//
 	/** URLで指示されたフィードを取得し DOM tree を構築、itemList を生成 */
 	@Override
 	public void run() {
@@ -102,8 +101,10 @@ public class RCFeed extends Feed {
 		this.itemList = new ArrayList<RCItem>();
 		BufferedReader in = null;
 		try {
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64)");
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setRequestProperty("User-Agent",
+					"Mozilla/5.0 (Windows NT 6.1; WOW64)");
 			connection.connect();
 			InputStream inputStream = connection.getInputStream();
 			InputStreamReader reader = new InputStreamReader(inputStream,
@@ -115,7 +116,8 @@ public class RCFeed extends Feed {
 		}
 
 		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			document = builder.parse(new InputSource(in));
 		} catch (ParserConfigurationException e) {
@@ -151,7 +153,8 @@ public class RCFeed extends Feed {
 
 	@Override
 	protected void findItems(Node node) {
-		for (Node current = node.getFirstChild(); current != null; current = current.getNextSibling()) {
+		for (Node current = node.getFirstChild(); current != null; current = current
+				.getNextSibling()) {
 			if (current.getNodeType() == Node.ELEMENT_NODE) {
 				String nodeName = current.getNodeName();
 				if ("item".equals(nodeName) || "entry".equals(nodeName)) {
@@ -161,8 +164,7 @@ public class RCFeed extends Feed {
 					itemList.add(item);
 				} else if ("title".equals(nodeName)) {
 					this.tempName = current.getFirstChild().getNodeValue();
-				}
-				else
+				} else
 					findItems(current);
 			}
 		}

@@ -1,6 +1,10 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -22,7 +26,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -31,6 +37,7 @@ public class RollCakeRSS extends JFrame {
 	NaviPanel naviPane;
 	RightPanel rightPane;
 	TabPanel mainPane;
+	HomePanel homePane;
 	DefaultListModel<String> feedListModel;
 	JList<String> feedList;
 	JComboBox<String> groupBox;
@@ -41,8 +48,7 @@ public class RollCakeRSS extends JFrame {
 		RollCakeRSS cake = new RollCakeRSS();
 
 		cake.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		cake.setBounds(10, 10, RCConfig.window_size_width,
-				RCConfig.window_size_height);
+		cake.setBounds(10, 10, RCConfig.window_size_width, RCConfig.window_size_height);
 		cake.setTitle(RCConfig.title_frame);
 		cake.setVisible(true);
 
@@ -88,9 +94,7 @@ public class RollCakeRSS extends JFrame {
 	}
 
 	private void setupWindowConfig() throws Exception {
-		UIManager
-				.setLookAndFeel(UIManager.getInstalledLookAndFeels()[RCConfig.window_id_lookandfeel]
-						.getClassName());
+		UIManager.setLookAndFeel(UIManager.getInstalledLookAndFeels()[RCConfig.window_id_lookandfeel].getClassName());
 	}
 
 	private void setupToolBar() {
@@ -119,14 +123,15 @@ public class RollCakeRSS extends JFrame {
 		public NaviPanel() {
 			super();
 			this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-			addressBar = new JTextField(startPage);
-			mainPane.openWebPage(startPage);
+			addressBar = new JTextField();
 			addressBar.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					mainPane.openWebPage(addressBar.getText());
 				}
 			});
+			// mainPane.openWebPage(startPage);
+			mainPane.setupHome();
 			this.add(addressBar);
 		}
 
@@ -159,31 +164,42 @@ public class RollCakeRSS extends JFrame {
 			this.setTabComponentAt(this.getTabCount() - 1, tab);
 		}
 
-		public void openWebPage(String url) {
-			final JEditorPane pane = new JEditorPane();
-			try {
-				pane.setPage(url);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			pane.addHyperlinkListener(new HyperlinkListener() {
-				@Override
-				public void hyperlinkUpdate(HyperlinkEvent e) {
-					if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED)
-						return;
-					String url = e.getURL().toString();
-					try {
-						pane.setPage(url);
-					} catch (IOException e1) {
-						// TODO 自動生成された catch ブロック
-						e1.printStackTrace();
-					}
-					naviPane.setUrl(url);
-				}
-			});
+		public void addTabPanelDeletable(String tabname, final JComponent component) {
+			this.addTabPanel(tabname, component);
+			JPanel tab = new JPanel(new FlowLayout());
+			tab.add(new JLabel(tabname));
+			this.setTabComponentAt(this.getTabCount() - 1, tab);
+		}
 
-			pane.setEditable(false);
-			this.addTabPanel(url.substring(0, 20), new JScrollPane(pane));
+		public void setupHome() {
+			homePane = new HomePanel(manager.getActiveGroup());
+			this.addTabPanelDeletable("Home", homePane);
+		}
+
+		public void openWebPage(String url) {
+			try {
+				final JEditorPane pane = new JEditorPane();
+				pane.setPage(url);
+				pane.addHyperlinkListener(new HyperlinkListener() {
+					@Override
+					public void hyperlinkUpdate(HyperlinkEvent e) {
+						if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED)
+							return;
+						String url = e.getURL().toString();
+						try {
+							pane.setPage(url);
+						} catch (IOException e1) {
+							addTabPanelDeletable(url, new WebErrorPnael(e1));
+						}
+						naviPane.setUrl(url);
+					}
+				});
+				pane.setEditable(false);
+				this.addTabPanelDeletable(url, new JScrollPane(pane));
+			} catch (IOException e) {
+				this.addTabPanelDeletable(url, new WebErrorPnael(e));
+			}
+
 		}
 	}
 
@@ -192,10 +208,14 @@ public class RollCakeRSS extends JFrame {
 	 * ---------------------------------------------------------
 	 */
 	class RightPanel extends JPanel {
+		public JPanel feedListPane;
+		public JPanel layoutButtons;
+		public JPanel configButtons;
+
 		public RightPanel() {
 			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			// ------------------- layoutButtons -------------------//
-			JPanel layoutButtons = new JPanel(new GridLayout(1, 3));
+			layoutButtons = new JPanel(new GridLayout(1, 3));
 			JButton panelsLayout = new JButton("Panel");
 			JButton tabelsLayout = new JButton("Table");
 			JButton imagesLayout = new JButton("Image");
@@ -204,19 +224,89 @@ public class RollCakeRSS extends JFrame {
 			layoutButtons.add(imagesLayout);
 			this.add(layoutButtons);
 
-			// ------------------- groupChooser-------------------//
-			String[] nameList = manager.groupNameList().toArray(new String[manager.groupNameList().size()]);
+			// ------------------- groupBox -------------------//
+			String[] nameList = new String[manager.groupNameList().size()];
+			for (RCGroup group : manager.getGroupList())
+				nameList[group.getId()] = group.getName();
 			groupBox = new JComboBox<String>(nameList);
+			groupBox.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					changeGroup(groupBox.getSelectedIndex());
+				}
+			});
 			this.add(groupBox);
 
 			// ------------------- feedList -------------------//
+			feedListPane = new JPanel();
+			this.add(feedListPane);
+			this.changeGroup(0);
+
+			configButtons = new JPanel(new GridLayout(1, 2));
+			JButton editBtn = new JButton("Edit");
+			JButton deleteBtn = new JButton("Delete");
+			configButtons.add(editBtn);
+			configButtons.add(deleteBtn);
+			this.add(configButtons);
+
+			this.setupFeel();
+
+		}
+
+		public void setupFeel() {
+			this.setPreferredSize(RCConfig.rightpane_size_dimension);
+			this.setBackground(RCConfig.rightpane_background_color);
+			layoutButtons.setMaximumSize(RCConfig.layout_button_box);
+			layoutButtons.setMinimumSize(RCConfig.layout_button_box);
+			layoutButtons.setBorder(RCConfig.margin_border);
+			layoutButtons.setBackground(Color.red);
+			((GridLayout) layoutButtons.getLayout()).setHgap(5);
+			((GridLayout) layoutButtons.getLayout()).setVgap(5);
+			for (Component button : layoutButtons.getComponents()) {
+				if (button instanceof JButton) {
+					button.setBackground(RCConfig.button_back_color);
+				}
+			}
+
+			groupBox.setMaximumSize(RCConfig.group_comb);
+			groupBox.setMinimumSize(RCConfig.group_comb);
+			groupBox.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
+
+			feedListPane.setBackground(Color.blue);
+			feedListPane.setBorder(RCConfig.margin_border);
+			for (Component button : feedListPane.getComponents()) {
+				if (button instanceof JToggleButton) {
+					button.setBackground(RCConfig.button_back_color);
+					button.setPreferredSize(RCConfig.feedlist_button_size);
+				}
+			}
+
+			configButtons.setMaximumSize(RCConfig.layout_button_box);
+			configButtons.setMinimumSize(RCConfig.layout_button_box);
+			configButtons.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
+			configButtons.setBackground(Color.red);
+			((GridLayout) configButtons.getLayout()).setHgap(5);
+			((GridLayout) configButtons.getLayout()).setVgap(5);
+			for (Component button : configButtons.getComponents()) {
+				if (button instanceof JButton) {
+					button.setBackground(RCConfig.button_back_color);
+				}
+			}
+		}
+
+		public void changeGroup(int groupId) {
+			if (groupId == -1)
+				return;
 			ArrayList<RCGroup> groupList = manager.getGroupList();
-			RCGroup group = groupList.get(groupBox.getSelectedIndex());
-			nameList = group.feedNameList().toArray(new String[group.feedNameList().size()]);
-			JList<String> feedList = new JList<>(nameList);
-			this.add(feedList);
-
-
+			RCGroup group = groupList.get(groupId);
+			feedListPane.removeAll();
+			for (RCFeed feed : group.getFeedList()) {
+				System.out.println(":" + feed.getName());
+				JToggleButton tb = new JToggleButton(feed.getName());
+				feedListPane.add(tb);
+			}
+			feedListPane.setVisible(false);
+			feedListPane.setVisible(true);
 		}
 	}
 }
