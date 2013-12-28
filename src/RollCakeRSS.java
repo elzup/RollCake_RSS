@@ -1,43 +1,31 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 
 public class RollCakeRSS extends JFrame {
 	RCManager manager;
 	RightPanel rightPane;
 	HomePanel homePane;
 	DefaultListModel<String> feedListModel;
-	JList<String> feedList;
 	JComboBox<String> groupBox;
 
 	public static void main(String... args) {
@@ -198,8 +186,22 @@ public class RollCakeRSS extends JFrame {
 			RCGroup group = groupList.get(groupId);
 			feedListPane.removeAll();
 			for (RCFeed feed : group.getFeedList()) {
-//				System.out.println(":" + feed.getName());
+				//				System.out.println(":" + feed.getName());
 				JToggleButton tb = new JToggleButton(feed.getName());
+				tb.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						Object o = e.getSource();
+						if (!(o instanceof JToggleButton)) return;
+						JToggleButton tb = (JToggleButton) o;
+						int i = 0;
+						for (Component c : feedListPane.getComponents()) {
+							if (c.equals(tb)) break;
+							i++;
+						}
+						homePane.changeItem(i, tb.isSelected());
+					}
+				});
 				feedListPane.add(tb);
 			}
 			feedListPane.setVisible(false);

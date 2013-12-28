@@ -52,10 +52,13 @@ public class RCConfig {
 	public static final Border margin_border = new EmptyBorder(margin_default);
 
 	// ------------------- itmePane -------------------//
-	public static final Dimension itempane_size = new Dimension(0, 250);
+	public static final Dimension itempane_size = new Dimension(210, 250);
 	public static final int item_image_width  = 210;
 	public static final int item_image_height = (int) (200 / Math.sqrt(2));
 	public static final Dimension item_imagepane = new Dimension(400, item_image_height + 5);
+	public static final Dimension item_underpane = new Dimension(400, 100 + 5);
+	public static final Dimension item_titlepane = new Dimension(210, 50);
+
 
 	/* --------------------------------------------------------- *
 	 *     design

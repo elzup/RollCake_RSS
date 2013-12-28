@@ -14,6 +14,7 @@ public class RCItem extends Item {
 
 	private Color color;
 	private String imageUrl;
+	private int feedId;
 
 	// ------------------- getter, setter -------------------//
 	public void setColor(Color col) {
@@ -22,6 +23,13 @@ public class RCItem extends Item {
 
 	public Color getColor() {
 		return this.color;
+	}
+
+	public void setFeedId (int feedId) {
+		this.feedId  = feedId;
+	}
+	public int getFeedId () {
+		return this.feedId;
 	}
 
 	public void setImgUrl(String url) {
