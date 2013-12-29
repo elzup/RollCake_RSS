@@ -11,18 +11,20 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
-import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 @SuppressWarnings("serial")
 public class HomePanel extends JPanel {
-	private ArrayList<RCItem> itemList;
+	private ArrayList<ItemPanel> itemPaneList;
 
 	public HomePanel() {
 		super();
@@ -33,10 +35,10 @@ public class HomePanel extends JPanel {
 		//		FlowLayout fl = new FlowLayout();
 		//		fl.setVgap(5);
 		//		fl.setHgap(5);
-		//		this.setLayout(fl);
+		//		this.setLayout(fl);		//まだ諦めるような時間じゃない
 		this.setBackground(RCConfig.home_back_color);
 		this.setBorder(RCConfig.margin_border);
-		this.itemList = new ArrayList<>();
+		this.itemPaneList = new ArrayList<>();
 	}
 
 	public HomePanel(RCGroup group) {
@@ -46,27 +48,107 @@ public class HomePanel extends JPanel {
 
 	public void setGroup(RCGroup group) {
 		this.removeAll();
-		this.itemList.clear();
+		this.itemPaneList.clear();
 		for (RCFeed feed : group.getFeedList()) {
 			System.out.println("f: " + feed.getName() + " [" + feed.getItemList().size());
 			for (RCItem item : feed.getRCItemList()) {
 				System.out.println("i: " + item.getTitle());
 				item.setColor(feed.getColor());
 				item.setFeedId(group.getFeedList().indexOf(feed));
-				itemList.add(item);
+				ItemPanel itemPane = new ItemPanel(item);
+				itemPaneList.add(itemPane);
+			}
+		}
+		this.timeSort();
+		this.reload();
+	}
+
+	public void reload() {
+		this.removeAll();
+		for (ItemPanel pane : itemPaneList) {
+			if (!pane.isDisplay())
+				continue;
+			this.add(pane);
+		}
+		this.setVisible(false);
+		this.setVisible(true);
+	}
+
+	public void offItem(int id) {
+		this.changeItem(id, false);
+	}
+
+	public void onItem(int id) {
+		this.changeItem(id, true);
+	}
+
+	void changeItem(int id, boolean state) {
+		for (ItemPanel pane : this.itemPaneList) {
+			if (pane.getId() == id) {
+				pane.setDisplay(state);
 			}
 		}
 		this.reload();
 	}
 
-	@Override
-	public void repaint() {
-		super.repaint();
+	public void timeSort() {
+		Collections.sort(itemPaneList, new Comparator<ItemPanel>() {
+			@Override
+			public int compare(ItemPanel o1, ItemPanel o2) {
+				Date d = o2.getItem().getDate();
+				return (d == null) ? -1 : d.compareTo(o1.getItem().getDate());
+			}
+		});
+	}
+
+	class OpenButton extends JButton {
+		public OpenButton(final String url) {
+			try {
+				final URI uri = new URI(url);
+				this.setText("Open");
+				this.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						Desktop desktop = Desktop.getDesktop();
+						try {
+							desktop.browse(uri);
+						} catch (IOException e1) {
+							// TODO 自動生成された catch ブロック
+							e1.printStackTrace();
+						}
+					}
+				});
+			} catch (URISyntaxException e2) {
+				// TODO 自動生成された catch ブロック
+				e2.printStackTrace();
+			}
+		}
+	}
+
+	class GridPanel extends JPanel {
+		public GridBagLayout gbl;
+
+		public void setGridBagLayout(GridBagLayout gbl) {
+			this.gbl = gbl;
+			this.setLayout(this.gbl);
+		}
+
+		public final void addGridBag(Component com, int x, int y, int w, int h) {
+			GridBagConstraints gbc = new GridBagConstraints();
+			gbc.fill = GridBagConstraints.BOTH;
+			gbc.gridx = x;
+			gbc.gridy = y;
+			gbc.gridwidth = w;
+			gbc.gridheight = h;
+			gbl.setConstraints(com, gbc);
+			add(com);
+		}
 	}
 
 	class ItemPanel extends JPanel {
 		private int feedId;
 		private boolean display;
+		private RCItem item;
 
 		// ------------------- getter, setter -------------------//
 		public int getId() {
@@ -81,11 +163,20 @@ public class HomePanel extends JPanel {
 			return this.display;
 		}
 
+		public RCItem getItem() {
+			return this.item;
+		}
+
+		public void setItem(RCItem item) {
+			this.item = item;
+		}
+
 		// ------------------- getter, setter end -------------------//
 
 		public ItemPanel(RCItem item) {
 			this.feedId = item.getFeedId();
 			this.display = true;
+			this.item = item;
 
 			this.setPreferredSize(RCConfig.itempane_size);
 			this.setMaximumSize(RCConfig.itempane_size);
@@ -141,81 +232,6 @@ public class HomePanel extends JPanel {
 
 			this.setVisible(false);
 			this.setVisible(true);
-		}
-
-	}
-
-	public void offItem(int id) {
-		this.changeItem(id, false);
-	}
-
-	public void onItem(int id) {
-		this.changeItem(id, true);
-	}
-
-	void changeItem(int id, boolean state) {
-		for (Component comp : this.getComponents()) {
-			if (!(comp instanceof ItemPanel))
-				continue;
-			ItemPanel itemPane = (ItemPanel) comp;
-			if (itemPane.getId() == id) {
-				itemPane.setDisplay(state);
-			}
-		}
-		this.reload();
-	}
-
-	public void reload() {
-		this.removeAll();
-		for (RCItem item : itemList) {
-			ItemPanel itemPane = new ItemPanel(item);
-			this.add(itemPane);
-		}
-		this.setVisible(false);
-		this.setVisible(true);
-	}
-
-	class OpenButton extends JButton {
-		public OpenButton(final String url) {
-			try {
-				final URI uri = new URI(url);
-				this.setText("Open");
-				this.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						Desktop desktop = Desktop.getDesktop();
-						try {
-							desktop.browse(uri);
-						} catch (IOException e1) {
-							// TODO 自動生成された catch ブロック
-							e1.printStackTrace();
-						}
-					}
-				});
-			} catch (URISyntaxException e2) {
-				// TODO 自動生成された catch ブロック
-				e2.printStackTrace();
-			}
-		}
-	}
-
-	class GridPanel extends JPanel {
-		public GridBagLayout gbl;
-
-		public void setGridBagLayout(GridBagLayout gbl) {
-			this.gbl = gbl;
-			this.setLayout(this.gbl);
-		}
-
-		public final void addGridBag(Component com, int x, int y, int w, int h) {
-			GridBagConstraints gbc = new GridBagConstraints();
-			gbc.fill = GridBagConstraints.BOTH;
-			gbc.gridx = x;
-			gbc.gridy = y;
-			gbc.gridwidth = w;
-			gbc.gridheight = h;
-			gbl.setConstraints(com, gbc);
-			add(com);
 		}
 	}
 }

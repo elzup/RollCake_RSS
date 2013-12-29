@@ -11,7 +11,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -194,11 +193,13 @@ public class RollCakeRSS extends JFrame {
 						Object o = e.getSource();
 						if (!(o instanceof JToggleButton)) return;
 						JToggleButton tb = (JToggleButton) o;
+						tb.setSelected(true);
 						int i = 0;
 						for (Component c : feedListPane.getComponents()) {
 							if (c.equals(tb)) break;
 							i++;
 						}
+						System.out.println(i + ": -" + tb.isSelected());
 						homePane.changeItem(i, tb.isSelected());
 					}
 				});
