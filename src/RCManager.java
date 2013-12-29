@@ -1,5 +1,7 @@
+import java.awt.Color;
 import java.util.ArrayList;
 
+import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 
 public class RCManager {
@@ -29,6 +31,7 @@ public class RCManager {
 		this.groupPointer = 0;
 		this.filer = new RCFiler(filename, this);
 	}
+
 	public RCManager() {
 		this(RCConfig.savefile_name);
 	}
@@ -36,6 +39,7 @@ public class RCManager {
 	public void save() {
 		this.filer.saveFeedList();
 	}
+
 	public void load() {
 		this.filer.loadFeedList();
 	}
@@ -49,7 +53,12 @@ public class RCManager {
 	}
 
 	public void addFeed(String name, String url, int index) {
-		this.groupList.get(index).add(this.createFeed(name, url, null));
+		this.groupList.get(index).add(this.createFeed(name, url));
+	}
+
+	public void addFeed(String name, String url, int index, Color color) {
+		this.groupList.get(index).add(this.createFeed(name, url, color));
+
 	}
 
 	public void addFeed(String name, String url) {
@@ -74,8 +83,8 @@ public class RCManager {
 			group.runAll();
 	}
 
-	public RCFeed createFeed(@Nullable String name, String url,
-			@Nullable String encode) {
+
+	public RCFeed createFeed( String name, String url, String encode, Color color) {
 		RCFeed feed = new RCFeed();
 		if (!feed.setURL(url)) {
 			return null;
@@ -87,8 +96,16 @@ public class RCManager {
 		return feed;
 	}
 
-	public RCFeed createFeed(@Nullable String name, String url) {
-		return this.createFeed(name, url, null);
+	public RCFeed createFeed(String name, String url, @NotNull Color color) {
+		return this.createFeed(name, url, null, color);
+	}
+
+	public RCFeed createFeed(String name, String url, String encode ) {
+		return this.createFeed(name, url, encode, RCConfig.no_color);
+	}
+
+	public RCFeed createFeed(String name, String url) {
+		return this.createFeed(name, url, null, RCConfig.no_color);
 	}
 
 	public ArrayList<String> groupNameList() {
@@ -98,7 +115,7 @@ public class RCManager {
 		return nameList;
 	}
 
-	public RCGroup getActiveGroup () {
+	public RCGroup getActiveGroup() {
 		return this.groupList.get(this.groupPointer);
 	}
 

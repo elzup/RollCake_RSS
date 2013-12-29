@@ -5,10 +5,7 @@ import java.util.Calendar;
 
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.border.MatteBorder;
-import javax.swing.border.TitledBorder;
 
 public class RCConfig {
 
@@ -52,18 +49,26 @@ public class RCConfig {
 	public static final Border margin_border = new EmptyBorder(margin_default);
 
 	// ------------------- itmePane -------------------//
-	public static final Dimension itempane_size = new Dimension(210, 250);
-	public static final int item_image_width  = 210;
+	public static final Dimension itempane_size = new Dimension(200, 250);
+	public static final int item_image_width  = 200;
 	public static final int item_image_height = (int) (200 / Math.sqrt(2));
-	public static final Dimension item_imagepane = new Dimension(400, item_image_height + 5);
-	public static final Dimension item_underpane = new Dimension(400, 100 + 5);
-	public static final Dimension item_titlepane = new Dimension(210, 50);
+	public static final Dimension item_imagepane = new Dimension(item_image_width, item_image_height + 5);
+	public static final Dimension item_underpane = new Dimension(item_image_width, 100 + 5);
+	public static final Dimension item_titlepane = new Dimension(item_image_width, 50);
 
 
 	/* --------------------------------------------------------- *
 	 *     design
 	 * --------------------------------------------------------- */
 
+	// ------------------- homepane -------------------//
+	public static final Color home_back_color = Color.white;
+//	public static final Color home_back_color = Color.white;
+
+	// ------------------- item -------------------//
+	public static final Color itempane_back_color = Color.white;
+	
+	
 	//------------------- table basic -------------------//
 	public static final int cell_size_height = 10;
 	public static final int cell_size_width = 14;
@@ -113,6 +118,11 @@ public class RCConfig {
 	public static final int num_split_column_hour = 4;
 
 	public static final int num_panel_layout_column = 3;
+
+	/* --------------------------------------------------------- *
+	 *     Extensive vlaies
+	* --------------------------------------------------------- */
+	public static final Color no_color = Color.LIGHT_GRAY;
 
 	/* --------------------------------------------------------- *
 	 *     File io

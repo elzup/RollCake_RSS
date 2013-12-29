@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 @SuppressWarnings("serial")
@@ -33,6 +34,7 @@ public class HomePanel extends JPanel {
 		//		fl.setVgap(5);
 		//		fl.setHgap(5);
 		//		this.setLayout(fl);
+		this.setBackground(RCConfig.home_back_color);
 		this.setBorder(RCConfig.margin_border);
 		this.itemList = new ArrayList<>();
 	}
@@ -54,12 +56,7 @@ public class HomePanel extends JPanel {
 				itemList.add(item);
 			}
 		}
-		for (RCItem item : itemList) {
-			ItemPanel itemPane = new ItemPanel(item);
-			this.add(itemPane);
-		}
-		this.setVisible(false);
-		this.setVisible(true);
+		this.reload();
 	}
 
 	@Override
@@ -69,30 +66,51 @@ public class HomePanel extends JPanel {
 
 	class ItemPanel extends JPanel {
 		private int feedId;
-		public int getId () {
+		private boolean display;
+
+		// ------------------- getter, setter -------------------//
+		public int getId() {
 			return this.feedId;
 		}
 
+		public void setDisplay(boolean b) {
+			this.display = b;
+		}
+
+		public boolean isDisplay() {
+			return this.display;
+		}
+
+		// ------------------- getter, setter end -------------------//
+
 		public ItemPanel(RCItem item) {
+			this.feedId = item.getFeedId();
+			this.display = true;
+
 			this.setPreferredSize(RCConfig.itempane_size);
 			this.setMaximumSize(RCConfig.itempane_size);
 			this.setMinimumSize(RCConfig.itempane_size);
 			this.setBackground(Color.white);
-//			BoxLayout bl = new BoxLayout(this, BoxLayout.Y_AXIS);
+			//			BoxLayout bl = new BoxLayout(this, BoxLayout.Y_AXIS);
 
-			this.feedId = item.getFeedId();
-			this.setBorder(new MatteBorder(new Insets(1, 1, 1, 10), item.getColor()));
+			this.setBorder(new MatteBorder(new Insets(0, 0, 12, 0), item.getColor()));
 
 			JPanel wrapPane = new JPanel();
+			this.add(wrapPane);
 			JPanel centerPane = new JPanel();
+			centerPane.setBackground(RCConfig.itempane_back_color);
+			centerPane.setBorder(null);
 			GridPanel underPane = new GridPanel();
 			wrapPane.setLayout(new BoxLayout(wrapPane, BoxLayout.Y_AXIS));
 			underPane.setGridBagLayout(new GridBagLayout());
+			wrapPane.setBackground(RCConfig.itempane_back_color);
 
 			wrapPane.add(centerPane);
 			wrapPane.add(underPane);
 
 			JTextPane imgPane = new JTextPane();
+			imgPane.setMargin(new Insets(0, 0, 0, 0));
+			imgPane.setBackground(Color.yellow);
 			imgPane.setContentType("text/html");
 			imgPane.setText(RCConfig.toImgTag(item.getImageUrl()));
 			imgPane.setMaximumSize(RCConfig.item_imagepane);
@@ -121,7 +139,6 @@ public class HomePanel extends JPanel {
 			underPane.addGridBag(dateLabel, 0, 2, 2, 1);
 			underPane.addGridBag(openButton, 2, 2, 1, 1);
 
-			this.add(wrapPane);
 			this.setVisible(false);
 			this.setVisible(true);
 		}
@@ -131,17 +148,31 @@ public class HomePanel extends JPanel {
 	public void offItem(int id) {
 		this.changeItem(id, false);
 	}
+
 	public void onItem(int id) {
 		this.changeItem(id, true);
 	}
 
 	void changeItem(int id, boolean state) {
-		for (Component itemPane : this.getComponents()) {
-			if (!(itemPane instanceof ItemPanel)) continue;
-			if ( ((ItemPanel) itemPane).getId()  == id) {
-				itemPane.setVisible(state);
+		for (Component comp : this.getComponents()) {
+			if (!(comp instanceof ItemPanel))
+				continue;
+			ItemPanel itemPane = (ItemPanel) comp;
+			if (itemPane.getId() == id) {
+				itemPane.setDisplay(state);
 			}
 		}
+		this.reload();
+	}
+
+	public void reload() {
+		this.removeAll();
+		for (RCItem item : itemList) {
+			ItemPanel itemPane = new ItemPanel(item);
+			this.add(itemPane);
+		}
+		this.setVisible(false);
+		this.setVisible(true);
 	}
 
 	class OpenButton extends JButton {

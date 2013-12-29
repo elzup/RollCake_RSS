@@ -22,7 +22,7 @@ public class RCItem extends Item {
 	}
 
 	public Color getColor() {
-		return this.color;
+		return (this.color != null) ? this.color : RCConfig.no_color;
 	}
 
 	public void setFeedId (int feedId) {

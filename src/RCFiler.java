@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -49,14 +50,13 @@ public class RCFiler {
 			String name = getElementValue(group, "name");
 			if (name == null)
 				continue;
-//			System.out.println("-" + name);
+			//			System.out.println("-" + name);
 			int groupId = Integer.valueOf(getElementValue(group, "id"));
-//			System.out.println("name: " + name + ":" + groupId);
+			//			System.out.println("name: " + name + ":" + groupId);
 			manager.addGroup(groupId, name);
 
 			for (int j = 0; j < group.getLength(); j++)
 				group.item(j).getChildNodes().getLength();
-
 
 			NodeList feedNodes = (NodeList) getElement(group, "feedList");
 			for (int j = 0; j < feedNodes.getLength(); j++) {
@@ -65,8 +65,9 @@ public class RCFiler {
 				if (feedName == null)
 					continue;
 				String url = getElementValue(feed, "url");
-//				System.out.println("name: " + name + ":" + url);
-				manager.addFeed(feedName, url, groupId);
+				String color = getElementValue(feed, "color");
+				//				System.out.println("name: " + name + ":" + url);
+				manager.addFeed(feedName, url, groupId, new Color(new Integer(color)));
 			}
 		}
 		manager.runAll();
@@ -84,12 +85,12 @@ public class RCFiler {
 
 	private String getElementValue(NodeList nodeList, String tagName) {
 		Node n = getElement(nodeList, tagName);
-		if (n == null) return null;
+		if (n == null)
+			return null;
 		return n.getFirstChild().getNodeValue();
 	}
 
-	private Document getDocument()
-			throws Exception {
+	private Document getDocument() throws Exception {
 		DOMImplementation domImpl = DocumentBuilderFactory.newInstance().newDocumentBuilder().getDOMImplementation();
 		Document document = domImpl.createDocument("", "rollCake", null);
 		Element rootElement = document.getDocumentElement();
@@ -112,6 +113,7 @@ public class RCFiler {
 					continue;
 				feedElement.appendChild(createElementWithName(document, "name", feed.getName()));
 				feedElement.appendChild(createElementWithName(document, "url", feed.getUrl().toString()));
+				feedElement.appendChild(createElementWithName(document, "color", "" + feed.getColor().getRGB()));
 
 				feedRootElement.appendChild(feedElement);
 			}
