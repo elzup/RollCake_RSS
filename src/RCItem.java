@@ -2,7 +2,9 @@ import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +17,7 @@ public class RCItem extends Item {
 	private Color color;
 	private String imageUrl;
 	private int feedId;
+	private HashMap<String, String> otherTag;
 
 	// ------------------- getter, setter -------------------//
 	public void setColor(Color col) {
@@ -25,10 +28,11 @@ public class RCItem extends Item {
 		return (this.color != null) ? this.color : RCConfig.no_color;
 	}
 
-	public void setFeedId (int feedId) {
-		this.feedId  = feedId;
+	public void setFeedId(int feedId) {
+		this.feedId = feedId;
 	}
-	public int getFeedId () {
+
+	public int getFeedId() {
 		return this.feedId;
 	}
 
@@ -61,10 +65,13 @@ public class RCItem extends Item {
 		dcSubject = null;
 		date = null;
 		dateString = null;
+		otherTag = new HashMap<>();
 		// 引数 node (= item要素) の子ノードを走査
 		for (Node current = node.getFirstChild(); current != null; current = current.getNextSibling()) { // 子ノードを先頭から
 			if (current.getNodeType() == Node.ELEMENT_NODE) { // 要素だったら
 				String nodeName = current.getNodeName();
+				if (nodeName == null || RCConfig.isNgTag(nodeName))
+					;
 				if (nodeName.equals("title"))
 					title = getContent(current);
 				else if (nodeName.equals("link"))
@@ -86,18 +93,8 @@ public class RCItem extends Item {
 						dcSubject = new LinkedList<String>();
 					}
 					dcSubject.add(getContent(current));
-//@formatter:off
-				} else if (
-						nodeName.equals("guid") 	||
-						nodeName.equals("category") ||
-						nodeName.startsWith("dc:")  ||
-						nodeName.startsWith("rdf:") ||
-						nodeName.startsWith("dcq:")
-						) {
-					; // 処理しない
-//@formatter:on
 				} else {
-					; // 処理しない
+					otherTag.put(nodeName, getContent(current));
 				}
 			}
 			// 要素 (Node.ELEMENT_NODE) でなかったら何もしない (改行など)
@@ -164,4 +161,13 @@ public class RCItem extends Item {
 		return vals[0] + RCConfig.key_delimiter + vals[1] + RCConfig.key_delimiter + vals[2];
 	}
 
+	@Override
+	public String toString() {
+		String string = "";
+		string += super.toString();
+		for (Entry<String, String> e : this.otherTag.entrySet()) {
+			string += "[" + e.getKey() + "]" + e.getValue();
+		}
+		return string;
+	}
 }

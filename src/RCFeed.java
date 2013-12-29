@@ -24,7 +24,6 @@ public class RCFeed extends Feed {
 	private String tempName;
 	private Color color;
 
-	private boolean isSimple = false;
 	private boolean isRun;
 	// private String url;
 
@@ -75,18 +74,6 @@ public class RCFeed extends Feed {
 		return this.color;
 	}
 
-	public void setSimple(boolean b) {
-		this.isSimple = b;
-	}
-
-	public void setSimple() {
-		this.setSimple(true);
-	}
-
-	public boolean isSimple() {
-		return this.isSimple;
-	}
-
 	public ArrayList<RCItem> getRCItemList() {
 		return itemList;
 	}
@@ -101,14 +88,11 @@ public class RCFeed extends Feed {
 		this.itemList = new ArrayList<RCItem>();
 		BufferedReader in = null;
 		try {
-			HttpURLConnection connection = (HttpURLConnection) url
-					.openConnection();
-			connection.setRequestProperty("User-Agent",
-					"Mozilla/5.0 (Windows NT 6.1; WOW64)");
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64)");
 			connection.connect();
 			InputStream inputStream = connection.getInputStream();
-			InputStreamReader reader = new InputStreamReader(inputStream,
-					encoding);
+			InputStreamReader reader = new InputStreamReader(inputStream, encoding);
 			in = new BufferedReader(reader);
 		} catch (IOException e) {
 			System.err.println("接続エラー: " + e);
@@ -116,8 +100,7 @@ public class RCFeed extends Feed {
 		}
 
 		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			document = builder.parse(new InputSource(in));
 		} catch (ParserConfigurationException e) {
@@ -153,14 +136,12 @@ public class RCFeed extends Feed {
 
 	@Override
 	protected void findItems(Node node) {
-		for (Node current = node.getFirstChild(); current != null; current = current
-				.getNextSibling()) {
+		for (Node current = node.getFirstChild(); current != null; current = current.getNextSibling()) {
 			if (current.getNodeType() == Node.ELEMENT_NODE) {
 				String nodeName = current.getNodeName();
 				if ("item".equals(nodeName) || "entry".equals(nodeName)) {
 					RCItem item = new RCItem(current);
-					if (this.isSimple)
-						item.compact();
+					if (RCConfig.isNgTitle(item.getTitle())) continue;
 					itemList.add(item);
 				} else if ("title".equals(nodeName)) {
 					this.tempName = current.getFirstChild().getNodeValue();

@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 @SuppressWarnings("serial")
@@ -50,9 +51,10 @@ public class HomePanel extends JPanel {
 		this.removeAll();
 		this.itemPaneList.clear();
 		for (RCFeed feed : group.getFeedList()) {
-			System.out.println("f: " + feed.getName() + " [" + feed.getItemList().size());
+			System.out.println("-" + feed.getName());
 			for (RCItem item : feed.getRCItemList()) {
-				System.out.println("i: " + item.getTitle());
+//				System.out.println(item);
+				System.out.println(" -" + item.getTitle());
 				item.setColor(feed.getColor());
 				item.setFeedId(group.getFeedList().indexOf(feed));
 				ItemPanel itemPane = new ItemPanel(item);
@@ -222,12 +224,15 @@ public class HomePanel extends JPanel {
 			//			titleLabel.setMinimumSize(RCConfig.item_titlepane);
 			JLabel dateLabel = new JLabel(item.getDateString());
 			dateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+			dateLabel.setBorder(new EmptyBorder(RCConfig.button_insets));
 			OpenButton openButton = new OpenButton(item.getLink());
 			//			underPane.addGridBag(titleLabel, 0, 0, 2, 1);
 			//			underPane.addGridBag(dateLabel, 0, 1, 1, 1);
 			//			underPane.addGridBag(openButton, 1, 1, 1, 1);
+			openButton.setMaximumSize(RCConfig.item_brows_button);
+			openButton.setBackground(RCConfig.button_back_color);
 			underPane.addGridBag(titleLabel, 0, 0, 3, 2);
-			underPane.addGridBag(dateLabel, 0, 2, 2, 1);
+			underPane.addGridBag(dateLabel , 0, 2, 2, 1);
 			underPane.addGridBag(openButton, 2, 2, 1, 1);
 
 			this.setVisible(false);

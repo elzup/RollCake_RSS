@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class RollCakeRSS extends JFrame {
 	RightPanel rightPane;
 	HomePanel homePane;
 	DefaultListModel<String> feedListModel;
+	JScrollPane homeWrap;
 	JComboBox<String> groupBox;
 
 	public static void main(String... args) {
@@ -53,10 +55,10 @@ public class RollCakeRSS extends JFrame {
 		JPanel pane = (JPanel) this.getContentPane();
 		pane.setLayout(new BorderLayout());
 		homePane = new HomePanel(manager.getActiveGroup());
+		homeWrap = new JScrollPane(homePane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		homeWrap.getVerticalScrollBar().setUnitIncrement(20);
 		rightPane = new RightPanel();
-		JScrollPane sp = new JScrollPane(homePane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		sp.getVerticalScrollBar().setUnitIncrement(20);
-		pane.add(sp, BorderLayout.CENTER);
+		pane.add(homeWrap, BorderLayout.CENTER);
 		pane.add(rightPane, BorderLayout.EAST);
 
 		try {
@@ -187,16 +189,18 @@ public class RollCakeRSS extends JFrame {
 			for (RCFeed feed : group.getFeedList()) {
 				//				System.out.println(":" + feed.getName());
 				JToggleButton tb = new JToggleButton(feed.getName());
+				tb.setSelected(true);
 				tb.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						Object o = e.getSource();
-						if (!(o instanceof JToggleButton)) return;
+						if (!(o instanceof JToggleButton))
+							return;
 						JToggleButton tb = (JToggleButton) o;
-						tb.setSelected(true);
 						int i = 0;
 						for (Component c : feedListPane.getComponents()) {
-							if (c.equals(tb)) break;
+							if (c.equals(tb))
+								break;
 							i++;
 						}
 						System.out.println(i + ": -" + tb.isSelected());
@@ -208,9 +212,12 @@ public class RollCakeRSS extends JFrame {
 			feedListPane.setVisible(false);
 			feedListPane.setVisible(true);
 
+			Point p = homeWrap.getViewport().getViewPosition();
 			homePane.setGroup(group);
-
 			setupFeel();
+			homeWrap.getViewport().setViewPosition(new Point(0, 0));
+			setVisible(false);
+			setVisible(true);
 		}
 	}
 }
