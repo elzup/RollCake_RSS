@@ -34,15 +34,7 @@ public class SettingPanel extends JPanel {
 
 		model = new DefaultListModel<>();
 		list = new JList<>(model);
-		RCFeed firstFeed = null;
-		for (RCGroup group : manager.getGroupList()) {
-			model.addElement(group.getName());
-			for (RCFeed feed : group.getFeedList()) {
-				if (firstFeed == null)
-					firstFeed = feed;
-				model.addElement(feed.getName());
-			}
-		}
+		RCFeed firstFeed = setList();
 		this.feedConfigPane = new FeedConfigPanel(firstFeed);
 		this.add(new JScrollPane(list), BorderLayout.WEST);
 		this.add(feedConfigPane, BorderLayout.CENTER);
@@ -50,14 +42,34 @@ public class SettingPanel extends JPanel {
 		list.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) return;
 				Object rc = manager.getContent(list.getSelectedIndex());
 				if (rc instanceof RCFeed) {
 					feedConfigPane.setFeed((RCFeed) rc);
 				} else if (rc instanceof RCGroup) {
+					e.getSource()
+					System.out.println(((RCGroup) rc).getId());///
 					feedConfigPane.callGroupSetting((RCGroup) rc);
 				}
 			}
 		});
+	}
+
+	public RCFeed setList() {
+		int select = list.getSelectedIndex();
+		model.clear();
+		list.removeAll();
+		RCFeed firstFeed = null;
+		for (RCGroup group : manager.getGroupList()) {
+			model.addElement("+" + group.getName());
+			for (RCFeed feed : group.getFeedList()) {
+				if (firstFeed == null)
+					firstFeed = feed;
+				model.addElement("  -" + feed.getName());
+			}
+		}
+		list.setSelectedIndex(select);
+		return firstFeed;
 	}
 
 	static final JPanel wrapByJPanel(Component c) {
@@ -70,7 +82,7 @@ public class SettingPanel extends JPanel {
 		private RCFeed feed;
 		JTextField nameField;
 		JTextField urlField;
-		JButton colorButton;
+		JButton colorButton, resetButton;
 		Color color;
 
 		public FeedConfigPanel() {
@@ -98,6 +110,13 @@ public class SettingPanel extends JPanel {
 					feed.setName(nameField.getText());
 					feed.setURL(urlField.getText());
 					feed.setColor(color);
+					setList();
+				}
+			});
+			resetButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setFeedInfo();
 				}
 			});
 			btnPane.add(updateButton);
@@ -120,6 +139,26 @@ public class SettingPanel extends JPanel {
 			this.setFeed(feed);
 		}
 
+		public void setFeedInfo () {
+			this.nameField.setText(feed.getName());
+			this.urlField.setText(feed.getUrl().toString());
+			this.color = feed.getColor();
+			this.colorButton.setBackground(color);
+			this.colorButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					//Color chooser
+					System.out.println(feed.getColor());///
+					Color choosedColor = JColorChooser.showDialog(feedConfigPane, "色選択", color);
+					if (choosedColor == null)
+						return;
+					color = choosedColor;
+					feed.setColor(choosedColor);
+					colorButton.setBackground(choosedColor);
+				}
+			});
+		}
+
 		public void callGroupSetting(RCGroup group) {
 			JTextField nameField = new JTextField(group.getName());
 			Object[] o = {
@@ -129,27 +168,13 @@ public class SettingPanel extends JPanel {
 
 			if (ans == JOptionPane.OK_OPTION && nameField.getText() != null) {
 				group.setName(nameField.getText());
+				setList();
 			}
 		}
 
 		public void setFeed(RCFeed feedS) {
 			this.feed = feedS;
-			this.nameField.setText(feedS.getName());
-			this.urlField.setText(feedS.getUrl().toString());
-			this.color = feedS.getColor();
-			this.colorButton.setBackground(color);
-			this.colorButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					//Color chooser
-					Color choosedColor = JColorChooser.showDialog(feedConfigPane, "色選択", color);
-					if (choosedColor == null)
-						return;
-					color = choosedColor;
-					feed.setColor(choosedColor);
-					colorButton.setBackground(choosedColor);
-				}
-			});
+			this.setFeedInfo();
 		}
 	}
 }
