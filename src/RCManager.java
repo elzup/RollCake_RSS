@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 
@@ -83,13 +85,13 @@ public class RCManager {
 			group.runAll();
 	}
 
-
-	public RCFeed createFeed( String name, String url, String encode, Color color) {
+	public RCFeed createFeed(String name, String url, String encode, Color color) {
 		RCFeed feed = new RCFeed();
 		if (!feed.setURL(url)) {
 			return null;
 		}
 		feed.setName(name);
+		feed.setColor(color);
 		if (encode != null) // 引数で指示があったら文字コードを指定
 			feed.setEncoding(encode);
 		// feed.run();
@@ -100,7 +102,7 @@ public class RCManager {
 		return this.createFeed(name, url, null, color);
 	}
 
-	public RCFeed createFeed(String name, String url, String encode ) {
+	public RCFeed createFeed(String name, String url, String encode) {
 		return this.createFeed(name, url, encode, RCConfig.no_color);
 	}
 
@@ -119,16 +121,32 @@ public class RCManager {
 		return this.groupList.get(this.groupPointer);
 	}
 
+	public Object getContent(int superIndex) {
+		int i = 0;
+		for (RCGroup group : this.getGroupList()) {
+			if (i++ == superIndex)
+				return group;
+			for (RCFeed feed : group.getFeedList())
+				if (i++ == superIndex)
+					return feed;
+		}
+		return null;
+
+	}
+
 	/* --------------------------------------------------------- *
 	 *     debug
 	 * --------------------------------------------------------- */
-
-	private void print() {
+	@Deprecated
+	void print() {
 		System.out.println("RCManager----");
 		for (RCGroup group : this.getGroupList()) {
 			System.out.println(" group" + group.getId() + ":" + group.getName());
 			for (RCFeed feed : group.getFeedList()) {
 				System.out.println("  feed:" + feed.getName() + "\n   (" + feed.getUrl().toString() + ")");
+				for (RCItem item : feed.getRCItemList()) {
+					System.out.println("   item:" + item.getTitle());
+				}
 			}
 			System.out.println();
 		}

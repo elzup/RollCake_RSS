@@ -59,6 +59,12 @@ public class RCConfig {
 
 	public static final Dimension item_brows_button = new Dimension(50, 30);
 
+
+	// ------------------- setting panel -------------------//
+	public static final Dimension settingpanel_size = new Dimension(500, 400);
+
+	public static final Dimension setting_child_size = new Dimension(400, 40);
+
 	/* --------------------------------------------------------- *
 	 *     design
 	 * --------------------------------------------------------- */

@@ -141,7 +141,8 @@ public class RCFeed extends Feed {
 				String nodeName = current.getNodeName();
 				if ("item".equals(nodeName) || "entry".equals(nodeName)) {
 					RCItem item = new RCItem(current);
-					if (RCConfig.isNgTitle(item.getTitle())) continue;
+					if (RCConfig.isNgTitle(item.getTitle()))
+						continue;
 					itemList.add(item);
 				} else if ("title".equals(nodeName)) {
 					this.tempName = current.getFirstChild().getNodeValue();

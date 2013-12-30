@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
@@ -28,6 +29,7 @@ public class RollCakeRSS extends JFrame {
 	DefaultListModel<String> feedListModel;
 	JScrollPane homeWrap;
 	JComboBox<String> groupBox;
+	SettingPanel settingPane;
 
 	public static void main(String... args) {
 		System.out.println("main start");
@@ -60,6 +62,7 @@ public class RollCakeRSS extends JFrame {
 		rightPane = new RightPanel();
 		pane.add(homeWrap, BorderLayout.CENTER);
 		pane.add(rightPane, BorderLayout.EAST);
+		settingPane = new SettingPanel(manager);
 
 		try {
 			this.setupWindowConfig();
@@ -128,10 +131,24 @@ public class RollCakeRSS extends JFrame {
 			this.add(feedListPane);
 
 			configButtons = new JPanel(new GridLayout(1, 2));
-			JButton editBtn = new JButton("Edit");
-			JButton deleteBtn = new JButton("Delete");
-			configButtons.add(editBtn);
-			configButtons.add(deleteBtn);
+			JButton addBtn  = new JButton("Add");
+			JButton confBtn = new JButton("Config");
+
+			// ------------------- button actions -------------------//
+			addBtn.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+				}
+			});
+			confBtn.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Object[] o = {settingPane};
+					JOptionPane.showMessageDialog(rightPane, o);
+				}
+			});
+			configButtons.add(addBtn);
+			configButtons.add(confBtn);
 			this.add(configButtons);
 
 			this.changeGroup(0);
