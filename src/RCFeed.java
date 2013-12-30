@@ -41,6 +41,7 @@ public class RCFeed extends Feed {
 		} catch (MalformedURLException e) {
 			return false;
 		}
+		this.isRun = false;
 		return true;
 	}
 

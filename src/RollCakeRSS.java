@@ -91,6 +91,17 @@ public class RollCakeRSS extends JFrame {
 		file.add(itemExit);
 	}
 
+	public void reloadAll() {
+		JPanel pane = (JPanel) this.getContentPane();
+		homePane = new HomePanel(manager.getActiveGroup());
+		homeWrap = new JScrollPane(homePane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		homeWrap.getVerticalScrollBar().setUnitIncrement(20);
+		rightPane = new RightPanel();
+		pane.add(homeWrap, BorderLayout.CENTER);
+		pane.add(rightPane, BorderLayout.EAST);
+		settingPane = new SettingPanel(manager);
+	}
+
 	/*
 	 * ---------------------------------------------------------
 	 * RightPanel
@@ -131,7 +142,7 @@ public class RollCakeRSS extends JFrame {
 			this.add(feedListPane);
 
 			configButtons = new JPanel(new GridLayout(1, 2));
-			JButton addBtn  = new JButton("Add");
+			JButton addBtn = new JButton("Add");
 			JButton confBtn = new JButton("Config");
 
 			// ------------------- button actions -------------------//
@@ -143,8 +154,15 @@ public class RollCakeRSS extends JFrame {
 			confBtn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					Object[] o = {settingPane};
-					JOptionPane.showMessageDialog(rightPane, o);
+					Object[] o = {
+						settingPane
+					};
+					int ans = JOptionPane.showConfirmDialog(rightPane, o, "設定", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+					if (ans == JOptionPane.OK_OPTION) {
+						System.out.println("--reload");
+						reloadAll();
+						manager.save();
+					}
 				}
 			});
 			configButtons.add(addBtn);

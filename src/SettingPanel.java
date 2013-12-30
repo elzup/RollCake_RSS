@@ -6,9 +6,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -19,14 +19,14 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class SettingPanel extends JPanel {
-	private RCManager manager;
+	RCManager manager;
 
 	JList<String> list;
 	DefaultListModel<String> model;
 	FeedConfigPanel feedConfigPane;
 
-	public SettingPanel(final RCManager manager) {
-		this.manager = manager;
+	public SettingPanel(RCManager mana) {
+		this.manager = mana;
 		this.setMaximumSize(RCConfig.settingpanel_size);
 		this.setMinimumSize(RCConfig.settingpanel_size);
 
@@ -77,7 +77,7 @@ public class SettingPanel extends JPanel {
 			this.setLayout(new GridLayout(6, 1));
 			this.nameField = new JTextField();
 			this.urlField = new JTextField();
-			this.colorButton = new JButton("■");
+			this.colorButton = new JButton(" ");
 			this.color = null;
 
 			this.add(wrapByJPanel(new JLabel("フィード名")));
@@ -121,10 +121,9 @@ public class SettingPanel extends JPanel {
 		}
 
 		public void callGroupSetting(RCGroup group) {
-			JTextField nameFiled = new JTextField(group.getName());
+			JTextField nameField = new JTextField(group.getName());
 			Object[] o = {
-					"グループ名",
-					nameField,
+					"グループ名", nameField,
 			};
 			int ans = JOptionPane.showConfirmDialog(this, o, "グループ名編集", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
@@ -133,15 +132,22 @@ public class SettingPanel extends JPanel {
 			}
 		}
 
-		public void setFeed(RCFeed feed) {
-			this.feed = feed;
-			this.nameField.setText(feed.getName());
-			this.urlField.setText(feed.getUrl().toString());
-			this.color = feed.getColor();
+		public void setFeed(RCFeed feedS) {
+			this.feed = feedS;
+			this.nameField.setText(feedS.getName());
+			this.urlField.setText(feedS.getUrl().toString());
+			this.color = feedS.getColor();
+			this.colorButton.setBackground(color);
 			this.colorButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					//Color chooser
+					Color choosedColor = JColorChooser.showDialog(feedConfigPane, "色選択", color);
+					if (choosedColor == null)
+						return;
+					color = choosedColor;
+					feed.setColor(choosedColor);
+					colorButton.setBackground(choosedColor);
 				}
 			});
 		}

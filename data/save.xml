@@ -8,11 +8,11 @@
         <feed>
           <name>#Minecraft技術部</name>
           <url>http://www.nicovideo.jp/tag/minecraft技術部?sort=f&amp;rss=2.0</url>
-          <color>-16777216</color>
+          <color>-13421569</color>
         </feed>
         <feed>
-          <name>#Minecraft農業部</name>
-          <url>http://www.nicovideo.jp/tag/Minecraft農業部?sort=f&amp;rss=2.0</url>
+          <name>#Minecraft農学部</name>
+          <url>http://www.nicovideo.jp/tag/Minecraft農学部?sort=f&amp;rss=2.0</url>
           <color>-16777216</color>
         </feed>
         <feed>
@@ -23,7 +23,7 @@
       </feedList>
     </group>
     <group>
-      <name>group02</name>
+      <name>アニメ</name>
       <id>1</id>
       <feedList>
         <feed>
@@ -39,7 +39,7 @@
       </feedList>
     </group>
     <group>
-      <name>group03</name>
+      <name>IT</name>
       <id>2</id>
       <feedList>
         <feed>
