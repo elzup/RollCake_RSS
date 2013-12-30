@@ -47,7 +47,6 @@ public class SettingPanel extends JPanel {
 				if (rc instanceof RCFeed) {
 					feedConfigPane.setFeed((RCFeed) rc);
 				} else if (rc instanceof RCGroup) {
-					e.getSource()
 					System.out.println(((RCGroup) rc).getId());///
 					feedConfigPane.callGroupSetting((RCGroup) rc);
 				}
