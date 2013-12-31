@@ -7,6 +7,7 @@ import java.util.Calendar;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 
 public class RCConfig {
 
@@ -92,6 +93,10 @@ public class RCConfig {
 
 	public static final Color rightbutton_back_color = new Color(200, 255, 200);
 	public static final Color rightbutton_font_color = new Color(0, 100, 0);
+
+
+	public static final MatteBorder setting_list_group_border = new MatteBorder(new Insets(0, 10, 0, 10), Color.black);
+	public static final MatteBorder setting_list_feed_border = new MatteBorder(new Insets(0, 5, 0, 0), Color.gray);
 
 	/* --------------------------------------------------------- *
 	 *     main value setting

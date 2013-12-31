@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,6 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -42,7 +45,8 @@ public class SettingPanel extends JPanel {
 		list.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) return;
+				if (!e.getValueIsAdjusting())
+					return;
 				Object rc = manager.getContent(list.getSelectedIndex());
 				if (rc instanceof RCFeed) {
 					feedConfigPane.setFeed((RCFeed) rc);
@@ -62,12 +66,12 @@ public class SettingPanel extends JPanel {
 		for (RCGroup group : manager.getGroupList()) {
 			model.addElement("+" + group.getName());
 			for (RCFeed feed : group.getFeedList()) {
+				model.addElement("  -" + feed.getName());
 				if (firstFeed == null)
 					firstFeed = feed;
-				model.addElement("  -" + feed.getName());
 			}
 		}
-		list.setSelectedIndex(select);
+//		list.setSelectedIndex(select);
 		return firstFeed;
 	}
 
@@ -138,7 +142,7 @@ public class SettingPanel extends JPanel {
 			this.setFeed(feed);
 		}
 
-		public void setFeedInfo () {
+		public void setFeedInfo() {
 			this.nameField.setText(feed.getName());
 			this.urlField.setText(feed.getUrl().toString());
 			this.color = feed.getColor();

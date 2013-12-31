@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
+import javax.swing.JViewport;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
@@ -93,13 +94,16 @@ public class RollCakeRSS extends JFrame {
 
 	public void reloadAll() {
 		JPanel pane = (JPanel) this.getContentPane();
+		pane.removeAll();
+		homePane = null;
 		homePane = new HomePanel(manager.getActiveGroup());
 		homeWrap = new JScrollPane(homePane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		homeWrap.getVerticalScrollBar().setUnitIncrement(20);
 		rightPane = new RightPanel();
 		pane.add(homeWrap, BorderLayout.CENTER);
 		pane.add(rightPane, BorderLayout.EAST);
-		settingPane = new SettingPanel(manager);
+		this.setVisible(false);
+		this.setVisible(true);
 	}
 
 	/*
@@ -170,7 +174,6 @@ public class RollCakeRSS extends JFrame {
 			this.add(configButtons);
 
 			this.changeGroup(0);
-
 		}
 
 		public void setupFeel() {
@@ -244,13 +247,10 @@ public class RollCakeRSS extends JFrame {
 				});
 				feedListPane.add(tb);
 			}
-			feedListPane.setVisible(false);
-			feedListPane.setVisible(true);
-
-			Point p = homeWrap.getViewport().getViewPosition();
+//			JViewport v = homeWrap.getViewport();
 			homePane.setGroup(group);
+
 			setupFeel();
-			homeWrap.getViewport().setViewPosition(new Point(0, 0));
 			setVisible(false);
 			setVisible(true);
 		}

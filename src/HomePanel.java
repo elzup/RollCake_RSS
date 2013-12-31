@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.JViewport;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
@@ -48,12 +50,16 @@ public class HomePanel extends JPanel {
 	}
 
 	public void setGroup(RCGroup group) {
+		this.setGroup(group, null);
+	}
+
+	public void setGroup(RCGroup group, JViewport view) {
 		this.removeAll();
 		this.itemPaneList.clear();
 		for (RCFeed feed : group.getFeedList()) {
 			System.out.println("-" + feed.getName());
 			for (RCItem item : feed.getRCItemList()) {
-//				System.out.println(item);
+				//				System.out.println(item);
 				System.out.println(" -" + item.getTitle());
 				item.setColor(feed.getColor());
 				item.setFeedId(group.getFeedList().indexOf(feed));
@@ -62,18 +68,30 @@ public class HomePanel extends JPanel {
 			}
 		}
 		this.timeSort();
-		this.reload();
+		this.reloadSafe(view);
+		if (view != null)
+		view.setViewPosition(new Point(0, 0));
 	}
 
-	public void reload() {
+	public void reloadInit() {
+
+	}
+
+	public void reloadSafe(JViewport view) {
 		this.removeAll();
 		for (ItemPanel pane : itemPaneList) {
 			if (!pane.isDisplay())
 				continue;
 			this.add(pane);
+			if (view != null)
+			view.setViewPosition(new Point(0, 0));
 		}
 		this.setVisible(false);
 		this.setVisible(true);
+	}
+
+	public void reload() {
+		this. reloadSafe(null);
 	}
 
 	public void offItem(int id) {
@@ -84,9 +102,20 @@ public class HomePanel extends JPanel {
 		this.changeItem(id, true);
 	}
 
+	static final int ALL_ITEM = -1;
+
+	public void offItemAll() {
+		this.changeItem(ALL_ITEM, false);
+	}
+
+	public void onItemAll() {
+		this.changeItem(ALL_ITEM, true);
+	}
+
+	// all -> -1
 	void changeItem(int id, boolean state) {
 		for (ItemPanel pane : this.itemPaneList) {
-			if (pane.getId() == id) {
+			if (id == ALL_ITEM || pane.getId() == id) {
 				pane.setDisplay(state);
 			}
 		}
@@ -232,7 +261,7 @@ public class HomePanel extends JPanel {
 			openButton.setMaximumSize(RCConfig.item_brows_button);
 			openButton.setBackground(RCConfig.button_back_color);
 			underPane.addGridBag(titleLabel, 0, 0, 3, 2);
-			underPane.addGridBag(dateLabel , 0, 2, 2, 1);
+			underPane.addGridBag(dateLabel, 0, 2, 2, 1);
 			underPane.addGridBag(openButton, 2, 2, 1, 1);
 
 			this.setVisible(false);

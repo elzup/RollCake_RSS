@@ -8,17 +8,17 @@
         <feed>
           <name>#Minecraft技術部</name>
           <url>http://www.nicovideo.jp/tag/minecraft技術部?sort=f&amp;rss=2.0</url>
-          <color>-13421569</color>
+          <color>-10066177</color>
         </feed>
         <feed>
           <name>#Minecraft農学部</name>
           <url>http://www.nicovideo.jp/tag/Minecraft農学部?sort=f&amp;rss=2.0</url>
-          <color>-16777216</color>
+          <color>-16711936</color>
         </feed>
         <feed>
           <name>#Minecraft_MOD紹介部</name>
           <url>http://www.nicovideo.jp/tag/Minecraft_MOD紹介部?sort=f&amp;rss=2.0</url>
-          <color>-16777216</color>
+          <color>-26368</color>
         </feed>
       </feedList>
     </group>
@@ -27,14 +27,14 @@
       <id>1</id>
       <feedList>
         <feed>
-          <name>#アニソン‐ニコニコ動画</name>
+          <name>#アニソン</name>
           <url>http://www.nicovideo.jp/tag/アニソン?sort=f&amp;rss=2.0</url>
-          <color>-16777216</color>
+          <color>-3342439</color>
         </feed>
         <feed>
-          <name>タグ ボカロ‐ニコニコ動画</name>
+          <name>#ボカロ</name>
           <url>http://www.nicovideo.jp/tag/ボカロ?sort=f&amp;rss=2.0</url>
-          <color>-16777216</color>
+          <color>-10066177</color>
         </feed>
       </feedList>
     </group>
