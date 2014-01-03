@@ -12,17 +12,13 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
+@SuppressWarnings("serial")
 public class RollCakeRSS extends JFrame {
 	RCManager manager;
 	RightPanel rightPane;
@@ -65,35 +61,28 @@ public class RollCakeRSS extends JFrame {
 		pane.add(rightPane, BorderLayout.EAST);
 		settingPane = new SettingPanel(manager);
 
-		try {
-			this.setupWindowConfig();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-//		this.setupMenuBar();
-
 	}
 
-	private void setupWindowConfig() throws Exception {
-		UIManager.setLookAndFeel(UIManager.getInstalledLookAndFeels()[RCConfig.window_id_lookandfeel].getClassName());
-	}
+//	private void setupWindowConfig() throws Exception {
+//		UIManager.setLookAndFeel(UIManager.getInstalledLookAndFeels()[RCConfig.window_id_lookandfeel].getClassName());
+//	}
+//
+//	@SuppressWarnings("unused")
+//	@Deprecated
+//	private void setupToolBar() {
+//		JToolBar tb = new JToolBar();
+//	}
 
-	@SuppressWarnings("unused")
-	@Deprecated
-	private void setupToolBar() {
-		JToolBar tb = new JToolBar();
-	}
-
-	@SuppressWarnings("unused")
-	private void setupMenuBar() {
-		JMenuBar menuBar = new JMenuBar();
-		this.setJMenuBar(menuBar);
-
-		JMenu file = new JMenu("File");
-		menuBar.add(file);
-		JMenuItem itemExit = new JMenuItem("Exit");
-		file.add(itemExit);
-	}
+//	@SuppressWarnings("unused")
+//	private void setupMenuBar() {
+//		JMenuBar menuBar = new JMenuBar();
+//		this.setJMenuBar(menuBar);
+//
+//		JMenu file = new JMenu("File");
+//		menuBar.add(file);
+//		JMenuItem itemExit = new JMenuItem("Exit");
+//		file.add(itemExit);
+//	}
 
 	public void reloadAll() {
 		JPanel pane = (JPanel) this.getContentPane();
@@ -114,7 +103,6 @@ public class RollCakeRSS extends JFrame {
 	 * RightPanel
 	 * ---------------------------------------------------------
 	 */
-	@SuppressWarnings("serial")
 	class RightPanel extends JPanel {
 		public JPanel feedListPane;
 		public JPanel layoutButtons;
@@ -243,7 +231,6 @@ public class RollCakeRSS extends JFrame {
 		}
 	}
 
-	@SuppressWarnings("serial")
 	class callSettingPaneAction extends AbstractAction {
 		int initIndex;
 		public callSettingPaneAction(int initIndex) {

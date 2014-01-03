@@ -1,10 +1,7 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-
 import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 
 public class RCManager {
 	private ArrayList<RCGroup> groupList;

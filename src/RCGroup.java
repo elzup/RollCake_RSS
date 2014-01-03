@@ -65,7 +65,7 @@ public class RCGroup {
 	}
 
 	public void runAll() {
-		long start = System.currentTimeMillis();
+//		long start = System.currentTimeMillis();
 		ExecutorService threadPool = Executors.newFixedThreadPool(8);
 		Collection<Callable<Void>> processes = new LinkedList<Callable<Void>>();
 		for (RCFeed feed : this.feedList) {
