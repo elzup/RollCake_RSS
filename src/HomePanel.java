@@ -14,9 +14,14 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -32,7 +37,6 @@ import javax.swing.border.MatteBorder;
 @SuppressWarnings("serial")
 public class HomePanel extends JPanel {
 	private ArrayList<ItemPanel> itemPaneList;
-
 	private String searchRegex;
 
 	public HomePanel() {
@@ -85,9 +89,30 @@ public class HomePanel extends JPanel {
 
 	public void crawl(String regex) {
 		this.searchRegex = regex;
+
+		long start = System.currentTimeMillis();
+		ExecutorService threadPool = Executors.newFixedThreadPool(8);
+		Collection<Callable<Void>> processes = new LinkedList<Callable<Void>>();
 		for (ItemPanel ip : this.itemPaneList) {
-			ip.updateFind();
+			final ItemPanel ip0 = ip;
+			processes.add(new Callable<Void>() {
+				@Override
+				public Void call() {
+					ip0.updateFind();
+					return null;
+				}
+			});
 		}
+		try {
+			threadPool.invokeAll(processes);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		} finally {
+			threadPool.shutdown();
+		}
+		System.out.println("RunProcesseTime: " + (System.currentTimeMillis() - start));
+		this.findSort();
+
 	}
 
 	public void closeFind() {
@@ -138,6 +163,31 @@ public class HomePanel extends JPanel {
 				pane.setDisplay(state);
 			}
 		}
+		this.reload();
+	}
+
+	public void findSort() {
+		Collections.sort(itemPaneList, new Comparator<ItemPanel>() {
+			@Override
+			public int compare(ItemPanel o1, ItemPanel o2) {
+				String s1 = o1.getFoundValue();
+				String s2 = o2.getFoundValue();
+				if (RCConfig.no_match_text.equals(s1)) return -1;
+
+				int r = 0;
+				try {
+					s1 = s1.replace(",", "");
+					s2 = s2.replace(",", "");
+					Integer i1 = new Integer(s1);
+					Integer i2 = new Integer(s2);
+					r =i2.compareTo(i1);
+				} catch (NumberFormatException e) {
+					r = s2.compareTo(s1);
+				}
+
+				return r;
+			}
+		});
 		this.reload();
 	}
 
@@ -220,6 +270,10 @@ public class HomePanel extends JPanel {
 
 		public void setItem(RCItem item) {
 			this.item = item;
+		}
+
+		public String getFoundValue() {
+			return this.foundBox.getText();
 		}
 
 		// ------------------- getter, setter end -------------------//
@@ -325,7 +379,7 @@ public class HomePanel extends JPanel {
 		public void updateFind() {
 			String find = this.item.crowl(searchRegex);
 			if (find == null)
-				find = "no matched";
+				find = RCConfig.no_match_text;
 			this.foundBox.setText(find);
 			this.foundBox.setVisible(true);
 		}

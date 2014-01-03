@@ -95,9 +95,8 @@ public class RCManager {
 		}
 		feed.setName(name);
 		feed.setColor(color);
-		if (encode != null) // 引数で指示があったら文字コードを指定
+		if (encode != null)
 			feed.setEncoding(encode);
-		// feed.run();
 		return feed;
 	}
 

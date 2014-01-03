@@ -115,6 +115,8 @@ public class RCConfig {
 	};
 	//@formatter:on
 
+	public static final String no_match_text = "no matched";
+
 	//------------------- table layout -------------------//
 	public static final int num_split_column_hour = 4;
 	public static final int num_panel_layout_column = 3;
@@ -123,6 +125,7 @@ public class RCConfig {
 	 *     Extensive vlaies
 	* --------------------------------------------------------- */
 	public static final Color no_color = Color.LIGHT_GRAY;
+
 
 	/* --------------------------------------------------------- *
 	 *     File io

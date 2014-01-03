@@ -65,5 +65,41 @@
     <log>
       <text>&lt;title.*&gt;(.*)&lt;/title&gt;</text>
     </log>
+    <log>
+      <text>&lt;div class="b-area-standard ja"&gt;.*&gt;(\\d+)&lt;/a&gt;</text>
+    </log>
+    <log>
+      <text>再生数： &lt;strong&gt;(.{0,10})&lt;/strong&gt;</text>
+    </log>
+    <log>
+      <text>再生数：\\s&lt;strong&gt;(.*)&lt;/strong&gt;</text>
+    </log>
+    <log>
+      <text>再生数：.*&gt;(.*)&lt;/string&gt;</text>
+    </log>
+    <log>
+      <text>再生数：.*&gt;(.*)&lt;/strong&gt;</text>
+    </log>
+    <log>
+      <text> 投稿者：.*&gt;(.*)&lt;/strong&gt;</text>
+    </log>
+    <log>
+      <text> 投稿者：.*&gt;(.*)&lt;/strong&gt;</text>
+    </log>
+    <log>
+      <text>再生数：\\s&lt;strong&gt;(.*)&lt;/strong&gt;</text>
+    </log>
+    <log>
+      <text>再生数：.*&gt;(.*)&lt;/strong&gt;</text>
+    </log>
+    <log>
+      <text>再生数：.*&gt;(.*)&lt;/strong&gt;</text>
+    </log>
+    <log>
+      <text>再生数：.*&gt;(.*)&lt;/strong&gt;</text>
+    </log>
+    <log>
+      <text>再生数：.*&gt;(.*)&lt;/strong&gt;</text>
+    </log>
   </crawlLogList>
 </rollCake>
