@@ -2,7 +2,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -20,11 +19,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
-import javax.swing.JViewport;
+import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
-
-import org.w3c.dom.views.AbstractView;
 
 public class RollCakeRSS extends JFrame {
 	RCManager manager;
@@ -73,7 +70,7 @@ public class RollCakeRSS extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		this.setupMenuBar();
+//		this.setupMenuBar();
 
 	}
 
@@ -81,10 +78,13 @@ public class RollCakeRSS extends JFrame {
 		UIManager.setLookAndFeel(UIManager.getInstalledLookAndFeels()[RCConfig.window_id_lookandfeel].getClassName());
 	}
 
+	@SuppressWarnings("unused")
+	@Deprecated
 	private void setupToolBar() {
-		// JToolBar tb = new JToolBar();
+		JToolBar tb = new JToolBar();
 	}
 
+	@SuppressWarnings("unused")
 	private void setupMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
@@ -114,6 +114,7 @@ public class RollCakeRSS extends JFrame {
 	 * RightPanel
 	 * ---------------------------------------------------------
 	 */
+	@SuppressWarnings("serial")
 	class RightPanel extends JPanel {
 		public JPanel feedListPane;
 		public JPanel layoutButtons;
@@ -129,7 +130,7 @@ public class RollCakeRSS extends JFrame {
 			layoutButtons.add(panelsLayout);
 			layoutButtons.add(tabelsLayout);
 			layoutButtons.add(imagesLayout);
-			this.add(layoutButtons);
+//			this.add(layoutButtons);
 
 			// ------------------- groupBox -------------------//
 			String[] nameList = new String[manager.groupNameList().size()];
@@ -242,6 +243,7 @@ public class RollCakeRSS extends JFrame {
 		}
 	}
 
+	@SuppressWarnings("serial")
 	class callSettingPaneAction extends AbstractAction {
 		int initIndex;
 		public callSettingPaneAction(int initIndex) {

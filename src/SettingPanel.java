@@ -170,7 +170,7 @@ public class SettingPanel extends JTabbedPane {
 		private RCFeed feed;
 		JTextField nameField;
 		JTextField urlField;
-		JButton colorButton, resetButton;
+		JButton colorButton, resetButton, removeButton;
 		Color color;
 		JComboBox<String> groupList;
 
@@ -197,6 +197,7 @@ public class SettingPanel extends JTabbedPane {
 			JPanel btnPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JButton updateButton = new JButton("OK");
 			JButton resetButton = new JButton("リセット");
+			JButton removeButton = new JButton("消去");
 			updateButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -216,8 +217,18 @@ public class SettingPanel extends JTabbedPane {
 					setFeedInfo();
 				}
 			});
+			removeButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					int ans = JOptionPane.showConfirmDialog(feedConfigPane, "[" + feed.getName() + "]を消去しますか？", "Feedの消去", JOptionPane.YES_NO_OPTION);
+					if (ans != JOptionPane.YES_OPTION) return ;
+					manager.removeFeed(feed);
+					setList();
+				}
+			});
 			btnPane.add(updateButton);
 			btnPane.add(resetButton);
+			btnPane.add(removeButton);
 			btnPane.setAlignmentX(RIGHT_ALIGNMENT);
 			this.add(btnPane);
 

@@ -48,16 +48,6 @@
           <color>-26368</color>
         </feed>
         <feed>
-          <name>elzzup's Activity</name>
-          <url>https://github.com/elzzup.atom</url>
-          <color>-10027264</color>
-        </feed>
-        <feed>
-          <name>PHP Advent Calendarの投稿 - Qiita</name>
-          <url>http://qiita.com/advent-calendar/2013/php/feed</url>
-          <color>-16777216</color>
-        </feed>
-        <feed>
           <name>CodeIQBlog</name>
           <url>http://codeiq.hatenablog.com/feed</url>
           <color>-4144960</color>

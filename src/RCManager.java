@@ -131,7 +131,16 @@ public class RCManager {
 					return feed;
 		}
 		return null;
+	}
 
+	public boolean removeFeed(RCFeed feed, int groupId) {
+		return this.groupList.get(groupId).remove(feed);
+	}
+
+	public boolean removeFeed(RCFeed feed) {
+		for (RCGroup group : this.groupList)
+			if ( group.remove(feed))return true;
+		return false;
 	}
 
 	public void moveFeedTo(RCFeed feed, int groupId) {
