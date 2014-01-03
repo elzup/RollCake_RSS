@@ -39,7 +39,6 @@ public class RCConfig {
 	public static final Dimension layout_button_box = new Dimension(rightpane_size_width, layout_button_box_height);
 	@Deprecated
 	public static final Dimension layout_button = new Dimension(100, layout_button_box_height - 10);
-
 	public static final Dimension group_comb = new Dimension(rightpane_size_width, layout_button_box_height);
 
 	public static final int feedlist_size_height = 400;
@@ -51,11 +50,11 @@ public class RCConfig {
 	public static final Border margin_border = new EmptyBorder(margin_default);
 
 	// ------------------- itmePane -------------------//
-	public static final Dimension itempane_size = new Dimension(200, 250);
+	public static final Dimension itempane_size = new Dimension(200, 280);
 	public static final int item_image_width = 200;
-	public static final int item_image_height = (int) (200 / Math.sqrt(2));
+	public static final int item_image_height = 124; //(int) (200 / Math.sqrt(2));
 	public static final Dimension item_imagepane = new Dimension(item_image_width, item_image_height + 5);
-	public static final Dimension item_underpane = new Dimension(item_image_width, 100 + 5);
+	public static final Dimension item_underpane = new Dimension(item_image_width, 100);
 	public static final Dimension item_titlepane = new Dimension(item_image_width, 50);
 
 	public static final Dimension item_brows_button = new Dimension(50, 30);
@@ -63,8 +62,10 @@ public class RCConfig {
 
 	// ------------------- setting panel -------------------//
 	public static final Dimension settingpanel_size = new Dimension(500, 400);
-
 	public static final Dimension setting_child_size = new Dimension(400, 40);
+	public static final Dimension setting_child2_size = new Dimension(300, 20);
+	public static final Dimension setting_grouplist_size = new Dimension(300, 100);
+
 
 	/* --------------------------------------------------------- *
 	 *     design
@@ -130,6 +131,12 @@ public class RCConfig {
 	public static final String savefile_name = "data/save.xml";
 	public static final String savefile_encoding = "UTF-8";
 
+	public static final String dir_img = System.getProperty("java.class.path") + "/../img/";
+
+	public static final String default_notfound_img = dir_img + "item.gif";
+
+	public static final String no_image = "<div style=\"width:" + (item_image_width - 10) + "px;height:" + (item_image_height - 10) + "px;\">no image</div>";
+
 	/* --------------------------------------------------------- *
 	 *     config methods
 	* --------------------------------------------------------- */
@@ -153,7 +160,9 @@ public class RCConfig {
 	}
 
 	public static final String toImgTag(String url) {
-		return "<img src=\"" + url + "\" width=\"" + item_image_width + "\" height=\"" + item_image_height + "\">";
+		return "<div style=\"margin:0;padding:0;float:left;width:" + (item_image_width - 50) + "px;height:" + (item_image_height) + "px;\"><img src=\"" + url + "\" width=\"" + (item_image_width - 2) + "\" height=\"" + (item_image_height - 2) + "\" /></div>";
+//		return "<div style=\"margin:0;padding:0;border:1px solid black;width:" + (item_image_width) + "px;height:" + (item_image_height) + "px;\">" + "" +
+//				"<img style=\"margin:0;padding:0;\" src=\"" + url + "\" width=\"" + (item_image_width - 2) + "\" height=\"" + (item_image_height - 2) + "\" /></div>";
 	}
 
 	public static final boolean isNgTag(String name) {

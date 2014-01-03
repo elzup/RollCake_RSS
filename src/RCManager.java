@@ -134,6 +134,12 @@ public class RCManager {
 
 	}
 
+	public void moveFeedTo(RCFeed feed, int groupId) {
+		for (RCGroup group : this.groupList)
+			if ( group.remove(feed))break;
+		this.groupList.get(groupId).add(feed);
+	}
+
 	/* --------------------------------------------------------- *
 	 *     debug
 	 * --------------------------------------------------------- */

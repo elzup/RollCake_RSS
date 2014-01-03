@@ -8,6 +8,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,7 +21,9 @@ import java.util.Date;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JViewport;
 import javax.swing.border.EmptyBorder;
@@ -70,7 +74,7 @@ public class HomePanel extends JPanel {
 		this.timeSort();
 		this.reloadSafe(view);
 		if (view != null)
-		view.setViewPosition(new Point(0, 0));
+			view.setViewPosition(new Point(0, 0));
 	}
 
 	public void reloadInit() {
@@ -84,14 +88,14 @@ public class HomePanel extends JPanel {
 				continue;
 			this.add(pane);
 			if (view != null)
-			view.setViewPosition(new Point(0, 0));
+				view.setViewPosition(new Point(0, 0));
 		}
 		this.setVisible(false);
 		this.setVisible(true);
 	}
 
 	public void reload() {
-		this. reloadSafe(null);
+		this.reloadSafe(null);
 	}
 
 	public void offItem(int id) {
@@ -204,10 +208,10 @@ public class HomePanel extends JPanel {
 
 		// ------------------- getter, setter end -------------------//
 
-		public ItemPanel(RCItem item) {
+		public ItemPanel(RCItem items) {
+			this.item = items;
 			this.feedId = item.getFeedId();
 			this.display = true;
-			this.item = item;
 
 			this.setPreferredSize(RCConfig.itempane_size);
 			this.setMaximumSize(RCConfig.itempane_size);
@@ -218,6 +222,8 @@ public class HomePanel extends JPanel {
 			this.setBorder(new MatteBorder(new Insets(0, 0, 12, 0), item.getColor()));
 
 			JPanel wrapPane = new JPanel();
+			wrapPane.setMaximumSize(RCConfig.itempane_size);
+			wrapPane.setMinimumSize(RCConfig.itempane_size);
 			this.add(wrapPane);
 			JPanel centerPane = new JPanel();
 			centerPane.setBackground(RCConfig.itempane_back_color);
@@ -232,12 +238,42 @@ public class HomePanel extends JPanel {
 
 			JTextPane imgPane = new JTextPane();
 			imgPane.setMargin(new Insets(0, 0, 0, 0));
-			imgPane.setBackground(Color.yellow);
+			imgPane.setBackground(Color.white);
 			imgPane.setContentType("text/html");
-			imgPane.setText(RCConfig.toImgTag(item.getImageUrl()));
-			imgPane.setMaximumSize(RCConfig.item_imagepane);
-			imgPane.setMinimumSize(RCConfig.item_imagepane);
+			imgPane.addMouseListener(new MouseListener() {
+				@Override
+				public void mouseReleased(MouseEvent e) {
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					JOptionPane.showMessageDialog((Component) e.getSource(), new DetailPanel(item));
+				}
+			});
+			String imgUrl = item.getImageUrl();
+			System.out.println("," + imgUrl);
+			imgPane.setText(RCConfig.toImgTag(imgUrl));
+			//			if (imgUrl != null) {
+			//				imgPane.setText(RCConfig.toImgTag(imgUrl));
+			//			} else {
+			//				imgPane.setText(RCConfig.no_image);
+			//			}
 			imgPane.setEditable(false);
+			centerPane.setMaximumSize(RCConfig.item_imagepane);
+			centerPane.setMinimumSize(RCConfig.item_imagepane);
+			centerPane.setMinimumSize(RCConfig.item_imagepane);
 			centerPane.add(imgPane);
 
 			underPane.setGridBagLayout(new GridBagLayout());
@@ -267,5 +303,6 @@ public class HomePanel extends JPanel {
 			this.setVisible(false);
 			this.setVisible(true);
 		}
+
 	}
 }

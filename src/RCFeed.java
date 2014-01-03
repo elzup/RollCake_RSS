@@ -24,6 +24,8 @@ public class RCFeed extends Feed {
 	private String tempName;
 	private Color color;
 
+	private int groupId;
+
 	private boolean isRun;
 	// private String url;
 
@@ -77,6 +79,14 @@ public class RCFeed extends Feed {
 
 	public ArrayList<RCItem> getRCItemList() {
 		return itemList;
+	}
+
+	public void setGroupId (int groupId) {
+		this.groupId = groupId;
+	}
+
+	public int getGroupId() {
+		return this.groupId;
 	}
 
 	// ------------------- getter,setter end -------------------//

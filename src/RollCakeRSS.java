@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -22,6 +23,8 @@ import javax.swing.JToggleButton;
 import javax.swing.JViewport;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+
+import org.w3c.dom.views.AbstractView;
 
 public class RollCakeRSS extends JFrame {
 	RCManager manager;
@@ -150,25 +153,8 @@ public class RollCakeRSS extends JFrame {
 			JButton confBtn = new JButton("Config");
 
 			// ------------------- button actions -------------------//
-			addBtn.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-				}
-			});
-			confBtn.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					Object[] o = {
-						settingPane
-					};
-					int ans = JOptionPane.showConfirmDialog(rightPane, o, "設定", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-					if (ans == JOptionPane.OK_OPTION) {
-						System.out.println("--reload");
-						reloadAll();
-						manager.save();
-					}
-				}
-			});
+			addBtn.addActionListener(new callSettingPaneAction (0));
+			confBtn.addActionListener(new callSettingPaneAction(1));
 			configButtons.add(addBtn);
 			configButtons.add(confBtn);
 			this.add(configButtons);
@@ -247,12 +233,29 @@ public class RollCakeRSS extends JFrame {
 				});
 				feedListPane.add(tb);
 			}
-//			JViewport v = homeWrap.getViewport();
+			//			JViewport v = homeWrap.getViewport();
 			homePane.setGroup(group);
 
 			setupFeel();
 			setVisible(false);
 			setVisible(true);
+		}
+	}
+
+	class callSettingPaneAction extends AbstractAction {
+		int initIndex;
+		public callSettingPaneAction(int initIndex) {
+			this.initIndex = initIndex;
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			settingPane.setSelectedIndex(initIndex);
+			int ans = JOptionPane.showConfirmDialog(rightPane, settingPane, "設定", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+			if (ans == JOptionPane.OK_OPTION) {
+				System.out.println("--reload");
+				reloadAll();
+				manager.save();
+			}
 		}
 	}
 }

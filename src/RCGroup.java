@@ -45,6 +45,7 @@ public class RCGroup {
 	}
 
 	public void add(RCFeed feed) {
+		feed.setGroupId(this.id);
 		this.feedList.add(feed);
 	}
 
@@ -86,6 +87,10 @@ public class RCGroup {
 			threadPool.shutdown();
 		}
 		//		System.out.println("RunProcesseTime: " + (System.currentTimeMillis() - start));
+	}
+
+	public boolean remove(RCFeed feed) {
+		return this.feedList.remove(feed);
 	}
 
 	@Deprecated

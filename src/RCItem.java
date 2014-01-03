@@ -44,6 +44,10 @@ public class RCItem extends Item {
 		return this.imageUrl;
 	}
 
+	public HashMap<String, String> getOtherTag () {
+		return this.otherTag;
+	}
+
 	// ------------------- getter, setter end -------------------//
 
 	public RCItem(Node node) {
@@ -101,7 +105,7 @@ public class RCItem extends Item {
 		}
 
 		imageUrl = null;
-		String regex = "<img.*src=\"(.*)\"";
+		String regex = "<img.*src=\"([^\"]*)\"";
 		Matcher m = Pattern.compile(regex).matcher(description);
 		if (m.find()) {
 			this.imageUrl = m.group(1);

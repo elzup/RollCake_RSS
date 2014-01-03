@@ -1,27 +1,33 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class SettingPanel extends JPanel {
+public class SettingPanel extends JTabbedPane {
 	RCManager manager;
 
 	JList<String> list;
@@ -33,14 +39,23 @@ public class SettingPanel extends JPanel {
 		this.setMaximumSize(RCConfig.settingpanel_size);
 		this.setMinimumSize(RCConfig.settingpanel_size);
 
-		this.setLayout(new BorderLayout());
+		JPanel addfeedPane = new AddPanel();
+		JPanel configPane = new JPanel();
+		this.addTab("AddFeed", addfeedPane);
+		this.addTab("Config", configPane);
 
+		//addfeedPane
+		addfeedPane.setLayout(new BoxLayout(addfeedPane, BoxLayout.Y_AXIS));
+
+		//configPane
+		configPane.setLayout(new BorderLayout());
 		model = new DefaultListModel<>();
 		list = new JList<>(model);
 		RCFeed firstFeed = setList();
 		this.feedConfigPane = new FeedConfigPanel(firstFeed);
-		this.add(new JScrollPane(list), BorderLayout.WEST);
-		this.add(feedConfigPane, BorderLayout.CENTER);
+
+		configPane.add(new JScrollPane(list), BorderLayout.WEST);
+		configPane.add(feedConfigPane, BorderLayout.CENTER);
 
 		list.addListSelectionListener(new ListSelectionListener() {
 			@Override
@@ -59,9 +74,9 @@ public class SettingPanel extends JPanel {
 	}
 
 	public RCFeed setList() {
-		int select = list.getSelectedIndex();
 		model.clear();
 		list.removeAll();
+		list.setModel(model);
 		RCFeed firstFeed = null;
 		for (RCGroup group : manager.getGroupList()) {
 			model.addElement("+" + group.getName());
@@ -71,14 +86,84 @@ public class SettingPanel extends JPanel {
 					firstFeed = feed;
 			}
 		}
-//		list.setSelectedIndex(select);
+		list.setVisible(false);
+		list.setVisible(true);
+		//		list.setSelectedIndex(select);
 		return firstFeed;
 	}
 
 	static final JPanel wrapByJPanel(Component c) {
+		return wrapByJPanel(c, null);
+	}
+
+	static final JPanel wrapByJPanel(Component c, Dimension d) {
 		JPanel pane = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		pane.add(c);
+		if (d != null) {
+			pane.setMaximumSize(d);
+			pane.setMinimumSize(d);
+		}
 		return pane;
+	}
+
+	class AddPanel extends JPanel {
+		JTextField nameField;
+		JTextField urlField;
+		JComboBox<String> groupList;
+
+		public AddPanel() {
+			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			this.nameField = new JTextField();
+			this.urlField = new JTextField();
+
+			nameField.setText("");
+			urlField.setText("");
+			model = new DefaultListModel<String>();
+
+			nameField.setPreferredSize(RCConfig.setting_child2_size);
+			urlField.setPreferredSize(RCConfig.setting_child2_size);
+
+			this.add(wrapByJPanel(new JLabel("フィード名")));
+			this.add(wrapByJPanel(this.nameField));
+			this.add(wrapByJPanel(new JLabel("URL")));
+			this.add(wrapByJPanel(this.urlField));
+
+			this.setGroupList();
+			this.add(wrapByJPanel(this.groupList));
+
+			JPanel btnPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JButton addButton = new JButton("OK");
+			addButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					int select = groupList.getSelectedIndex();
+					manager.addFeed(nameField.getText(), urlField.getText(), select);
+					nameField.setText("");
+					urlField.setText("");
+					setList();
+				}
+			});
+			btnPane.add(addButton);
+			btnPane.setAlignmentX(RIGHT_ALIGNMENT);
+			this.add(btnPane);
+
+			for (Component c : this.getComponents()) {
+				if (c instanceof JPanel) {
+					//					c.setBackground(Color.red);
+					//					((FlowLayout) ((JPanel) c).getLayout()).setAlignment(FlowLayout.LEFT);
+					c.setMaximumSize(RCConfig.setting_child_size);
+					c.setMinimumSize(RCConfig.setting_child_size);
+				}
+			}
+		}
+
+		public void setGroupList() {
+			String[] nameList = new String[manager.getGroupList().size()];
+			for (RCGroup group : manager.getGroupList())
+				nameList[group.getId()] = group.getName();
+			groupList = new JComboBox<String>(nameList);
+		}
+
 	}
 
 	class FeedConfigPanel extends JPanel {
@@ -87,14 +172,17 @@ public class SettingPanel extends JPanel {
 		JTextField urlField;
 		JButton colorButton, resetButton;
 		Color color;
+		JComboBox<String> groupList;
 
 		public FeedConfigPanel() {
-			this.setLayout(new GridLayout(6, 1));
+			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			this.nameField = new JTextField();
 			this.urlField = new JTextField();
 			this.colorButton = new JButton(" ");
 			this.color = null;
 
+			model = new DefaultListModel<String>();
+			this.setGroupList();
 			this.add(wrapByJPanel(new JLabel("フィード名")));
 			this.add(wrapByJPanel(this.nameField));
 			this.add(wrapByJPanel(new JLabel("URL")));
@@ -103,6 +191,8 @@ public class SettingPanel extends JPanel {
 			colorPane.add(new JLabel("色"));
 			colorPane.add(this.colorButton);
 			this.add(colorPane);
+
+			this.add(wrapByJPanel(this.groupList));
 
 			JPanel btnPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JButton updateButton = new JButton("OK");
@@ -113,6 +203,10 @@ public class SettingPanel extends JPanel {
 					feed.setName(nameField.getText());
 					feed.setURL(urlField.getText());
 					feed.setColor(color);
+					int select = groupList.getSelectedIndex();
+					feed.setGroupId(select);
+					manager.moveFeedTo(feed, select);
+
 					setList();
 				}
 			});
@@ -142,6 +236,13 @@ public class SettingPanel extends JPanel {
 			this.setFeed(feed);
 		}
 
+		public void setGroupList() {
+			String[] nameList = new String[manager.getGroupList().size()];
+			for (RCGroup group : manager.getGroupList())
+				nameList[group.getId()] = group.getName();
+			groupList = new JComboBox<String>(nameList);
+		}
+
 		public void setFeedInfo() {
 			this.nameField.setText(feed.getName());
 			this.urlField.setText(feed.getUrl().toString());
@@ -160,6 +261,7 @@ public class SettingPanel extends JPanel {
 					colorButton.setBackground(choosedColor);
 				}
 			});
+			this.groupList.setSelectedIndex(feed.getGroupId());
 		}
 
 		public void callGroupSetting(RCGroup group) {

@@ -27,14 +27,14 @@
       <id>1</id>
       <feedList>
         <feed>
-          <name>#アニソン</name>
-          <url>http://www.nicovideo.jp/tag/アニソン?sort=f&amp;rss=2.0</url>
-          <color>-3342439</color>
-        </feed>
-        <feed>
           <name>#ボカロ</name>
           <url>http://www.nicovideo.jp/tag/ボカロ?sort=f&amp;rss=2.0</url>
           <color>-10066177</color>
+        </feed>
+        <feed>
+          <name>#アニソン</name>
+          <url>http://www.nicovideo.jp/tag/アニソン?sort=f&amp;rss=2.0</url>
+          <color>-3342439</color>
         </feed>
       </feedList>
     </group>
@@ -45,17 +45,22 @@
         <feed>
           <name>GIGAZINE</name>
           <url>http://feed.rssad.jp/rss/gigazine/rss_2.0</url>
-          <color>-16777216</color>
+          <color>-26368</color>
         </feed>
         <feed>
           <name>elzzup's Activity</name>
           <url>https://github.com/elzzup.atom</url>
-          <color>-16777216</color>
+          <color>-10027264</color>
         </feed>
         <feed>
           <name>PHP Advent Calendarの投稿 - Qiita</name>
           <url>http://qiita.com/advent-calendar/2013/php/feed</url>
           <color>-16777216</color>
+        </feed>
+        <feed>
+          <name>CodeIQBlog</name>
+          <url>http://codeiq.hatenablog.com/feed</url>
+          <color>-4144960</color>
         </feed>
       </feedList>
     </group>
