@@ -50,11 +50,11 @@ public class RCConfig {
 	public static final Border margin_border = new EmptyBorder(margin_default);
 
 	// ------------------- itmePane -------------------//
-	public static final Dimension itempane_size = new Dimension(200, 280);
+	public static final Dimension itempane_size = new Dimension(200, 310);
 	public static final int item_image_width = 200;
 	public static final int item_image_height = 124; //(int) (200 / Math.sqrt(2));
 	public static final Dimension item_imagepane = new Dimension(item_image_width, item_image_height + 5);
-	public static final Dimension item_underpane = new Dimension(item_image_width, 100);
+	public static final Dimension item_underpane = new Dimension(item_image_width, 130);
 	public static final Dimension item_titlepane = new Dimension(item_image_width, 50);
 
 	public static final Dimension item_brows_button = new Dimension(50, 30);

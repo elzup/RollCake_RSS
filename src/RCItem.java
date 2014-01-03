@@ -1,4 +1,11 @@
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,7 +51,7 @@ public class RCItem extends Item {
 		return this.imageUrl;
 	}
 
-	public HashMap<String, String> getOtherTag () {
+	public HashMap<String, String> getOtherTag() {
 		return this.otherTag;
 	}
 
@@ -151,6 +158,34 @@ public class RCItem extends Item {
 		};
 //@formatter:on
 		return valsToKey(vals);
+	}
+
+	public String crowl(String regex) {
+		URL url;
+		Pattern p = Pattern.compile(regex);
+		try {
+			url = new URL(this.link);
+			URLConnection urlConnection = url.openConnection();
+			urlConnection.connect();
+			BufferedReader fin = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
+			String line = "";
+			while ((line = fin.readLine()) != null) {
+				Matcher m = p.matcher(line);
+				if (m.find()) {
+					return m.group(1);
+				}
+			}
+		} catch (MalformedURLException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public static int[] keyToVals(String key) {

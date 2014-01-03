@@ -55,4 +55,15 @@
       </feedList>
     </group>
   </groupList>
+  <crawlLogList>
+    <log>
+      <text>test()</text>
+    </log>
+    <log>
+      <text>dateIn</text>
+    </log>
+    <log>
+      <text>&lt;title.*&gt;(.*)&lt;/title&gt;</text>
+    </log>
+  </crawlLogList>
 </rollCake>

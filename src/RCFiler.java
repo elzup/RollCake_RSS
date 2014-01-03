@@ -45,6 +45,15 @@ public class RCFiler {
 		}
 
 		NodeList groupNodes = (NodeList) document.getChildNodes().item(0).getChildNodes().item(1).getChildNodes();
+		NodeList crawlNodes = (NodeList) document.getChildNodes().item(0).getChildNodes().item(3).getChildNodes();
+		for (int i = 0; i < crawlNodes.getLength(); i++) {
+			NodeList log = crawlNodes.item(i).getChildNodes();
+			String text = getElementValue(log, "text");
+			System.out.println(text);
+			if (text == null)
+				continue;
+			manager.addCrawledHistory(text);
+		}
 		for (int i = 0; i < groupNodes.getLength(); i++) {
 			NodeList group = groupNodes.item(i).getChildNodes();
 			String name = getElementValue(group, "name");
@@ -95,8 +104,18 @@ public class RCFiler {
 		Document document = domImpl.createDocument("", "rollCake", null);
 		Element rootElement = document.getDocumentElement();
 		Element groupRootElement = document.createElement("groupList");
+		Element crawlRootElement = document.createElement("crawlLogList");
 		rootElement.appendChild(groupRootElement);
+		rootElement.appendChild(crawlRootElement);
 
+		for (String text: this.manager.getCrawledHistory()) {
+			//			feedElement.setAttribute("name");
+			Element logElement = document.createElement("log");
+			if ("".equals(text))
+				continue;
+			logElement.appendChild(createElementWithName(document, "text", text));
+			crawlRootElement.appendChild(logElement);
+		}
 		for (RCGroup group : this.manager.getGroupList()) {
 			Element groupElement = document.createElement("group");
 			//			feedElement.setAttribute("name");

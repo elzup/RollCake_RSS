@@ -8,6 +8,7 @@ public class RCManager {
 
 	private int groupPointer;
 	private RCFiler filer;
+	private ArrayList<String> crawledHistory;
 
 	public static int table_mode_recentry = 0;
 
@@ -24,11 +25,16 @@ public class RCManager {
 		this.groupPointer = index;
 	}
 
+	public ArrayList<String> getCrawledHistory() {
+		return this.crawledHistory;
+	}
+
 	// ------------------- getter, setter, end -------------------//
 	public RCManager(String filename) {
 		this.groupList = new ArrayList<RCGroup>();
 		this.groupPointer = 0;
 		this.filer = new RCFiler(filename, this);
+		this.crawledHistory = new ArrayList<>();
 	}
 
 	public RCManager() {
@@ -144,6 +150,10 @@ public class RCManager {
 		for (RCGroup group : this.groupList)
 			if ( group.remove(feed))break;
 		this.groupList.get(groupId).add(feed);
+	}
+
+	public void addCrawledHistory(String e) {
+		this.crawledHistory.add(e);
 	}
 
 	/* --------------------------------------------------------- *

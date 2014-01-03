@@ -12,11 +12,15 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 @SuppressWarnings("serial")
 public class RollCakeRSS extends JFrame {
@@ -63,26 +67,26 @@ public class RollCakeRSS extends JFrame {
 
 	}
 
-//	private void setupWindowConfig() throws Exception {
-//		UIManager.setLookAndFeel(UIManager.getInstalledLookAndFeels()[RCConfig.window_id_lookandfeel].getClassName());
-//	}
-//
-//	@SuppressWarnings("unused")
-//	@Deprecated
-//	private void setupToolBar() {
-//		JToolBar tb = new JToolBar();
-//	}
+	//	private void setupWindowConfig() throws Exception {
+	//		UIManager.setLookAndFeel(UIManager.getInstalledLookAndFeels()[RCConfig.window_id_lookandfeel].getClassName());
+	//	}
+	//
+	//	@SuppressWarnings("unused")
+	//	@Deprecated
+	//	private void setupToolBar() {
+	//		JToolBar tb = new JToolBar();
+	//	}
 
-//	@SuppressWarnings("unused")
-//	private void setupMenuBar() {
-//		JMenuBar menuBar = new JMenuBar();
-//		this.setJMenuBar(menuBar);
-//
-//		JMenu file = new JMenu("File");
-//		menuBar.add(file);
-//		JMenuItem itemExit = new JMenuItem("Exit");
-//		file.add(itemExit);
-//	}
+	//	@SuppressWarnings("unused")
+	//	private void setupMenuBar() {
+	//		JMenuBar menuBar = new JMenuBar();
+	//		this.setJMenuBar(menuBar);
+	//
+	//		JMenu file = new JMenu("File");
+	//		menuBar.add(file);
+	//		JMenuItem itemExit = new JMenuItem("Exit");
+	//		file.add(itemExit);
+	//	}
 
 	public void reloadAll() {
 		JPanel pane = (JPanel) this.getContentPane();
@@ -105,20 +109,58 @@ public class RollCakeRSS extends JFrame {
 	 */
 	class RightPanel extends JPanel {
 		public JPanel feedListPane;
-		public JPanel layoutButtons;
+		public JPanel crawlButtons;
 		public JPanel configButtons;
 
 		public RightPanel() {
 			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			// ------------------- layoutButtons -------------------//
-			layoutButtons = new JPanel(new GridLayout(1, 3));
-			JButton panelsLayout = new JButton("Panel");
-			JButton tabelsLayout = new JButton("Table");
-			JButton imagesLayout = new JButton("Image");
-			layoutButtons.add(panelsLayout);
-			layoutButtons.add(tabelsLayout);
-			layoutButtons.add(imagesLayout);
-//			this.add(layoutButtons);
+			crawlButtons = new JPanel(new GridLayout(1, 3));
+			JButton crawlButton = new JButton("Crawl");
+			JButton crawlOffButton = new JButton("Off");
+			crawlButtons.add(crawlButton);
+			crawlButtons.add(crawlOffButton);
+			this.add(crawlButtons);
+			crawlOffButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					homePane.closeFind();
+					homePane.setVisible(false);
+					homePane.setVisible(true);
+				}
+			});
+			crawlButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final JTextField tf = new JTextField("");
+					ArrayList<String> h = manager.getCrawledHistory();
+					String[] vs = new String[h.size()];
+					for (int i = 0; i < vs.length; i++)
+						vs[i] = h.get(i);
+					final JList<String> list = new JList<String>(vs);
+					list.addListSelectionListener(new ListSelectionListener() {
+						@Override
+						public void valueChanged(ListSelectionEvent e) {
+							if (!e.getValueIsAdjusting())
+								return;
+							tf.setText(list.getSelectedValue());
+						}
+					});
+					Object[] o = {
+							"探索する正規表現", tf, new JScrollPane(list)
+					};
+					int ans = JOptionPane.showConfirmDialog(rightPane, o, "探索", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+					if (ans == JOptionPane.OK_OPTION) {
+						String regex = tf.getText();
+						homePane.crawl(regex);
+						System.out.println("crawled[" + regex);
+						manager.addCrawledHistory(regex);
+						homePane.setVisible(false);
+						homePane.setVisible(true);
+						manager.save();
+					}
+				}
+			});
 
 			// ------------------- groupBox -------------------//
 			String[] nameList = new String[manager.groupNameList().size()];
@@ -142,7 +184,7 @@ public class RollCakeRSS extends JFrame {
 			JButton confBtn = new JButton("Config");
 
 			// ------------------- button actions -------------------//
-			addBtn.addActionListener(new callSettingPaneAction (0));
+			addBtn.addActionListener(new callSettingPaneAction(0));
 			confBtn.addActionListener(new callSettingPaneAction(1));
 			configButtons.add(addBtn);
 			configButtons.add(confBtn);
@@ -154,13 +196,13 @@ public class RollCakeRSS extends JFrame {
 		public void setupFeel() {
 			this.setPreferredSize(RCConfig.rightpane_size_dimension);
 			this.setBackground(RCConfig.rightpane_background_color);
-			layoutButtons.setMaximumSize(RCConfig.layout_button_box);
-			layoutButtons.setMinimumSize(RCConfig.layout_button_box);
-			layoutButtons.setBorder(RCConfig.margin_border);
-			layoutButtons.setBackground(RCConfig.rightpane_background_color);
-			((GridLayout) layoutButtons.getLayout()).setHgap(5);
-			((GridLayout) layoutButtons.getLayout()).setVgap(5);
-			for (Component button : layoutButtons.getComponents()) {
+			crawlButtons.setMaximumSize(RCConfig.layout_button_box);
+			crawlButtons.setMinimumSize(RCConfig.layout_button_box);
+			crawlButtons.setBorder(RCConfig.margin_border);
+			crawlButtons.setBackground(RCConfig.rightpane_background_color);
+			((GridLayout) crawlButtons.getLayout()).setHgap(5);
+			((GridLayout) crawlButtons.getLayout()).setVgap(5);
+			for (Component button : crawlButtons.getComponents()) {
 				if (button instanceof JButton) {
 					button.setBackground(RCConfig.button_back_color);
 				}
@@ -233,9 +275,11 @@ public class RollCakeRSS extends JFrame {
 
 	class callSettingPaneAction extends AbstractAction {
 		int initIndex;
+
 		public callSettingPaneAction(int initIndex) {
 			this.initIndex = initIndex;
 		}
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			settingPane.setSelectedIndex(initIndex);

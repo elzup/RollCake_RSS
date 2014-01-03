@@ -23,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JViewport;
 import javax.swing.border.EmptyBorder;
@@ -31,6 +32,8 @@ import javax.swing.border.MatteBorder;
 @SuppressWarnings("serial")
 public class HomePanel extends JPanel {
 	private ArrayList<ItemPanel> itemPaneList;
+
+	private String searchRegex;
 
 	public HomePanel() {
 		super();
@@ -78,6 +81,19 @@ public class HomePanel extends JPanel {
 
 	public void reloadInit() {
 
+	}
+
+	public void crawl(String regex) {
+		this.searchRegex = regex;
+		for (ItemPanel ip : this.itemPaneList) {
+			ip.updateFind();
+		}
+	}
+
+	public void closeFind() {
+		for (ItemPanel ip : this.itemPaneList) {
+			ip.closeFind();
+		}
 	}
 
 	public void reloadSafe(JViewport view) {
@@ -181,6 +197,7 @@ public class HomePanel extends JPanel {
 
 	class ItemPanel extends JPanel {
 		private int feedId;
+		private JTextField foundBox;
 		private boolean display;
 		private RCItem item;
 
@@ -206,7 +223,6 @@ public class HomePanel extends JPanel {
 		}
 
 		// ------------------- getter, setter end -------------------//
-
 		public ItemPanel(RCItem items) {
 			this.item = items;
 			this.feedId = item.getFeedId();
@@ -232,6 +248,7 @@ public class HomePanel extends JPanel {
 			underPane.setGridBagLayout(new GridBagLayout());
 			wrapPane.setBackground(RCConfig.itempane_back_color);
 
+			this.foundBox = new JTextField();
 			wrapPane.add(centerPane);
 			wrapPane.add(underPane);
 
@@ -296,12 +313,25 @@ public class HomePanel extends JPanel {
 			openButton.setMaximumSize(RCConfig.item_brows_button);
 			openButton.setBackground(RCConfig.button_back_color);
 			underPane.addGridBag(titleLabel, 0, 0, 3, 2);
-			underPane.addGridBag(dateLabel, 0, 2, 2, 1);
-			underPane.addGridBag(openButton, 2, 2, 1, 1);
+			underPane.addGridBag(this.foundBox, 0, 2, 3, 1);
+			underPane.addGridBag(dateLabel, 0, 3, 2, 1);
+			underPane.addGridBag(openButton, 2, 3, 1, 1);
 
+			this.foundBox.setVisible(false);
 			this.setVisible(false);
 			this.setVisible(true);
 		}
 
+		public void updateFind() {
+			String find = this.item.crowl(searchRegex);
+			if (find == null)
+				find = "no matched";
+			this.foundBox.setText(find);
+			this.foundBox.setVisible(true);
+		}
+
+		public void closeFind() {
+			this.foundBox.setVisible(false);
+		}
 	}
 }
